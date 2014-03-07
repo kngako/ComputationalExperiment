@@ -30,6 +30,6 @@ codeWord getCodeWord_FromFile(const char* path, int m, int codewordIndex);
 
 //Function prototype for in/out
 codeWords getHuffmanCodeWords_Memory(int m, int series);
-bool getHuffmanCodeWords_File(char* filename, int m, int series);
+bool getHuffmanCodeWords_File(const char* filename, int m, int series);
 
 #endif

@@ -238,7 +238,7 @@ codeWord getCodeWord_FromFile(const char* path, int m, int codewordIndex)
     char* filename = new char[STD_NUMBER_OF_CHARS];
     sprintf(filename,"%s%d.%s", path,m, HUFFMAN_FILE_EXT);
     
-    char* data = getLine_FromFile(filename,codewordIndex);
+    char* data = getLine_FromFile(filename,m);
     
     delete [] filename;
     
@@ -261,10 +261,10 @@ codeWords getHuffmanCodeWords_Memory(int m, int series)
     }
 }
 
-bool getHuffmanCodeWords_File(char* filename, int m, int series)
+bool getHuffmanCodeWords_File(const char* filename, int m, int series)
 {
 	fstream outputFile;
-
+        
 	outputFile.open(filename,ios::out);
 
 	codeWord temp;

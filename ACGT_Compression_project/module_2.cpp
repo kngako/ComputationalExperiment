@@ -113,8 +113,12 @@ bool getNonIsomorphicStrings_NLen_File(char* filename, int len, int limit)
 	fstream outputFile;
 
 	outputFile.open(filename,ios::out);
-	double counter = 0;
-    char* temp = new char[1];
+	
+        double counter = 0;
+        
+        cout << "Number of strings: " << getNumberOfIsomorphicStringFor(len) << endl;
+        
+        char* temp = new char[1];
 	if(limit > 0)
 	{
 		recDownString_File(len,0,temp,'0',limit, counter, outputFile);
@@ -122,7 +126,7 @@ bool getNonIsomorphicStrings_NLen_File(char* filename, int len, int limit)
 	else
 	{
 		recDownString_File(len,0,temp,'0',-1, counter, outputFile);
-    }
+        }
 
 	outputFile.close();
 
@@ -212,7 +216,7 @@ void recDownString_File(int strLength, int curLength, char*& curStr, char nextCh
             newStr = 0; //create a new char* string in memory
 			newStr = new char[curLength + 1];
 
-			cout << '\r' << "Generated: " << counter << " of ";
+			cout << '\r' << "Generated: " << counter;
 
 			strncpy(newStr, curStr, curLength); //Copy old string to new
 

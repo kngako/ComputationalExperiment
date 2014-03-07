@@ -43,6 +43,7 @@ void scanLPArrForRep_U_XYX(char*, int, int, vector<int*>&, int, vector<repetitio
 bool getAllRepetitions_XYX_Mem (char* str, vector<repetition*>&);
 bool getAllRepetitions_XYX_File (char* str, char*);
 
+repetition getRepetionOfNIStringI_FromFile(const char*, int, int, int);
 
 //========Auxilary functions
 
@@ -95,6 +96,6 @@ bool getAllRepetitions_XX (char* filename, char* str);
 //Not used
 int* calcLstextLR_XX (char*, char*);
 
-repetition getRepetionOfNIStringI_FromFile(const char*, int, int, int);
+
 
 #endif
