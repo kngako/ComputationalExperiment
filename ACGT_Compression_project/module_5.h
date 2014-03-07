@@ -1,3 +1,5 @@
+//COMPRESSION PROJECT: MODULE 5 FILE API: module_5.h
+//Created by Mathys Ellis 30/02/2014
 //---------------------------------------------------------------------------
 
 #ifndef module_5H
@@ -6,6 +8,7 @@
 
 #include <fstream>
 #include <istream>
+#include "module_0.h"
 
 using namespace std;
 

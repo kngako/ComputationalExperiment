@@ -1,4 +1,11 @@
+//COMPRESSION PROJECT: MODULE 0 TYPES AND CONVERSION: module_0.cpp
+//Created by Mathys Ellis 01/03/2014
 #include "module_0.h"
+
+void errorMsg(char* msg)
+{
+    fprintf(stdout, "%s \n", msg);
+}
 
 //module_1
 //==============================================================================
@@ -219,7 +226,8 @@ mappedString stringToMappedString(char* str)
 	{
 		switch (count)
 		{
-			case 0: temp.mappedStr = curTok;
+			case 0: temp.mappedStr = new char[strlen(curTok)];
+                                strcpy(temp.mappedStr,curTok);       
 				break;
                         case 1: temp.mapping[A_IDX] = atoi(curTok);
 				break;
@@ -280,7 +288,8 @@ repetition stringToRepetition(char* str)
                                 }
 				break;*/
 
-			case 0: temp.repetitionStr = curTok;
+			case 0: temp.repetitionStr = new char[strlen(curTok)];
+                                strcpy(temp.repetitionStr,curTok);                       
 				break;
 
 			/*case 2: if(strcmp(curTok,"pos") != 0)

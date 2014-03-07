@@ -242,9 +242,14 @@ codeWord getCodeWord_FromFile(const char* path, int m, int codewordIndex)
     
     delete [] filename;
     
-    codeWord temp = findCodeWordInString(data, codewordIndex);
+    codeWord temp;
     
-    delete [] data;
+    if(data != NULL)
+    {    
+        temp = findCodeWordInString(data, codewordIndex);
+
+        delete [] data;
+    }
     
     return temp;
 }

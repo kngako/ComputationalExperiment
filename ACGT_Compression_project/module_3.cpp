@@ -1100,15 +1100,20 @@ bool getAllRepetitions_XX (char* filename, char* str)
 repetition getRepetionOfNIStringI_FromFile(const char* path, int lenIndex, int NIStringIndex, int repIndex)
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
-    sprintf(filename,"%s%d_%d.%s", path, lenIndex, NIStringIndex, NONISOMORPHIC_FILE_EXT);
+    sprintf(filename,"%s%d_%d.%s", path, lenIndex, NIStringIndex, REPETITION_FILE_EXT);
     
     char* data = getLine_FromFile(filename,repIndex);
     
     delete [] filename;
     
-    repetition temp = stringToRepetition(data);
+    repetition temp;
     
-    delete [] data;
+    if(data != NULL)
+    {    
+        temp = stringToRepetition(data);
+
+        delete [] data;
+    }
     
     return temp;
 }

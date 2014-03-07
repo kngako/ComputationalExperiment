@@ -33,11 +33,12 @@ int main(int argc, char** argv)
         cout << "Choose test:" << endl;
         cout << "1: Module 1 - getHuffmanCodeWords_File " << endl;
         cout << "2: Module 1 - getCodeWord_FromFile " << endl;
-        cout << "3: Module 2 - getNonIsomorphicStrings_NLen_File" << endl;
-        cout << "4: Module 2 - getNonIsomorphicString_FromFile" << endl;
-        cout << "5: Module 3 - getAllRepetitions_XYX_File" << endl;
-        cout << "6: Module 3 - getRepetionOfNIStringI_FromFile" << endl;
-        cout << "7: Module 4 - getCompressionGain_2Str" << endl;
+        cout << "10: Module 2 - getNonIsomorphicStrings_NLen_File" << endl;
+        cout << "12: Module 2 - getNonIsomorphicString_FromFile" << endl;
+        cout << "20: Module 3 - getAllRepetitions_XYX_File (Modular)" << endl;
+        cout << "21: Module 3 - getAllRepetitions_XYX_File (Modular)" << endl;
+        cout << "22: Module 3 - getRepetionOfNIStringI_FromFile" << endl;
+        cout << "30: Module 4 - getCompressionGain_2Str" << endl;
         
         int option = 0;
         cin >> option;
@@ -55,7 +56,7 @@ int main(int argc, char** argv)
                 
                 cin >> m;                
                 
-                sprintf(fn,"%d.HUF",m);
+                sprintf(fn,"%d.%s",m, HUFFMAN_FILE_EXT);
                 
                 getHuffmanCodeWords_File(fn, m, 2);
                 
@@ -69,53 +70,84 @@ int main(int argc, char** argv)
                 
                 cout << "Code word at " << i << ": " << cwToString(getCodeWord_FromFile("", m, i)) << endl;
                 break;
-            case 3:
+            case 10:
                 cout << "Please enter the length of the non isomorphic strings to be generated: ";
                 cin >> m;
                 
-                sprintf(fn,"%d.NIF",m);
+                sprintf(fn,"%d.%s",m, NONISOMORPHIC_FILE_EXT);
                 
                 getNonIsomorphicStrings_NLen_File(fn, m, 0);
                 
                 break;
-            case 4: 
+            case 11: 
                 cout << "Please enter the length of the non isomorphic strings to find: ";
                 cin >> m;
                 
                 cout << "Please enter the index of the non isomorphic string in the file: ";     
                 cin >> i;
 
-                cout << "Mapped string at " << i << ": " << getNonIsomorphicString_FromFile("", m, i).mappedStr << endl;                
+                cout << "Mapped string at " << i << ": " << getStringFromMap(getNonIsomorphicString_FromFile("", m, i))<< endl;                
                 break;
-            case 5: 
+                
+            case 20: 
                 cout << "Please enter a string to be scanned for XYX repetitions: ";
                 cin >> strin;
                 
                 cout << "Please enter the index of the non isomorphic string in the file: ";     
                 cin >> i;
-                
-                sprintf(fn,"%s.RFF",strin);
+                //AGGTGGA check
+                sprintf(fn,"%s.%s",strin,REPETITION_FILE_EXT);
                 
                 getAllRepetitions_XYX_File(strin, fn); 
                 break;
-            case 6:
+            case 21:
                 
-                //getRepetionOfNIStringI_FromFile();
+                cout << "Please enter the length of the non isomorphic strings to be scanned for XYX repetitions: ";
+                cin >> m;
+                
+                cout << "Please enter the index of the non isomorphic string in the file that needs to be scanned: ";     
+                cin >> i;
+                                
+                sprintf(fn,"%d_%d.%s", m, i, REPETITION_FILE_EXT);
+                
+                getAllRepetitions_XYX_File(getStringFromMap(getNonIsomorphicString_FromFile("", m, i)), fn); 
+                
                 break;
-            case 7:
-                cout << "Please enter a a standard string: ";
+            case 22:
+                cout << "Please enter the length of the non isomorphic string that was scanned: ";
+                cin >> m;
+                
+                cout << "Please enter the index of the non isomorphic string that was scanned: ";     
+                cin >> i;
+                
+                int j;
+                
+                cout << "Please enter the index of the XYX repetition: ";     
+                cin >> j;
+                
+                cout << "The repetition " << j << " of non isomorphic string " <<  getStringFromMap(getNonIsomorphicString_FromFile("", m, i)) << " is: " << repetitionToString(getRepetionOfNIStringI_FromFile("",m,i,j)) << endl;
+                
+                break;
+            case 30:
+                
+                //ACACACACACAC
+                //ACA,CAC:1010
+                cout << "Please enter a standard string: ";
                 cin >> strin;
                 
                 cout << "Please enter a an encoded version of the string: ";
                 cin >> strin2;
                 
-                getCompressionGain_2Str(strin,strlen(strin), strin2, strlen(strin));
+                cout << "The compression gain of " << strin << " over " << strin2 << " : " << getCompressionGain_2Str(strin,strlen(strin), strin2, strlen(strin)) << endl;
                 break;
             default: active = false;
                     break;                
         }
+        delete [] strin;
+        delete [] strin2;
+        delete [] fn;
+        cout << endl << "=========Ending test" << endl;
         
-        cout << endl << "Ending testing" << endl;
     
     }
     

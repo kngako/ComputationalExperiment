@@ -292,9 +292,15 @@ mappedString getNonIsomorphicString_FromFile(const char* path, int lenIndex, int
     
     delete [] filename;
     
-    mappedString temp = stringToMappedString(data);
+    mappedString temp;
     
-    delete [] data;
+    if(data != NULL)
+    { 
+    
+        temp = stringToMappedString(data);
+    
+        delete [] data;
+    }
     
     return temp;
 }

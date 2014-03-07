@@ -1,3 +1,6 @@
+//COMPRESSION PROJECT: MODULE 0 TYPES AND CONVERSION: module_0.h
+//Created by Mathys Ellis 01/03/2014
+
 /* 
  * File:   module_0.h
  * Author: MoX
@@ -14,6 +17,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <stdio.h>
+#include <iostream>
 
 using namespace std;
 
@@ -60,6 +64,10 @@ struct repetition
 
 
 //Type converstion functions
+
+//Module_0
+//==============================================================================
+void errorMsg(char*);
 
 //Module_1
 //==============================================================================

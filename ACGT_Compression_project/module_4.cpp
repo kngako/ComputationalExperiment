@@ -1,4 +1,4 @@
-//COMPRESSION PROJECT: MODULE 4 CALCULATIONS : module4.cpp
+//COMPRESSION PROJECT: MODULE 4 ENCODING : module4.cpp
 //Created by Mathys Ellis 26/02/2014
 #include "module_4.h"
 
