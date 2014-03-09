@@ -14,7 +14,8 @@ using namespace std;
 #include "module_2.h"
 #include "module_3.h"
 #include "module_4.h"
-
+#include "module_6.h"
+#include <string>
 #include <iostream>
 
 
@@ -39,6 +40,8 @@ int main(int argc, char** argv)
         cout << "21: Module 3 - getAllRepetitions_XYX_File (Modular)" << endl;
         cout << "22: Module 3 - getRepetionOfNIStringI_FromFile" << endl;
         cout << "30: Module 4 - getCompressionGain_2Str" << endl;
+        cout << "40: Module 6 - partition (Partition a string)" << endl;
+        cout << "41: Module 6 - partition (Calculate weight of partitioned string)" << endl;
         
         int option = 0;
         cin >> option;
@@ -48,6 +51,7 @@ int main(int argc, char** argv)
         char* fn = new char[STD_NUMBER_OF_CHARS];
         char* strin = new char[STD_NUMBER_OF_CHARS];
         char* strin2 = new char[STD_NUMBER_OF_CHARS];
+        string inStr;
         
         switch (option)
         {
@@ -139,6 +143,28 @@ int main(int argc, char** argv)
                 cin >> strin2;
                 
                 cout << "The compression gain of " << strin << " over " << strin2 << " : " << getCompressionGain_2Str(strin,strlen(strin), strin2, strlen(strin)) << endl;
+                break;
+                
+            case 40:
+                cout << "Please enter a string to be partitioned: ";
+                cin >> strin;
+                
+                sprintf(fn,"%s.%s", strin, PARTITION_FILE_EXT);
+                
+                partition(strin,true,fn);
+                
+                break;
+            case 41:
+                cout << "Please enter a partitioned to be analysed: ";
+                //cin >> strin;
+                cin.getline(strin,STD_NUMBER_OF_CHARS);
+                //cin.getline(strin,STD_NUMBER_OF_CHARS,'\n');
+                //getline(cin, inStr, '\n');
+                
+                sprintf(fn,"%s.%s", inStr.c_str(), PARTITION_FILE_EXT);
+                
+                partition("TT B DAC ABBA ABBA C DAC B DAC TT",false,fn);
+                
                 break;
             default: active = false;
                     break;                

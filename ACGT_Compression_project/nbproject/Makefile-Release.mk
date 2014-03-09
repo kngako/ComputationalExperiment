@@ -41,7 +41,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/module_2.o \
 	${OBJECTDIR}/module_3.o \
 	${OBJECTDIR}/module_4.o \
-	${OBJECTDIR}/module_5.o
+	${OBJECTDIR}/module_5.o \
+	${OBJECTDIR}/module_6.o
 
 
 # C Compiler Flags
@@ -102,6 +103,11 @@ ${OBJECTDIR}/module_5.o: module_5.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_5.o module_5.cpp
+
+${OBJECTDIR}/module_6.o: module_6.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_6.o module_6.cpp
 
 # Subprojects
 .build-subprojects:
