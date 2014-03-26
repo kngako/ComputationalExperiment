@@ -42,16 +42,24 @@ int main(int argc, char** argv)
         cout << "30: Module 4 - getCompressionGain_2Str" << endl;
         cout << "40: Module 6 - partition (Partition a string)" << endl;
         cout << "41: Module 6 - partition (Calculate weight of partitioned string)" << endl;
+        cout << "50: Precache - Precache the experiment" << endl;
         
         int option = 0;
-        cin >> option;
-        
+        //cin >> option;
+        option = 50;
+        // TODO: Get rid of this hard coding.
         int m;
         int i;
+        
+        int l;
+        int h;
+        
         char* fn = new char[STD_NUMBER_OF_CHARS];
         char* strin = new char[STD_NUMBER_OF_CHARS];
         char* strin2 = new char[STD_NUMBER_OF_CHARS];
         string inStr;
+        string experiment;
+        string directory;
         
         switch (option)
         {
@@ -166,8 +174,52 @@ int main(int argc, char** argv)
                 partition("TT B DAC ABBA ABBA C DAC B DAC TT",false,fn);
                 
                 break;
-            default: active = false;
-                    break;                
+            case 50:      
+                cout << "Enter precache experiment name[ExpName]: ";
+                cin >> experiment;
+                
+                directory = "mkdir ";
+                directory.append((experiment + SUFFICE_FOLDER_NAME).c_str());
+                system(directory.c_str());
+                system((directory + "\\" + HUFFMAN_FOLDER_NAME).c_str());
+                system((directory + "\\" + NONISOMORPHIC_FOLDER_NAME).c_str());
+                
+                m = 10; // TODO: Alter to fit 1000
+                cout << "Enter the maximum 'm' for the Huffman table.\n";
+                cin >> m;
+                cout << "Creating Huffman table till size " << m;
+                
+                sprintf(fn,"%s\\%s\\%d.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), HUFFMAN_FOLDER_NAME, m, HUFFMAN_FILE_EXT);
+                
+                getHuffmanCodeWords_File(fn, m, 2);
+                
+                cout << "Enter the range of the Nonisomorphic string lengths your are working with.\n";
+                
+                while(true)
+                {
+                    cout << "From lowest to highest.\n"
+                            << "Lowest: ";
+
+                    l = 4; h =6;
+                    
+                    cin >> l;
+                    cout << "Highest: ";
+                    cin >> h;
+
+                    if(l <= h && l >= 1)
+                    {
+                        for(m = l; m <= h; m++)
+                        {
+                            sprintf(fn,"%s\\%s\\%d.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), NONISOMORPHIC_FOLDER_NAME ,m, NONISOMORPHIC_FILE_EXT);
+                            getNonIsomorphicStrings_NLen_File(fn, m, 0);
+                        }
+                        break;
+                    }
+                }
+                break;
+            default: 
+                active = false;
+                break;                
         }
         delete [] strin;
         delete [] strin2;

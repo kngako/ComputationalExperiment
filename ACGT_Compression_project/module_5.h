@@ -19,6 +19,12 @@ const char REPETITION_FILE_EXT[] = "RFF";
 const char PARTITION_FILE_EXT[] = "PWF";
 const char COMPRESSION_GAIN_FILE_EXT[] = "CGF";
 
+const char SUFFICE_FOLDER_NAME[] = "_precache";
+const char HUFFMAN_FOLDER_NAME[] = "HufM";
+const char NONISOMORPHIC_FOLDER_NAME[] = "NifStrings";
+
+const char COMPUTATION_FOLDER_NAME[] = "ACGT_COMPUTATION";
+
 char* getLine_FromFile(const char*, unsigned int);
 
 #endif
