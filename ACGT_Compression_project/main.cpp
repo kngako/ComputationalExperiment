@@ -97,8 +97,6 @@ int main(int argc, char** argv)
                 cout << "Please enter a string to be scanned for XYX repetitions: ";
                 cin >> strin;
                 
-                cout << "Please enter the index of the non isomorphic string in the file: ";     
-                cin >> i;
                 //AGGTGGA check
                 sprintf(fn,"%s.%s",strin,REPETITION_FILE_EXT);
                 

@@ -40,25 +40,30 @@ void findReps_E_XYX_file (char* str, fstream& outFile)
 int* findMaxLppattern_XYX(char* str)
 {
 	int strLen = strlen(str);
+        //Used for zeroing all covered zones in LPpattern Overall
 	int zeroCounter = 0;
 
 	vector<int*> lppatterns;
 
 	//Intialise 3 arrays
+        //MOVE FROM ALL TO 1 string levels (no of chars from orignal string)
+        //[0] Overall LPpattern
+        //[1] current level LPpattern in string
+        //[2] next level LPpattern in string
 	lppatterns.push_back(new int[strLen]);
 	lppatterns.push_back(new int[1]);
 	lppatterns.push_back(new int[strLen]);
 
 	for (int i = 0; i < strLen; i++)
 	{
-        lppatterns[0][i] = 0;
+                lppatterns[0][i] = 0;
 		lppatterns[2][i] = 0;
 	}
 
 	//Process str and find longest prefixs
 	for (int i = 0; i < strLen - 1; i++)
 	{
-        //Replace Cur array [1] with Temp array [2]
+                //Replace Cur array lppatterns[1] with Temp array lppatterns[2]
 		int* temp = lppatterns[2];
 		lppatterns.pop_back();
 
@@ -66,10 +71,11 @@ int* findMaxLppattern_XYX(char* str)
 		lppatterns.pop_back();
 
 		lppatterns.push_back(temp);
-
+                
+                //Insert new array in lppatterns[2] and initialise
 		temp = 0;
 		temp = new int[strLen - i - 1];
-
+                
 		for (int j = 0; j < strLen - i - 1; j++)
 		{
 			temp[j] = 0;
@@ -79,28 +85,36 @@ int* findMaxLppattern_XYX(char* str)
 
 		//Claculate the next level of lppattern
 		calcLppattern_E_XYX(str, lppatterns, i);
-
-		//Zero already covered zones
-		if(lppatterns[0][i] > zeroCounter)
+                /*
+                cout << "level " << i << ": " << endl;
+                for(int m = 0; m < strLen - i; m++)
+                {
+                    cout << lppatterns[1][m];
+                }
+                cout << endl;
+		*/
+                //Zero already covered zones
+		if(lppatterns[0][i] > zeroCounter) //If the current LP is bigger then the current number of elements to zero then needs to change zero counter that
 		{
-			zeroCounter = lppatterns[0][i];
+			zeroCounter = lppatterns[0][i] - 1;
 		}
-		else if(zeroCounter > 0)
+		else if(zeroCounter > 0) //If zones are covered
 		{
 		   lppatterns[0][i] = 0;
-		   zeroCounter--;
+		   zeroCounter--;                   
 		}
+                
 
 	}
 
 	//Zero last if not covered yet
 	if(zeroCounter > 0)
 	{
-        lppatterns[0][strLen - 1] = 0;
-    }
+                lppatterns[0][strLen - 1] = 0;
+        }
 
 	//Free memory
-    delete [] lppatterns[1];
+        delete [] lppatterns[1];
 	delete [] lppatterns[2];
 
 	lppatterns.pop_back();
@@ -224,19 +238,22 @@ void scanLPArrForRep_E_XYX_mem (char* str, int* lpMaxPattern, vector<repetition*
 		//skip if possible
 		if(lpMaxPattern[i] > 1 && lpMaxPattern[lpMaxPattern[i] + i - 1] == 0)
 		{
-		   	i = i + lpMaxPattern[i] - 1;
-        }
+		   	//i = i + lpMaxPattern[i] - 1;
+                }
 	}
 }
 
 void scanLPArrForRep_E_XYX_file (char* str, int* lpMaxPattern, fstream& outFile)
 {
 	int lpLen = strlen(str);
-
-    //scan lpMaxPattern for reps
+        cout << lpLen << endl;
+        
+        //scan lpMaxPattern for reps
 	for(int i = 0; i < lpLen; i++)
 	{
-		//Check if rep exist
+            
+            cout << lpMaxPattern[i];
+                //Check if rep exist
 		if(lpMaxPattern[i] > 0)
 		{
 			//Extract repetitions
@@ -261,8 +278,8 @@ void scanLPArrForRep_E_XYX_file (char* str, int* lpMaxPattern, fstream& outFile)
 		//skip if possible
 		if(lpMaxPattern[i] > 1 && lpMaxPattern[lpMaxPattern[i] + i - 1] == 0)
 		{
-		   	i = i + lpMaxPattern[i] - 1;
-        }
+		   	//i = i + lpMaxPattern[i] - 1;
+                }
 	}
 }
 
@@ -472,7 +489,7 @@ char* copyChar (char* src, int start, int len)
 
 	for(int i = 0; i < len; i++)
 	{
-        temp[i] = src[start + i];
+                temp[i] = src[start + i];
 	}
 
 	temp[len] = '\0';

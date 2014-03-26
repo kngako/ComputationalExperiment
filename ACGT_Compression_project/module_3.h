@@ -31,7 +31,7 @@ void scanLPArrForRep_E_XYX_mem(char*, int*, vector<repetition*>&);
 
 void scanLPArrForRep_E_XYX_file(char*, int*, fstream& outFile);
 
-//========Uneffiecent impementation
+//========ineffiecent impementation
 
 void findReps_U_XYX (char*, vector<repetition*>&);
 

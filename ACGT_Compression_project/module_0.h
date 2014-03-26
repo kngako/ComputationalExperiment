@@ -62,6 +62,15 @@ struct repetition
 //Module_4
 //==============================================================================
 
+//Module_7
+struct partition
+{
+    char* partitionStr;
+    int weight;
+    int distinicIndex;
+};
+
+typedef vector<partition> partitions;
 
 //Type converstion functions
 
