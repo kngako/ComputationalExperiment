@@ -11,3 +11,12 @@
 *.lai
 *.la
 *.a
+
+# Makefiles and such
+*.mk
+
+# Executable files
+*.exe
+
+# XML files
+*.xml
