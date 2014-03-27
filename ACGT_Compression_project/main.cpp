@@ -15,6 +15,7 @@ using namespace std;
 #include "module_3.h"
 #include "module_4.h"
 #include "module_6.h"
+#include "module_7.h"
 #include <string>
 #include <iostream>
 
@@ -42,7 +43,8 @@ int main(int argc, char** argv)
         cout << "30: Module 4 - getCompressionGain_2Str" << endl;
         cout << "40: Module 6 - partition (Partition a string)" << endl;
         cout << "41: Module 6 - partition (Calculate weight of partitioned string)" << endl;
-        cout << "50: Precache - Precache the experiment" << endl;
+        cout << "50: Module 7 - partition (Calculate weight of partitioned string)" << endl;
+        cout << "60: Precache - Precache the experiment" << endl;
         
         int option = 0;
         cin >> option;
@@ -55,6 +57,7 @@ int main(int argc, char** argv)
         int h;
         
         char* fn = new char[STD_NUMBER_OF_CHARS];
+        char* fn2 = new char[STD_NUMBER_OF_CHARS];
         char* strin = new char[STD_NUMBER_OF_CHARS];
         char* strin2 = new char[STD_NUMBER_OF_CHARS];
         string inStr;
@@ -68,7 +71,7 @@ int main(int argc, char** argv)
                 
                 cin >> m;                
                 
-                sprintf(fn,"%d.%s",m, HUFFMAN_FILE_EXT);
+                sprintf(fn,"%llu.%s",m, HUFFMAN_FILE_EXT);
                 
                 getHuffmanCodeWords_File(fn, m, 2);
                 
@@ -86,7 +89,7 @@ int main(int argc, char** argv)
                 cout << "Please enter the length of the non isomorphic strings to be generated: ";
                 cin >> m;
                 
-                sprintf(fn,"%d.%s",m, NONISOMORPHIC_FILE_EXT);
+                sprintf(fn,"%llu.%s",m, NONISOMORPHIC_FILE_EXT);
                 
                 getNonIsomorphicStrings_NLen_File(fn, m, 0);
                 
@@ -118,7 +121,7 @@ int main(int argc, char** argv)
                 cout << "Please enter the index of the non isomorphic string in the file that needs to be scanned: ";     
                 cin >> i;
                                 
-                sprintf(fn,"%d_%d.%s", m, i, REPETITION_FILE_EXT);
+                sprintf(fn,"%llu_%llu.%s", m, i, REPETITION_FILE_EXT);
                 
                 getAllRepetitions_XYX_File(getStringFromMap(getNonIsomorphicString_FromFile("", m, i)), fn); 
                 
@@ -172,7 +175,18 @@ int main(int argc, char** argv)
                 partition("TT B DAC ABBA ABBA C DAC B DAC TT",false,fn);
                 
                 break;
-            case 50:      
+            case 50:
+                cout << "Please enter the length of the non isomorphic string who's repetition needs to be partitioned: ";
+                cin >> m;
+                
+                cout << "Please enter the index of the non isomorphic string who's repetition needs to be partitioned: ";     
+                cin >> i;
+                                
+                sprintf(fn,"%llu_%llu.%s", m, i, REPETITION_FILE_EXT);
+                sprintf(fn2,"%llu_%llu.%s", m, i, PARTITION_FILE_EXT);
+                partitionRepetitions_FromFile(fn, fn2,0); 
+                break;
+            case 60:      
                 cout << "Enter precache experiment name[ExpName]: ";
                 cin >> experiment;
                 
@@ -187,7 +201,7 @@ int main(int argc, char** argv)
                 cin >> m;
                 cout << "Creating Huffman table till of size " << m << endl;
                 
-                sprintf(fn,"%s\\%s\\%d.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), HUFFMAN_FOLDER_NAME, m, HUFFMAN_FILE_EXT);
+                sprintf(fn,"%s\\%s\\%llu.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), HUFFMAN_FOLDER_NAME, m, HUFFMAN_FILE_EXT);
                 
                 getHuffmanCodeWords_File(fn, m, 2);
                 
@@ -208,7 +222,7 @@ int main(int argc, char** argv)
                     {
                         for(int p = l; p <= h; p++)
                         {
-                            sprintf(fn,"%s\\%s\\%d.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), NONISOMORPHIC_FOLDER_NAME ,p, NONISOMORPHIC_FILE_EXT);
+                            sprintf(fn,"%s\\%s\\%llu.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), NONISOMORPHIC_FOLDER_NAME ,p, NONISOMORPHIC_FILE_EXT);
                             cout << "Generating NIF file for strings of length " << p << ":" << endl;
                             getNonIsomorphicStrings_NLen_File(fn, p, 0);
                         }

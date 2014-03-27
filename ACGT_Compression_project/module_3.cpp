@@ -13,11 +13,11 @@ bool getAllRepetitions_XYX_Mem (char* str, vector<repetition*>& reps)
 bool getAllRepetitions_XYX_File (char* str, char* filename)
 {
 	fstream outFile;
-
+        
 	outFile.open(filename,ios::out);
-
-	outFile << str << endl;
-
+        outFile << str << endl;
+	
+        cout << str << endl;
 	findReps_E_XYX_file(str, outFile);
 
 	return true;
@@ -32,8 +32,8 @@ void findReps_E_XYX_mem (char* str, vector<repetition*>& reps)
 
 void findReps_E_XYX_file (char* str, fstream& outFile)
 {
-	int* temp = findMaxLppattern_XYX(str);
-
+	
+        int* temp = findMaxLppattern_XYX(str);
 	scanLPArrForRep_E_XYX_file(str,temp,outFile);
 }
 

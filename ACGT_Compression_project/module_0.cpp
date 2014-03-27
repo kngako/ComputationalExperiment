@@ -316,7 +316,7 @@ repetition stringToRepetition(char* str)
 
 repetition* stringToRepetitionPtr(char* str)
 {
-        repetition* temp;
+        repetition* temp = new repetition;
 
 	char* curTok = strtok(str," ");
 	int count = 0;
@@ -549,7 +549,7 @@ partition stringToPartition (char* string)
 
 partition* stringToPartitionPtr (char* string)
 {
-    partition* temp;
+    partition* temp = new partition;
 
     char* curTok = strtok(string," ");
     int count = 0;

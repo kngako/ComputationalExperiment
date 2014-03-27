@@ -18,11 +18,12 @@
 #include "module_5.h"
 #include "module_3.h"
 
-vector<repetition*> generateRepetitionListFromFile(const char* filename);
+vector<repetition*> generateRepetitionListFromFile(const char* filename, char*& string);
 vector<vector<repetition*>*> repetitionListSorter(vector<repetition*> repetitionList, char* str);
 void repetitionToPartitions_mem_file(vector<vector<repetition*>*> repetitionList);
 void recConstructPartions_mem_file(partitionedString& currentPartitionedString, vector<vector<repetition*>*>& repetitionList, fstream& outFile, int curPos, int strLen);
 
+void partitionRepetitions_FromFile(const char* sourceFilename, const char* destFilname, int mode);
 
 #endif	/* MODULE_7_H */
 

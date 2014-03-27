@@ -1,14 +1,17 @@
 #include "module_7.h"
 
-vector<repetition*> generateRepetitionListFromFile(const char* filename)
+vector<repetition*> generateRepetitionListFromFile(const char* filename, char*& string)
 {
     vector<char*> temp = getAllLines_FromFile(filename);
+    
     vector<repetition*> out;
     
-    for(unsigned int i = 0; i < temp.size(); i++)
-    {
+    for(unsigned int i = 1; i < temp.size(); i++)
+    {        
         out.push_back(stringToRepetitionPtr(temp[i]));
     }
+    
+    string = temp[0];
     
     return out;
 }
@@ -44,11 +47,10 @@ vector<vector<repetition*>*> repetitionListSorter(vector<repetition*> repetition
         {
             if(repetitionList[i] != NULL)
             {
-                delete repetitionList[i];
+                //delete repetitionList[i];
             }
         }     
-    }
-    
+    } 
     return out;
 }
 
@@ -60,8 +62,7 @@ void repetitionToPartitions_mem_file(vector<vector<repetition*>*> repetitionList
     
     partitionedString temp;
     
-    recConstructPartions_mem_file(temp,repetitionList,outputFile,0, (int) repetitionList.size());
-    
+    recConstructPartions_mem_file(temp,repetitionList,outputFile,0, (int) repetitionList.size());    
     
     outputFile.close();
 
@@ -79,20 +80,66 @@ void recConstructPartions_mem_file(partitionedString& currentPartitionedString, 
             partition* temp = new partition;            
             temp->partitionStr = new char[len + 1];
             strcpy(temp->partitionStr,(*repetitionList[curPos])[i]->repetitionStr);
+            temp->distinicIndex = 0;
+            temp->weight = 0;
             
             //Append new partition to the current partitioned string
             currentPartitionedString.push_back(temp);
-            
-            recConstructPartions_mem_file(currentPartitionedString,repetitionList,outFile,curPos + 1, strLen);
-            
+            cout << "partition: " << partitionedStringToString(currentPartitionedString) << endl;
+            cout << curPos << endl;
+            recConstructPartions_mem_file(currentPartitionedString,repetitionList,outFile,curPos + len, strLen);
+            //cout << "partition: " << partitionedStringToString(currentPartitionedString) << endl;
             //Back track to save memory and create new partitions
-            delete currentPartitionedString[currentPartitionedString.size() - 1];
-            currentPartitionedString.pop_back();
+            if(currentPartitionedString.size() > 0)
+            {
+                delete currentPartitionedString[currentPartitionedString.size() - 1];
+                currentPartitionedString.pop_back();
+            }
         }
     }
-    else if(curPos == strLen)
+    else if(curPos >= strLen)
     {
+        
+        /*for(int i = 0; i< currentPartitionedString.size(); i++)
+        {
+            cout << currentPartitionedString[i]->partitionStr<<"-";
+        }
+        cout << endl;*/
+        cout << "actual: " << partitionedStringToString(currentPartitionedString) << endl;
         outFile << partitionedStringToString(currentPartitionedString) << endl;
+        return;
+    }
+    return;
+}
+
+void partitionRepetitions_FromFile(const char* sourceFilename, const char* destFilname, int mode)
+{
+    char* string;
+    cout << sourceFilename << endl;
+    cout << destFilname << endl;
+    vector<repetition*> list = generateRepetitionListFromFile(sourceFilename, string);
+    
+    /*for(int i = 0; i < list.size(); i++)
+    {
+        cout << list[i]->repetitionStr << "  " << list[i]->startpos << endl;
+    }*/
+    
+    //If the list is in cluster order
+    if(mode == 0)
+    {
+        vector<vector<repetition*>*> sortedList = repetitionListSorter(list,string);
+        
+        /*cout << "Extracted string: " << string << endl;
+        for(int i = 0; i < sortedList.size(); i++)
+        {
+            cout << "Starting position " << i << " :" << endl;
+            for(int j = 0; j < sortedList[i]->size(); j++)
+            {
+                cout << (*sortedList[i])[j]->repetitionStr << "  " << (*sortedList[i])[j]->startpos << endl;
+            }
+        }*/
+        
+        repetitionToPartitions_mem_file(sortedList,destFilname);
     }
     
 }
