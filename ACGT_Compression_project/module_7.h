@@ -18,9 +18,10 @@
 #include "module_5.h"
 #include "module_3.h"
 
-vector<repetition*> generateRepetitionList(const char* path, int lenIndex, int NIStringIndex, int repIndex);
-vector<vector<repetition*>*> repetitionSorter(vector<repetition*> repetitionList, char* str);
-void repetitionToPartitions_mem(vector<vector<repetition*>*> repetitionList);
+vector<repetition*> generateRepetitionListFromFile(const char* filename);
+vector<vector<repetition*>*> repetitionListSorter(vector<repetition*> repetitionList, char* str);
+void repetitionToPartitions_mem_file(vector<vector<repetition*>*> repetitionList);
+void recConstructPartions_mem_file(partitionedString& currentPartitionedString, vector<vector<repetition*>*>& repetitionList, fstream& outFile, int curPos, int strLen);
 
 
 #endif	/* MODULE_7_H */

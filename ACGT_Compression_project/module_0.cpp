@@ -314,6 +314,35 @@ repetition stringToRepetition(char* str)
 	return temp;
 }
 
+repetition* stringToRepetitionPtr(char* str)
+{
+        repetition* temp;
+
+	char* curTok = strtok(str," ");
+	int count = 0;
+
+	while(curTok != NULL && count <= 1)
+	{
+		switch (count)
+		{
+
+			case 0: temp->repetitionStr = new char[strlen(curTok)];
+                                strcpy(temp->repetitionStr,curTok);                       
+				break;
+			case 1: temp->startpos = atoi(curTok);
+				break;
+
+			default:
+				break;
+		}
+
+		curTok = strtok(NULL," ");
+	  	count++;
+	}
+
+	return temp;
+}
+
 
 //module_4
 //==============================================================================
@@ -507,6 +536,34 @@ partition stringToPartition (char* string)
                     case 1: temp.distinicIndex = atoi(curTok);
                             break;
                     case 2: temp.weight = atoi(curTok);
+                    
+                    default:
+                            break;
+            }
+            curTok = strtok(NULL," ");
+            count++;
+    }
+
+    return temp;
+}
+
+partition* stringToPartitionPtr (char* string)
+{
+    partition* temp;
+
+    char* curTok = strtok(string," ");
+    int count = 0;
+
+    while(curTok != NULL && count <= 2)
+    {
+            switch (count)
+            {
+                    case 0: temp->partitionStr = new char[strlen(curTok)];
+                            strcpy(temp->partitionStr,curTok);       
+                            break;
+                    case 1: temp->distinicIndex = atoi(curTok);
+                            break;
+                    case 2: temp->weight = atoi(curTok);
                     
                     default:
                             break;

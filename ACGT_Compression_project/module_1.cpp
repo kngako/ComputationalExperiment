@@ -140,7 +140,7 @@ void recDownCodeWords(int levels, int noInTopLevels, int noOfCW, int countLevel,
 	return;
 }
 
-void recDownCodeWords_File(int levels, int noInTopLevels, int noOfCW, int countLevel, int& codeWordCount, fstream& outFile, codeWord curCW, bool side)
+void recDownCodeWords_File(unsigned long long int levels, unsigned long long int noInTopLevels, unsigned long long int noOfCW, unsigned long long int countLevel, unsigned long long int& codeWordCount, fstream& outFile, codeWord curCW, bool side)
 {
 	if(codeWordCount < noInTopLevels)
 	{
@@ -186,8 +186,8 @@ void recDownCodeWords_File(int levels, int noInTopLevels, int noOfCW, int countL
 		{
 			curCW.push_back(side);
 			outFile << cwToString(curCW);
-			codeWordCount++;
-
+			codeWordCount++;                        
+                        cout << "Generated: " << codeWordCount << '\r';
 			if(codeWordCount < noOfCW)
 			{
 				outFile << " ";
@@ -233,7 +233,7 @@ codeWord getCodeWord(int noOfCodeWords, bool firstCode, int index)
 	return temp;
 }
 
-codeWord getCodeWord_FromFile(const char* path, int m, int codewordIndex)
+codeWord getCodeWord_FromFile(const char* path, unsigned long long int m, unsigned long long int codewordIndex)
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
     sprintf(filename,"%s%d.%s", path,m, HUFFMAN_FILE_EXT);
@@ -266,7 +266,7 @@ codeWords getHuffmanCodeWords_Memory(int m, int series)
     }
 }
 
-bool getHuffmanCodeWords_File(const char* filename, int m, int series)
+bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, int series)
 {
 	fstream outputFile;
         
@@ -275,9 +275,11 @@ bool getHuffmanCodeWords_File(const char* filename, int m, int series)
 	codeWord temp;
 
 	bool firstCode = true;
-
-	for(int j = 1; j <= m; j++)
+        
+        
+	for(unsigned long long int j = 1; j <= m; j++)
 	{
+                cout << "Huffman codewords for m = " << j << endl;
                 outputFile << j << " ";
                 //outputFile << "{m:" << j << ",data:[";
 
@@ -324,15 +326,18 @@ bool getHuffmanCodeWords_File(const char* filename, int m, int series)
 		}
 		else
 		{
-			int toplevel = (int) ((log10l(j)/log10l(2)) + 1);
-			int total = (int) (powl(2,toplevel));
+			unsigned long long int toplevel = (unsigned long long int) ((log10l(j)/log10l(2)) + 1);
+			unsigned long long int total = (unsigned long long int) (powl(2,toplevel));
 
-			int noOnPreLevel = total - j;
+			unsigned long long int noOnPreLevel = total - j;
 
-			int codeWordCount = 0;
+			unsigned long long int codeWordCount = 0;
+                        
+                        cout << "Number of codewords to generate: " << j << endl;
 
 			recDownCodeWords_File(toplevel, j - noOnPreLevel, j, 0, codeWordCount, outputFile, *(new codeWord), false);
-
+                        
+                        cout << endl;
 		}
                 outputFile << endl;
 		//outputFile << "]}" << endl;

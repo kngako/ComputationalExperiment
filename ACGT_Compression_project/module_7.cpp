@@ -1,8 +1,16 @@
 #include "module_7.h"
 
-vector<repetition*> generateRepetitionList(const char* path, int lenIndex, int NIStringIndex, int repIndex)
+vector<repetition*> generateRepetitionListFromFile(const char* filename)
 {
+    vector<char*> temp = getAllLines_FromFile(filename);
+    vector<repetition*> out;
     
+    for(unsigned int i = 0; i < temp.size(); i++)
+    {
+        out.push_back(stringToRepetitionPtr(temp[i]));
+    }
+    
+    return out;
 }
 
 //Sorts repetition list by order of starting position
@@ -44,16 +52,26 @@ vector<vector<repetition*>*> repetitionListSorter(vector<repetition*> repetition
     return out;
 }
 
-void repetitionToPartitions_mem_file(vector<vector<repetition*>*> repetitionList)
+void repetitionToPartitions_mem_file(vector<vector<repetition*>*> repetitionList, const char* filename)
 {
+    fstream outputFile;
+        
+    outputFile.open(filename,ios::out);
     
+    partitionedString temp;
+    
+    recConstructPartions_mem_file(temp,repetitionList,outputFile,0, (int) repetitionList.size());
+    
+    
+    outputFile.close();
+
 }
 
 void recConstructPartions_mem_file(partitionedString& currentPartitionedString, vector<vector<repetition*>*>& repetitionList, fstream& outFile, int curPos, int strLen)
 {
     if(curPos < strLen)
     {
-        for(int i = 0; i < repetitionList[curPos]->size(); i++)
+        for(unsigned int i = 0; i < repetitionList[curPos]->size(); i++)
         {
             int len = strlen((*repetitionList[curPos])[i]->repetitionStr);
             

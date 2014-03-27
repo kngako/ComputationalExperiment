@@ -45,11 +45,11 @@ int main(int argc, char** argv)
         cout << "50: Precache - Precache the experiment" << endl;
         
         int option = 0;
-        //cin >> option;
-        option = 50;
+        cin >> option;
+        
         // TODO: Get rid of this hard coding.
-        int m;
-        int i;
+        unsigned long long int m;
+        unsigned long long int i;
         
         int l;
         int h;
@@ -161,7 +161,7 @@ int main(int argc, char** argv)
                 
                 break;
             case 41:
-                cout << "Please enter a partitioned to be analysed: ";
+                cout << "Please enter a partitioned string to be analysed: ";
                 //cin >> strin;
                 cin.getline(strin,STD_NUMBER_OF_CHARS);
                 //cin.getline(strin,STD_NUMBER_OF_CHARS,'\n');
@@ -183,15 +183,15 @@ int main(int argc, char** argv)
                 system((directory + "\\" + NONISOMORPHIC_FOLDER_NAME).c_str());
                 
                 m = 10; // TODO: Alter to fit 1000
-                cout << "Enter the maximum 'm' for the Huffman table.\n";
+                cout << "Enter the maximum 'm' for the Huffman table:" << endl;
                 cin >> m;
-                cout << "Creating Huffman table till size " << m;
+                cout << "Creating Huffman table till of size " << m << endl;
                 
                 sprintf(fn,"%s\\%s\\%d.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), HUFFMAN_FOLDER_NAME, m, HUFFMAN_FILE_EXT);
                 
                 getHuffmanCodeWords_File(fn, m, 2);
                 
-                cout << "Enter the range of the Nonisomorphic string lengths your are working with.\n";
+                cout << "Enter the range of the Non-isomorphic string lengths your are working with:" << endl;
                 
                 while(true)
                 {
@@ -206,10 +206,11 @@ int main(int argc, char** argv)
 
                     if(l <= h && l >= 1)
                     {
-                        for(m = l; m <= h; m++)
+                        for(int p = l; p <= h; p++)
                         {
-                            sprintf(fn,"%s\\%s\\%d.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), NONISOMORPHIC_FOLDER_NAME ,m, NONISOMORPHIC_FILE_EXT);
-                            getNonIsomorphicStrings_NLen_File(fn, m, 0);
+                            sprintf(fn,"%s\\%s\\%d.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), NONISOMORPHIC_FOLDER_NAME ,p, NONISOMORPHIC_FILE_EXT);
+                            cout << "Generating NIF file for strings of length " << p << ":" << endl;
+                            getNonIsomorphicStrings_NLen_File(fn, p, 0);
                         }
                         break;
                     }

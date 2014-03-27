@@ -1114,7 +1114,7 @@ bool getAllRepetitions_XX (char* filename, char* str)
 	return true;
 }
 
-repetition getRepetionOfNIStringI_FromFile(const char* path, int lenIndex, int NIStringIndex, int repIndex)
+repetition getRepetionOfNIStringI_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex, unsigned long long int repIndex)
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
     sprintf(filename,"%s%d_%d.%s", path, lenIndex, NIStringIndex, REPETITION_FILE_EXT);

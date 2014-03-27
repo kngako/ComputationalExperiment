@@ -109,6 +109,7 @@ mappedString stringToMappedString(char*);
 char* repetitionToString(repetition);
 //Convert string "<str> <int>" to repetition struct
 repetition stringToRepetition(char* str);
+repetition* stringToRepetitionPtr(char* str);
 
 //Module_4
 //==============================================================================
@@ -127,6 +128,7 @@ char* partitionedStringToString(partitionedString partStr);
 
 //converts a string in the format "<partionStr> <distincIndex> <weight>" to a partition struct
 partition stringToPartition (char* string);
+partition* stringToPartitionPtr (char* string);
 //converts a string in the format "<partition1>-<partion2>-<partition3>-..." to a partitionedString type
 partitionedString stringToPartitionedString (char* string);
 

@@ -108,13 +108,13 @@ bool isIsomorphic(char* str1, char* str2)
 	return false;
 }
 
-bool getNonIsomorphicStrings_NLen_File(char* filename, int len, int limit)
+bool getNonIsomorphicStrings_NLen_File(char* filename, int len, unsigned long long int limit)
 {
 	fstream outputFile;
 
 	outputFile.open(filename,ios::out);
 	
-        double counter = 0;
+        unsigned long long int counter = 0;
         
         cout << "Number of strings: " << getNumberOfIsomorphicStringFor(len) << endl;
         
@@ -127,7 +127,7 @@ bool getNonIsomorphicStrings_NLen_File(char* filename, int len, int limit)
 	{
 		recDownString_File(len,0,temp,'0',-1, counter, outputFile);
         }
-
+        cout << endl;
 	outputFile.close();
 
 	return true;
@@ -161,7 +161,7 @@ double getNumberOfIsomorphicStringFor(int len)
 
 
 
-void recDownString_File(int strLength, int curLength, char*& curStr, char nextChar, int maxNoOfResults, double& counter, fstream& outFile)
+void recDownString_File(int strLength, int curLength, char*& curStr, char nextChar, unsigned long long int maxNoOfResults, unsigned long long int& counter, fstream& outFile)
 {
 	//Base Case: When the max number of strings has been created
 	//
@@ -213,7 +213,7 @@ void recDownString_File(int strLength, int curLength, char*& curStr, char nextCh
 
 			counter++;
 
-            newStr = 0; //create a new char* string in memory
+                        newStr = 0; //create a new char* string in memory
 			newStr = new char[curLength + 1];
 
 			cout << '\r' << "Generated: " << counter;
@@ -283,7 +283,7 @@ void recDownString_File(int strLength, int curLength, char*& curStr, char nextCh
 
 }
 
-mappedString getNonIsomorphicString_FromFile(const char* path, int lenIndex, int NIStringIndex)
+mappedString getNonIsomorphicString_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex)
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
     sprintf(filename,"%s%d.%s", path, lenIndex, NONISOMORPHIC_FILE_EXT);
