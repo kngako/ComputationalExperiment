@@ -5,9 +5,10 @@ vector<repetition*> generateRepetitionList(const char* path, int lenIndex, int N
     
 }
 
-vector<vector<repetition>*> repetitionSorter(vector<repetition*> repetitionList, char* str)
+//Sorts repetition list by order of starting position
+vector<vector<repetition*>*> repetitionListSorter(vector<repetition*> repetitionList, char* str)
 {
-    vector<vector<repetition>*> out;
+    vector<vector<repetition*>*> out;
     int strLen = strlen(str);
     
     for(int i = 0; i < strLen; i++)
@@ -48,27 +49,32 @@ void repetitionToPartitions_mem_file(vector<vector<repetition*>*> repetitionList
     
 }
 
-void recConstructPartions_mem_file(vector<partition*>& currentPartitionedString, vector<vector<repetition*>*>& repetitionList, fstream& outFile, int curPos, int strLen)
+void recConstructPartions_mem_file(partitionedString& currentPartitionedString, vector<vector<repetition*>*>& repetitionList, fstream& outFile, int curPos, int strLen)
 {
     if(curPos < strLen)
     {
-        for(int i = 0; i < repetitionList[curPos].size(); i++)
+        for(int i = 0; i < repetitionList[curPos]->size(); i++)
         {
-            int len = strlen(repetitionList[curPos][i]->repetitionStr);
-            partition* temp = new partition;
+            int len = strlen((*repetitionList[curPos])[i]->repetitionStr);
             
+            //Create new partition from repetition
+            partition* temp = new partition;            
             temp->partitionStr = new char[len + 1];
-            strcpy(temp->partitionStr,repetitionList[curPos][i]->repetitionStr);
+            strcpy(temp->partitionStr,(*repetitionList[curPos])[i]->repetitionStr);
+            
+            //Append new partition to the current partitioned string
             currentPartitionedString.push_back(temp);
             
             recConstructPartions_mem_file(currentPartitionedString,repetitionList,outFile,curPos + 1, strLen);
             
+            //Back track to save memory and create new partitions
             delete currentPartitionedString[currentPartitionedString.size() - 1];
             currentPartitionedString.pop_back();
         }
     }
     else if(curPos == strLen)
     {
-        
+        outFile << partitionedStringToString(currentPartitionedString) << endl;
     }
+    
 }

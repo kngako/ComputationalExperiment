@@ -62,7 +62,8 @@ struct repetition
 //Module_4
 //==============================================================================
 
-//Module_7
+//Module_7 & Module_6
+//==============================================================================
 struct partition
 {
     char* partitionStr;
@@ -70,7 +71,7 @@ struct partition
     int distinicIndex;
 };
 
-typedef vector<partition> partitions;
+typedef vector<partition*> partitionedString;
 
 //Type converstion functions
 
@@ -117,7 +118,17 @@ bitstream encodeString_compressed(char * string, int len);
 char* decodeString_compressed(bitstream estr);
 
 
+//Module_7 & Module_6
+//==============================================================================
+//converts a partition in to "<partionStr> <distincIndex> <weight>
+char* partitionToString(partition part);
+//converts a partitioned string in to "<partition1>-<partion2>-<partition3>-..."
+char* partitionedStringToString(partitionedString partStr);
 
+//converts a string in the format "<partionStr> <distincIndex> <weight>" to a partition struct
+partition stringToPartition (char* string);
+//converts a string in the format "<partition1>-<partion2>-<partition3>-..." to a partitionedString type
+partitionedString stringToPartitionedString (char* string);
 
 #endif	/* MODULE_0_H */
 

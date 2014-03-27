@@ -443,3 +443,103 @@ char* decodeString_compressed(bitstream bits)
         }
     }
 }
+
+//Module_7 & Module_6
+//==============================================================================
+char* partitionToString(partition part)
+{
+    string temp = "";
+    
+    char ind[200];
+    sprintf(ind,"%d", part.distinicIndex);
+    char weight[200];
+    sprintf(weight,"%d", part.weight);
+    
+    temp += part.partitionStr;
+    temp += " ";
+    temp += ind;
+    temp += " ";
+    temp += weight;
+    temp += "\0";
+
+    char* outStr = new char[temp.length()];
+    
+    strcpy(outStr,temp.c_str());
+
+    return outStr;
+}
+
+char* partitionedStringToString(partitionedString partStr)
+{
+    string temp = "";
+    
+    for(int i = 0; i < partStr.size() - 1; i++)
+    {
+        temp += partitionToString(*partStr[i]);
+        temp += "-";
+    }    
+    
+    temp += partitionToString(*partStr[partStr.size() - 1]);
+    
+    temp += "\0";
+
+    char* outStr = new char[temp.length()];
+    
+    strcpy(outStr,temp.c_str());
+
+    return outStr;
+}
+
+partition stringToPartition (char* string)
+{
+    partition temp;
+
+    char* curTok = strtok(string," ");
+    int count = 0;
+
+    while(curTok != NULL && count <= 2)
+    {
+            switch (count)
+            {
+                    case 0: temp.partitionStr = new char[strlen(curTok)];
+                            strcpy(temp.partitionStr,curTok);       
+                            break;
+                    case 1: temp.distinicIndex = atoi(curTok);
+                            break;
+                    case 2: temp.weight = atoi(curTok);
+                    
+                    default:
+                            break;
+            }
+            curTok = strtok(NULL," ");
+            count++;
+    }
+
+    return temp;
+}
+
+partitionedString stringToPartitionedString (char* string)
+{
+    partitionedString temp;
+
+    char* curTok = strtok(string,"-");
+    
+    while(curTok != NULL)
+    {
+        partition curToken = stringToPartition(curTok);
+        partition* tempPart = new partition;
+        
+        //Set up pointer version of current partition token
+        tempPart->partitionStr = new char [strlen(curToken.partitionStr) + 1];
+        strcpy(tempPart->partitionStr,curToken.partitionStr);
+        
+        tempPart->distinicIndex = curToken.distinicIndex;
+        tempPart->weight = curToken.weight;
+                
+        //Add to partitionedString vector       
+        temp.push_back(tempPart);
+        curTok = strtok(NULL,"-");        
+    }
+
+    return temp;
+}
