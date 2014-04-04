@@ -18,6 +18,7 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -94,19 +95,19 @@ codeWord findCodeWordInString(char*, int);
 //Module_2
 //==============================================================================
 //This function maps the inputted string and returns a mappedString
-mappedString mapString(char*);
+mappedString* mapString(char*);
 //This function converts the mappedString to a normal c-string
-char* getStringFromMap(mappedString);
+char* getStringFromMap(mappedString*);
 //To string "<str> <A> <B> <G> <T>" function for mapped string 
-char* mappedStringToString(mappedString);
+char* mappedStringToString(mappedString*);
 //From storage string "<str> <A> <B> <G> <T>" to mapped string 
-mappedString stringToMappedString(char*);
+mappedString* stringToMappedString(char*);
 
 
 //Module_3
 //==============================================================================
 //Convert repetition struct to "<str> <int>"
-char* repetitionToString(repetition);
+char* repetitionToString(repetition*);
 //Convert string "<str> <int>" to repetition struct
 repetition stringToRepetition(char* str);
 repetition* stringToRepetitionPtr(char* str);
@@ -123,8 +124,9 @@ char* decodeString_compressed(bitstream estr);
 //==============================================================================
 //converts a partition in to "<partionStr> <distincIndex> <weight>
 char* partitionToString(partition part);
+char* partitionToString(partition* part);
 //converts a partitioned string in to "<partition1>-<partion2>-<partition3>-..."
-char* partitionedStringToString(partitionedString partStr);
+char* partitionedStringToString(partitionedString& partStr);
 
 //converts a string in the format "<partionStr> <distincIndex> <weight>" to a partition struct
 partition stringToPartition (char* string);

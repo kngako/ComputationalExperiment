@@ -158,7 +158,10 @@ void recDownCodeWords_File(unsigned long long int levels, unsigned long long int
 		else
 		{
 			curCW.push_back(side);
-			outFile << cwToString(curCW);
+                        char* ptr = cwToString(curCW);
+			outFile << ptr;
+                        
+                        delete [] ptr;
 			codeWordCount++;
 
 			if(codeWordCount < noOfCW)
@@ -185,7 +188,11 @@ void recDownCodeWords_File(unsigned long long int levels, unsigned long long int
 		else
 		{
 			curCW.push_back(side);
-			outFile << cwToString(curCW);
+                        char* ptr = cwToString(curCW);
+                        
+			outFile << ptr;
+                        delete [] ptr;
+                        
 			codeWordCount++;                        
                         cout << "Generated: " << codeWordCount << '\r';
 			if(codeWordCount < noOfCW)
@@ -236,7 +243,7 @@ codeWord getCodeWord(int noOfCodeWords, bool firstCode, int index)
 codeWord getCodeWord_FromFile(const char* path, unsigned long long int m, unsigned long long int codewordIndex)
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
-    sprintf(filename,"%s%d.%s", path,m, HUFFMAN_FILE_EXT);
+    sprintf(filename,"%s%llu.%s", path,m, HUFFMAN_FILE_EXT);
     
     char* data = getLine_FromFile(filename,m);
     
@@ -334,8 +341,11 @@ bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, in
 			unsigned long long int codeWordCount = 0;
                         
                         cout << "Number of codewords to generate: " << j << endl;
-
-			recDownCodeWords_File(toplevel, j - noOnPreLevel, j, 0, codeWordCount, outputFile, *(new codeWord), false);
+                        codeWord* tempCW = new codeWord;
+                        
+			recDownCodeWords_File(toplevel, j - noOnPreLevel, j, 0, codeWordCount, outputFile, *tempCW, false);
+                        
+                        delete tempCW;
                         
                         cout << endl;
 		}

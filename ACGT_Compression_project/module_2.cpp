@@ -97,13 +97,18 @@ void recDownString(int strLength, int curLength, char* curStr, char nextChar, in
 
 bool isIsomorphic(char* str1, char* str2)
 {
-	mappedString ms1 = mapString(str1);
-	mappedString ms2 = mapString(str2);
+	mappedString* ms1 = mapString(str1);
+	mappedString* ms2 = mapString(str2);
 
-	if(strcmp(ms1.mappedStr,ms2.mappedStr) == 0)
+	if(strcmp(ms1->mappedStr,ms2->mappedStr) == 0)
 	{
-        return true;
+                return true;
 	}
+        
+        delete [] ms1->mappedStr;
+        delete [] ms2->mappedStr;
+        delete ms1;
+        delete ms2;
 
 	return false;
 }
@@ -119,6 +124,7 @@ bool getNonIsomorphicStrings_NLen_File(char* filename, int len, unsigned long lo
         cout << "Number of strings: " << getNumberOfIsomorphicStringFor(len) << endl;
         
         char* temp = new char[1];
+        temp[0] = '\0';
 	if(limit > 0)
 	{
 		recDownString_File(len,0,temp,'0',limit, counter, outputFile);
@@ -127,7 +133,11 @@ bool getNonIsomorphicStrings_NLen_File(char* filename, int len, unsigned long lo
 	{
 		recDownString_File(len,0,temp,'0',-1, counter, outputFile);
         }
+        
+        delete [] temp;
+        
         cout << endl;
+        
 	outputFile.close();
 
 	return true;
@@ -195,21 +205,23 @@ void recDownString_File(int strLength, int curLength, char*& curStr, char nextCh
 		//Store newly created string
 		if (strLength == newLength)
 		{
-			mappedString temp;
+			mappedString* temp = new mappedString;
 
-			temp.mapping[A_IDX] = 0;
-			temp.mapping[C_IDX] = 1;
-			temp.mapping[G_IDX] = 2;
-			temp.mapping[T_IDX] = 3;
+			temp->mapping[A_IDX] = 0;
+			temp->mapping[C_IDX] = 1;
+			temp->mapping[G_IDX] = 2;
+			temp->mapping[T_IDX] = 3;
 
-			temp.mappedStr = new char[newLength + 1];
-			strcpy(temp.mappedStr, curStr);
+			temp->mappedStr = new char[newLength + 1];
+			strcpy(temp->mappedStr, curStr);
 
 			char* outStr = mappedStringToString(temp);
-
+                        
 			outFile << outStr << endl;
 
 			delete [] outStr;
+                        delete [] temp->mappedStr;
+                        delete temp;
 
 			counter++;
 
@@ -283,16 +295,16 @@ void recDownString_File(int strLength, int curLength, char*& curStr, char nextCh
 
 }
 
-mappedString getNonIsomorphicString_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex)
+mappedString* getNonIsomorphicString_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex)
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
-    sprintf(filename,"%s%d.%s", path, lenIndex, NONISOMORPHIC_FILE_EXT);
+    sprintf(filename,"%s%llu.%s", path, lenIndex, NONISOMORPHIC_FILE_EXT);
     
     char* data = getLine_FromFile(filename,NIStringIndex);
     
     delete [] filename;
     
-    mappedString temp;
+    mappedString* temp = NULL;
     
     if(data != NULL)
     { 

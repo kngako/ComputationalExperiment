@@ -43,7 +43,7 @@ int main(int argc, char** argv)
         cout << "30: Module 4 - getCompressionGain_2Str" << endl;
         cout << "40: Module 6 - partition (Partition a string)" << endl;
         cout << "41: Module 6 - partition (Calculate weight of partitioned string)" << endl;
-        cout << "50: Module 7 - partition (Calculate weight of partitioned string)" << endl;
+        cout << "50: Module 7 - Repetition partitionizer" << endl;
         cout << "60: Precache - Precache the experiment" << endl;
         
         int option = 0;
@@ -60,6 +60,11 @@ int main(int argc, char** argv)
         char* fn2 = new char[STD_NUMBER_OF_CHARS];
         char* strin = new char[STD_NUMBER_OF_CHARS];
         char* strin2 = new char[STD_NUMBER_OF_CHARS];
+        
+        mappedString* tempMappedString = NULL;
+        char* tempPtr = NULL;
+        repetition* tempRep = NULL;
+        
         string inStr;
         string experiment;
         string directory;
@@ -100,8 +105,16 @@ int main(int argc, char** argv)
                 
                 cout << "Please enter the index of the non isomorphic string in the file: ";     
                 cin >> i;
-
-                cout << "Mapped string at " << i << ": " << getStringFromMap(getNonIsomorphicString_FromFile("", m, i))<< endl;                
+                
+                tempMappedString = getNonIsomorphicString_FromFile("", m, i);
+                tempPtr = getStringFromMap(tempMappedString);
+                
+                cout << "Mapped string at " << i << ": " << tempPtr << endl;      
+                
+                delete [] tempPtr;
+                delete [] tempMappedString->mappedStr;
+                delete tempMappedString;
+                
                 break;
                 
             case 20: 
@@ -122,8 +135,16 @@ int main(int argc, char** argv)
                 cin >> i;
                                 
                 sprintf(fn,"%llu_%llu.%s", m, i, REPETITION_FILE_EXT);
+                cout << fn << endl;
                 
-                getAllRepetitions_XYX_File(getStringFromMap(getNonIsomorphicString_FromFile("", m, i)), fn); 
+                tempMappedString = getNonIsomorphicString_FromFile("", m, i);
+                tempPtr = getStringFromMap(tempMappedString); 
+                
+                getAllRepetitions_XYX_File(tempPtr, fn); 
+                
+                delete [] tempPtr;
+                delete [] tempMappedString->mappedStr;
+                delete tempMappedString;
                 
                 break;
             case 22:
@@ -138,7 +159,25 @@ int main(int argc, char** argv)
                 cout << "Please enter the index of the XYX repetition: ";     
                 cin >> j;
                 
-                cout << "The repetition " << j << " of non isomorphic string " <<  getStringFromMap(getNonIsomorphicString_FromFile("", m, i)) << " is: " << repetitionToString(getRepetionOfNIStringI_FromFile("",m,i,j)) << endl;
+                tempMappedString = getNonIsomorphicString_FromFile("", m, i);
+                tempPtr = getStringFromMap(tempMappedString);
+                tempRep = getRepetionOfNIStringI_FromFile("",m,i,j);
+                
+                cout << "The repetition " << j << " of non isomorphic string " <<  tempPtr << " is: " ;
+                
+                delete [] tempPtr;
+                
+                tempPtr = repetitionToString(tempRep);      
+                
+                cout<< tempPtr << endl;
+                
+                delete [] tempPtr;
+                
+                delete [] tempMappedString->mappedStr;
+                delete tempMappedString;
+                
+                delete []tempRep->repetitionStr;
+                delete tempRep;
                 
                 break;
             case 30:
@@ -220,7 +259,7 @@ int main(int argc, char** argv)
 
                     if(l <= h && l >= 1)
                     {
-                        for(int p = l; p <= h; p++)
+                        for(unsigned long long int p = l; p <= h; p++)
                         {
                             sprintf(fn,"%s\\%s\\%llu.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), NONISOMORPHIC_FOLDER_NAME ,p, NONISOMORPHIC_FILE_EXT);
                             cout << "Generating NIF file for strings of length " << p << ":" << endl;
@@ -237,6 +276,7 @@ int main(int argc, char** argv)
         delete [] strin;
         delete [] strin2;
         delete [] fn;
+        delete [] fn2;
         cout << endl << "=========Ending test" << endl;
         
     

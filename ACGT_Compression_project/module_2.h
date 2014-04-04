@@ -36,6 +36,6 @@ void recDownString_File(int strLength, int curLength, char*& curStr, char nextCh
 bool getNonIsomorphicStrings_NLen_File(char* filename, int len, unsigned long long int limit);
 
 //Get a mappedString from file at a particular path with a length x
-mappedString getNonIsomorphicString_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex);
+mappedString* getNonIsomorphicString_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex);
 
 #endif

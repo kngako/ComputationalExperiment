@@ -21,13 +21,15 @@ char* getLine_FromFile(const char* filename, unsigned long long int line)
 
           if(count == line)
           {
-              char* fit = new char[file.gcount()];
+              char* fit = new char[file.gcount() + 1];
               
-              strncpy(fit, temp, file.gcount() + 1);
-              
+              strncpy(fit, temp, file.gcount());
+              fit[file.gcount()] = '\0';
+              delete [] temp;
               return fit;
           }
           
+          delete [] temp;         
           
       }
       
@@ -58,12 +60,20 @@ vector<char*> getAllLines_FromFile (const char* filename)
           
           char* temp = new char[MAX_READ_CHARS];
           file.getline(temp, MAX_READ_CHARS);
-          char* fit = new char[file.gcount()];
-          strncpy(fit, temp, file.gcount() + 1);
+          char* fit = new char[file.gcount() + 1];
+          strncpy(fit, temp, file.gcount());
+          fit[file.gcount()] = '\0';
+          
           if (strcmp("",fit) != 0)
           {
              out.push_back(fit); 
           }
+          else
+          {
+              delete [] fit;
+          }
+          
+          delete [] temp;
           
       }
 

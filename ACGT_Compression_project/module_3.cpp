@@ -14,12 +14,15 @@ bool getAllRepetitions_XYX_File (char* str, char* filename)
 {
 	fstream outFile;
         
+        
 	outFile.open(filename,ios::out);
-        outFile << str << endl;
-	
-        cout << str << endl;
-	findReps_E_XYX_file(str, outFile);
+        
+	outFile << str << endl;
 
+	findReps_E_XYX_file(str, outFile);
+        
+        outFile.close();
+        
 	return true;
 }
 
@@ -28,13 +31,18 @@ void findReps_E_XYX_mem (char* str, vector<repetition*>& reps)
 	int* temp = findMaxLppattern_XYX(str);
 
 	scanLPArrForRep_E_XYX_mem(str,temp,reps);
+        
+        delete temp;
 }
 
 void findReps_E_XYX_file (char* str, fstream& outFile)
 {
 	
         int* temp = findMaxLppattern_XYX(str);
-	scanLPArrForRep_E_XYX_file(str,temp,outFile);
+	
+        scanLPArrForRep_E_XYX_file(str,temp,outFile);
+        
+        delete temp;
 }
 
 int* findMaxLppattern_XYX(char* str)
@@ -262,15 +270,17 @@ void scanLPArrForRep_E_XYX_file (char* str, int* lpMaxPattern, fstream& outFile)
 				//cout << "J: " << j << endl;
 				for(int k = 0; k < lpMaxPattern[i] - j; k++)
 				{
-					repetition temp;
-					temp.repetitionStr = copyChar(str,i + k, j + 1);
-					temp.startpos = i + k;
+					repetition* temp = new repetition;
+					temp->repetitionStr = copyChar(str,i + k, j + 1);
+					temp->startpos = i + k;
 
 					char* strOut = repetitionToString(temp);
 
 					outFile << strOut << endl;
 
-					delete [] strOut;
+					delete [] strOut;                                        
+                                        delete [] temp->repetitionStr;
+                                        delete temp;
 				}
 			}
 		}
@@ -998,8 +1008,14 @@ void newReps_file_XX (char* u, char* v, int realPos, fstream& outFile)
 			repetition* temp = new repetition;
 			temp->repetitionStr = tempRep;
 			temp->startpos = k - right[i][2] + 1 + realPos;
-
-			outFile << repetitionToString(*temp) << endl;
+                        
+                        char* outStr = repetitionToString(temp);
+			
+                        outFile << outStr << endl;
+                        
+                        delete [] outStr;                        
+                        delete [] temp->repetitionStr;
+                        delete temp;
 		}
 
 	}
@@ -1027,8 +1043,13 @@ void newReps_file_XX (char* u, char* v, int realPos, fstream& outFile)
 				repetition* temp = new repetition;
 				temp->repetitionStr = tempRep;
 				temp->startpos = k - left[i][2] + 1 + realPos;
-				//cout <<  temp->repetitionStr  << endl;
-				outFile << repetitionToString(*temp) << endl;
+				
+                                char* outStr = repetitionToString(temp);
+				outFile << outStr << endl;
+                                
+                                delete [] outStr;
+                                delete [] temp->repetitionStr;
+                                delete temp;
             }
 		}
 	}
@@ -1038,8 +1059,8 @@ void findReps_XX (char* str, int realPos, vector<repetition*>& reps)
 {
 	if (strlen(str) > 1)
 	{
-		char* u = ""; //left
-		char* v = ""; //right
+		char* u = new char[1]; //left
+		char* v = new char[1]; //right
 
 		splitStr(str, u, v);
 		//cout << u << endl;
@@ -1056,8 +1077,8 @@ void findReps_file_XX (char* str, int realPos, fstream& outFile)
 {
 	if (strlen(str) > 1)
 	{
-		char* u = ""; //left
-		char* v = ""; //right
+		char* u = new char[1]; //left
+		char* v = new char[2]; //right
 
 		splitStr(str, u, v);
 		//cout << u << endl;
@@ -1114,20 +1135,21 @@ bool getAllRepetitions_XX (char* filename, char* str)
 	return true;
 }
 
-repetition getRepetionOfNIStringI_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex, unsigned long long int repIndex)
+repetition* getRepetionOfNIStringI_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex, unsigned long long int repIndex)
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
-    sprintf(filename,"%s%d_%d.%s", path, lenIndex, NIStringIndex, REPETITION_FILE_EXT);
+    
+    sprintf(filename,"%s%llu_%llu.%s", path, lenIndex, NIStringIndex, REPETITION_FILE_EXT);
     
     char* data = getLine_FromFile(filename,repIndex);
     
     delete [] filename;
     
-    repetition temp;
+    repetition* temp = NULL;
     
     if(data != NULL)
     {    
-        temp = stringToRepetition(data);
+        temp = stringToRepetitionPtr(data);
 
         delete [] data;
     }
