@@ -18,14 +18,20 @@
 #include "module_5.h"
 #include "module_3.h"
 
-vector<repetition*> generateRepetitionListFromFile(const char* filename, char*& string);
-vector<vector<repetition*>*> repetitionListSorter(vector<repetition*>& repetitionList, char* str);
-void repetitionToPartitions_mem_file(char* str, vector<vector<repetition*>*>& repetitionList, const char* filename);
-void recConstructPartions_mem_file(partitionedString& currentPartitionedString, vector<vector<repetition*>*>& repetitionList, fstream& outFile, int curPos, int strLen);
-
-void recRepetitionPartitioner_file(char*& str, int curPos, partitionedString& currentPartitionedString, vector<vector<repetition*>*>& repetitionList, fstream& outFile);
-
 void partitionRepetitions_FromFile(const char* sourceFilename, const char* destFilname, int mode);
+
+vector<repetition*> generateRepetitionListFromFile(const char* filename, char*& string);
+
+vector<vector<repetition*>*> repetitionListSorterSingleRef(vector<repetition*>& repetitionList, char* str);
+vector<vector<repetition*>*> repetitionListSorter(vector<repetition*>& repetitionList, char* str);
+
+void repetitionToPartitions_mem_file(char* str, vector<vector<repetition*>*>& repetitionList, vector<repetition*>& list, const char* filename);
+void recRepetitionPartitioner_file(char*& str, int curPos, partitionedString& currentPartitionedString, vector<vector<repetition*>*>& repetitionList, vector<repetition*>& list, fstream& outFile);
+
+void recPartitioner_file(char*& str, int curPos, partitionedString& currentPartitionedString, fstream& outFile);
+
+
+
 
 #endif	/* MODULE_7_H */
 

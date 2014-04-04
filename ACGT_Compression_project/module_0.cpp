@@ -441,7 +441,7 @@ char* partitionToString(partition part)
     strm << " ";
     strm << part.distinicIndex;
     strm << " ";
-    strm << part.weight;
+    strm << part.huffmanCWIndex;
     
     char* outStr = new char [strm.str().length() + 1];
     strcpy(outStr,strm.str().c_str());
@@ -457,7 +457,7 @@ char* partitionToString(partition* part)
     strm << " ";
     strm << part->distinicIndex;
     strm << " ";
-    strm << part->weight;   
+    strm << part->huffmanCWIndex;   
     
     char* outStr = new char [strm.str().length() + 1];
     strcpy(outStr,strm.str().c_str());
@@ -509,7 +509,7 @@ partition stringToPartition (char* string)
                             break;
                     case 1: temp.distinicIndex = atoi(curTok);
                             break;
-                    case 2: temp.weight = atoi(curTok);
+                    case 2: temp.huffmanCWIndex = atoi(curTok);
                     
                     default:
                             break;
@@ -537,7 +537,7 @@ partition* stringToPartitionPtr (char* string)
                             break;
                     case 1: temp->distinicIndex = atoi(curTok);
                             break;
-                    case 2: temp->weight = atoi(curTok);
+                    case 2: temp->huffmanCWIndex = atoi(curTok);
                     
                     default:
                             break;
@@ -565,7 +565,7 @@ partitionedString stringToPartitionedString (char* string)
         strcpy(tempPart->partitionStr,curToken.partitionStr);
         
         tempPart->distinicIndex = curToken.distinicIndex;
-        tempPart->weight = curToken.weight;
+        tempPart->huffmanCWIndex = curToken.huffmanCWIndex;
                 
         //Add to partitionedString vector       
         temp.push_back(tempPart);

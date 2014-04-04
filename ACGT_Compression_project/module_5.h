@@ -24,6 +24,7 @@ const char HUFFMAN_FOLDER_NAME[] = "HuffmanTable";
 const char NONISOMORPHIC_FOLDER_NAME[] = "NIFStrings";
 
 const char COMPUTATION_FOLDER_NAME[] = "ACGT_COMPUTATION";
+const char FILEMANAGER_PATH_DELIMINATOR = '/';
 
 char* getLine_FromFile(const char* filename, unsigned long long int lineIndex);
 vector<char*> getAllLines_FromFile (const char* filename);

@@ -68,7 +68,7 @@ struct repetition
 struct partition
 {
     char* partitionStr;
-    int weight;
+    int huffmanCWIndex;
     int distinicIndex;
 };
 
@@ -131,7 +131,7 @@ char* partitionedStringToString(partitionedString& partStr);
 //converts a string in the format "<partionStr> <distincIndex> <weight>" to a partition struct
 partition stringToPartition (char* string);
 partition* stringToPartitionPtr (char* string);
-//converts a string in the format "<partition1>-<partion2>-<partition3>-..." to a partitionedString type
+//converts a string in the format "<partition1>-<partion2>-<partition3>-...-<partitionN>" to a partitionedString type
 partitionedString stringToPartitionedString (char* string);
 
 #endif	/* MODULE_0_H */

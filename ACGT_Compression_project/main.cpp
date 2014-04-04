@@ -19,7 +19,7 @@ using namespace std;
 #include <string>
 #include <iostream>
 
-
+void createPreCache(unsigned long long int m, unsigned long int l, unsigned long int h, char* name);
 
 /*
  * 
@@ -37,13 +37,13 @@ int main(int argc, char** argv)
         cout << "2: Module 1 - getCodeWord_FromFile " << endl;
         cout << "10: Module 2 - getNonIsomorphicStrings_NLen_File" << endl;
         cout << "12: Module 2 - getNonIsomorphicString_FromFile" << endl;
-        cout << "20: Module 3 - getAllRepetitions_XYX_File (Modular)" << endl;
-        cout << "21: Module 3 - getAllRepetitions_XYX_File (Modular)" << endl;
+        cout << "20: Module 3 - getAllRepetitions_XYX_File (Unit)" << endl;
+        cout << "21: Module 3 - getAllRepetitions_XYX_File (On file)" << endl;
         cout << "22: Module 3 - getRepetionOfNIStringI_FromFile" << endl;
         cout << "30: Module 4 - getCompressionGain_2Str" << endl;
         cout << "40: Module 6 - partition (Partition a string)" << endl;
         cout << "41: Module 6 - partition (Calculate weight of partitioned string)" << endl;
-        cout << "50: Module 7 - Repetition partitionizer" << endl;
+        cout << "50: Module 7 - Repetition partitioner" << endl;
         cout << "60: Precache - Precache the experiment" << endl;
         
         int option = 0;
@@ -286,3 +286,7 @@ int main(int argc, char** argv)
     return 0;
 }
 
+void createPreCache(unsigned long long int m, unsigned long int l, unsigned long int h, char* name)
+{
+    
+}

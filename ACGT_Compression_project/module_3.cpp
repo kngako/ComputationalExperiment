@@ -264,32 +264,40 @@ void scanLPArrForRep_E_XYX_file (char* str, int* lpMaxPattern, fstream& outFile)
                 //Check if rep exist
 		if(lpMaxPattern[i] > 0)
 		{
-			//Extract repetitions
+                        //Extract repetitions
 			for(int j = 0; j < lpMaxPattern[i]; j++)
 			{
-				//cout << "J: " << j << endl;
-				for(int k = 0; k < lpMaxPattern[i] - j; k++)
-				{
-					repetition* temp = new repetition;
-					temp->repetitionStr = copyChar(str,i + k, j + 1);
-					temp->startpos = i + k;
+                            //Compensate for overlapping LPMaxs
+                            if (lpMaxPattern[i + j] > 0 && j != 0)
+                            {
+                                break;
+                            }
+                            
+                            //cout << "J: " << j << endl;
+                            for(int k = 0; k < lpMaxPattern[i] - j; k++)
+                            {
+                                    repetition* temp = new repetition;
+                                    temp->repetitionStr = copyChar(str,i + j, k + 1);
+                                    temp->startpos = i + j;
 
-					char* strOut = repetitionToString(temp);
+                                    char* strOut = repetitionToString(temp);
 
-					outFile << strOut << endl;
+                                    outFile << strOut << endl;
 
-					delete [] strOut;                                        
-                                        delete [] temp->repetitionStr;
-                                        delete temp;
-				}
+                                    delete [] strOut;                                        
+                                    delete [] temp->repetitionStr;
+                                    delete temp;
+                            }
+                            
+                            
 			}
 		}
 
 		//skip if possible
-		if(lpMaxPattern[i] > 1 && lpMaxPattern[lpMaxPattern[i] + i - 1] == 0)
-		{
+		//if(lpMaxPattern[i] > 1 && lpMaxPattern[lpMaxPattern[i] + i - 1] == 0)
+		//{
 		   	//i = i + lpMaxPattern[i] - 1;
-                }
+                //}
 	}
 }
 
