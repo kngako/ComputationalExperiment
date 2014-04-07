@@ -45,7 +45,7 @@ void print(partitionedString& partitions);
 
 void printToFile(partitionedString& partitions, fstream& file);
 
-void print(partition& word);
+void print(partition* word);
 
 partitionedString& split(int index, int currentIndex, 
         partitionedString& partitionedStr, partitionedString& newPart, string pattern);
@@ -59,6 +59,8 @@ void setupDistinct(partitionedString& partitionedStr);
 int highestDistinct(partitionedString& partitionedStr);
 
 void copyOverPatritionString(partition* newPartition, string pattern);
+
+void copyPartition(partition* orig, partition* newPart);
 
 /**
  * Checks to see if a partioned is contained in a partioned string and returns 
