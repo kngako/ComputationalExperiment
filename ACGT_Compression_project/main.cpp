@@ -19,7 +19,9 @@ using namespace std;
 #include <string>
 #include <iostream>
 
-void createPreCache(unsigned long long int m, unsigned long int l, unsigned long int h, char* name);
+void createPreCache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* expName);
+void createPartitionedStrings(const char* expName);
+void calcualteCompressionGain(const char* expName);
 
 /*
  * 
@@ -96,7 +98,7 @@ int main(int argc, char** argv)
                 
                 sprintf(fn,"%llu.%s",m, NONISOMORPHIC_FILE_EXT);
                 
-                getNonIsomorphicStrings_NLen_File(fn, m, 0);
+                getNonIsomorphicStrings_NLen_File(fn, (int) m, 0);
                 
                 break;
             case 11: 
@@ -199,7 +201,7 @@ int main(int argc, char** argv)
                 
                 sprintf(fn,"%s.%s", strin, PARTITION_FILE_EXT);
                 
-                partition(strin,true,fn);
+                //partition(strin,true,fn);
                 
                 break;
             case 41:
@@ -211,7 +213,7 @@ int main(int argc, char** argv)
                 
                 sprintf(fn,"%s.%s", inStr.c_str(), PARTITION_FILE_EXT);
                 
-                partition("TT B DAC ABBA ABBA C DAC B DAC TT",false,fn);
+                //partition("TT B DAC ABBA ABBA C DAC B DAC TT",false,fn);
                 
                 break;
             case 50:
@@ -228,46 +230,14 @@ int main(int argc, char** argv)
             case 60:      
                 cout << "Enter precache experiment name[ExpName]: ";
                 cin >> experiment;
-                
-                directory = "mkdir ";
-                directory.append((experiment + SUFFICE_FOLDER_NAME).c_str());
-                system(directory.c_str());
-                system((directory + "\\" + HUFFMAN_FOLDER_NAME).c_str());
-                system((directory + "\\" + NONISOMORPHIC_FOLDER_NAME).c_str());
-                
-                m = 10; // TODO: Alter to fit 1000
                 cout << "Enter the maximum 'm' for the Huffman table:" << endl;
                 cin >> m;
-                cout << "Creating Huffman table till of size " << m << endl;
-                
-                sprintf(fn,"%s\\%s\\%llu.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), HUFFMAN_FOLDER_NAME, m, HUFFMAN_FILE_EXT);
-                
-                getHuffmanCodeWords_File(fn, m, 2);
-                
                 cout << "Enter the range of the Non-isomorphic string lengths your are working with:" << endl;
-                
-                while(true)
-                {
-                    cout << "From lowest to highest.\n"
-                            << "Lowest: ";
-
-                    l = 4; h =6;
-                    
-                    cin >> l;
-                    cout << "Highest: ";
-                    cin >> h;
-
-                    if(l <= h && l >= 1)
-                    {
-                        for(unsigned long long int p = l; p <= h; p++)
-                        {
-                            sprintf(fn,"%s\\%s\\%llu.%s", (experiment + SUFFICE_FOLDER_NAME).c_str(), NONISOMORPHIC_FOLDER_NAME ,p, NONISOMORPHIC_FILE_EXT);
-                            cout << "Generating NIF file for strings of length " << p << ":" << endl;
-                            getNonIsomorphicStrings_NLen_File(fn, p, 0);
-                        }
-                        break;
-                    }
-                }
+                cout << "From lowest to highest." << endl << "Lowest: ";
+                cin >> l;
+                cout << "Highest: ";
+                cin >> h;
+                createPreCache(m,l,h,experiment.c_str());
                 break;
             default: 
                 active = false;
@@ -286,7 +256,68 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void createPreCache(unsigned long long int m, unsigned long int l, unsigned long int h, char* name)
+void createPreCache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* name)
 {
+    ostringstream strm;
     
+    strm << "mkdir " << name;    
+    system(strm.str().c_str());
+    strm << FILEMANAGER_PATH_DELIMINATOR << PRECACHE_SUFFIX_FOLDER_NAME;
+    
+    system(strm.str().c_str());
+    strm << FILEMANAGER_PATH_DELIMINATOR << HUFFMAN_FOLDER_NAME;
+    system(strm.str().c_str());
+    strm.str("");
+    strm << "mkdir " << name << PRECACHE_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << NONISOMORPHIC_FOLDER_NAME;
+    system(strm.str().c_str());
+    
+    if (m > 0)
+    {
+        for(int i = 1; i <= m; i++)
+        {
+            strm.str("");
+            strm << name << PRECACHE_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << HUFFMAN_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << i << "." << HUFFMAN_FILE_EXT;     
+            
+            getHuffmanCodeWords_File(strm.str().c_str(), i, 2);
+        }
+        
+        if(l <= h && l > 0 && h > 0)
+        {
+            for(int i = l; i <= h; i++)
+            {
+                strm.str("");
+                strm << name << PRECACHE_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << NONISOMORPHIC_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << i << "." << NONISOMORPHIC_FILE_EXT;
+                
+                cout << "Generating NIF file for strings of length " << i << ":" << endl;                
+                getNonIsomorphicStrings_NLen_File(strm.str().c_str(), i, 0);
+            }
+        }
+        else
+        {
+            cout << "The l and h values must be bigger than 0 nor may l be more than h" << endl;
+        }
+    }
+    else
+    {
+        cout << "m value must be bigger than 0" << endl;        
+    }
+}
+
+void createPartitionedStrings(const char* expName)
+{
+    ostringstream strm;
+    
+    strm << "mkdir " << expName << PARTITIONEDDATA_SUFFIX_FOLDER_NAME;    
+    system(strm.str().c_str());
+    
+    strm << FILEMANAGER_PATH_DELIMINATOR << REPETITIONS_FOLDER_NAME;
+    system(strm.str().c_str());
+    
+    strm.str("");
+    strm << "mkdir " << expName << PARTITIONEDDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << ALLPARTITIONS_FOLDER_NAME;
+    system(strm.str().c_str());
+    
+    strm.str("");
+    strm << "mkdir " << expName << PARTITIONEDDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << REPPARTITIONS_FOLDER_NAME;
+    system(strm.str().c_str());
 }

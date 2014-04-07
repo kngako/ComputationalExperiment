@@ -28,6 +28,7 @@ void recDownCodeWords_File(unsigned long long int levels, unsigned long long int
 codeWord getCodeWord(int, bool, int);
 
 codeWord getCodeWord_FromFile(const char* path, unsigned long long int m, unsigned long long int codewordIndex);
+codeWords getAllCodewords_FromFile(const char* path, unsigned long long int m);
 
 //Function prototype for in/out
 codeWords getHuffmanCodeWords_Memory(int m, int series);

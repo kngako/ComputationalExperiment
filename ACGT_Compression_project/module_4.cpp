@@ -36,3 +36,72 @@ double getBitSizeOfStr(char* str, int len)
 	return count;
 }
 
+char* encodePartitionedStringToEncodedString(partitionedString& input, const char* huffLookupDirectory)
+{
+    if(input.size() > 0)
+    {
+        int m = input[0]->distinicIndex;
+        ostringstream strm;
+        ostringstream strm2;
+        vector<char*> dictionary(m,(char*)NULL);
+        codeWords huffmanCWs = getAllCodewords_FromFile(huffLookupDirectory, m);
+        
+        if(huffmanCWs.size() == 0)
+        {
+            return NULL;
+        }
+        
+        //Find and order each huffman code word for dictionary from heaviest to lightest
+        for (unsigned int i = 0; i < input.size(); i++)
+        {
+            int ind = input[i]->huffmanCWIndex; 
+            
+            //Create dictionary
+            if(dictionary[ind] == NULL)
+            {
+                dictionary[input[i]->huffmanCWIndex] = new char [strlen(input[i]->partitionStr) + 1];
+                strcpy(dictionary[ind],input[i]->partitionStr);                
+            }
+            
+            //construct encoded string
+            strm2 << cwToString(huffmanCWs[ind]);
+            
+        }
+        
+        //construct dictionary string
+        while(dictionary.size() > 1)
+        {
+            
+            if(dictionary[dictionary.size() - 1] != NULL)
+            {
+                strm << dictionary[dictionary.size() - 1] << ",";
+                delete [] dictionary[dictionary.size() - 1];
+            }            
+            dictionary.pop_back();
+        }
+        
+        if(dictionary[dictionary.size() - 1] != NULL)
+        {
+            strm << dictionary[dictionary.size() - 1] << ":";
+            delete [] dictionary[dictionary.size() - 1];
+        }            
+        dictionary.pop_back();
+        
+        //concatenate streams
+        strm << strm2;
+        
+        char* out = new char[strm.str().length() + 1];
+        strcpy(out,strm.str().c_str());
+        
+        return out;
+        
+    }
+    
+    return NULL;
+}
+
+partitionedString decodePartitionedStringFromEncodedString(char* input, const char* huffLookupDirectory)
+{
+    
+}
+

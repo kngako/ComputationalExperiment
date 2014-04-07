@@ -113,7 +113,7 @@ bool isIsomorphic(char* str1, char* str2)
 	return false;
 }
 
-bool getNonIsomorphicStrings_NLen_File(char* filename, int len, unsigned long long int limit)
+bool getNonIsomorphicStrings_NLen_File(const char* filename, int len, unsigned long long int limit)
 {
 	fstream outputFile;
 

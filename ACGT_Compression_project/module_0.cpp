@@ -82,6 +82,25 @@ codeWord findCodeWordInString(char* str, int index)
 
     return temp;
 }
+//Heaviest to lightest
+codeWords getAllCodeWordsInString(char* str)
+{
+    codeWords temp; 
+    char* curTok = strtok(str," ");
+    int count = -1;
+
+    while(curTok != NULL)
+    {
+        if(count > 0)
+        {
+            temp.push_back(stringToCodeWord(curTok));
+        }
+        curTok = strtok(NULL," ");
+        count++;
+    }
+
+    return temp;
+}
 
 //module_2
 //==============================================================================

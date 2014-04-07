@@ -245,7 +245,7 @@ codeWord getCodeWord_FromFile(const char* path, unsigned long long int m, unsign
     char* filename = new char[STD_NUMBER_OF_CHARS];
     sprintf(filename,"%s%llu.%s", path,m, HUFFMAN_FILE_EXT);
     
-    char* data = getLine_FromFile(filename,m);
+    char* data = getLine_FromFile(filename,1);
     
     delete [] filename;
     
@@ -254,6 +254,27 @@ codeWord getCodeWord_FromFile(const char* path, unsigned long long int m, unsign
     if(data != NULL)
     {    
         temp = findCodeWordInString(data, codewordIndex);
+
+        delete [] data;
+    }
+    
+    return temp;
+}
+
+codeWords getAllCodewords_FromFile(const char* path, unsigned long long int m)
+{
+    char* filename = new char[STD_NUMBER_OF_CHARS];
+    sprintf(filename,"%s%llu.%s", path,m, HUFFMAN_FILE_EXT);
+    
+    char* data = getLine_FromFile(filename,1);
+    
+    delete [] filename;
+    
+    codeWords temp;
+    
+    if(data != NULL)
+    {    
+        temp = getAllCodeWordsInString(data);
 
         delete [] data;
     }
@@ -284,7 +305,7 @@ bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, in
 	bool firstCode = true;
         
         
-	for(unsigned long long int j = 1; j <= m; j++)
+	for(unsigned long long int j = m; j <= m; j++)
 	{
                 cout << "Huffman codewords for m = " << j << endl;
                 outputFile << j << " ";

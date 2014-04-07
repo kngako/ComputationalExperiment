@@ -91,6 +91,8 @@ char* bsToString(bitstream);
 codeWord stringToCodeWord(char*);
 //Find a codeword at an index in a string "<m> <cw0> <cw1> ..."
 codeWord findCodeWordInString(char*, int);
+//Find all codewords in a string "<m> <cw0> <cw1> ..."
+codeWords getAllCodeWordsInString(char* str);
 
 //Module_2
 //==============================================================================

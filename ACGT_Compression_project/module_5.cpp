@@ -87,3 +87,19 @@ vector<char*> getAllLines_FromFile (const char* filename)
   
   return out;
 }
+
+void ceateInfoFile(const char* path, unsigned long long int h, unsigned long long int l, unsigned long long int m)
+{
+    fstream file;
+    char* filename = new char[STD_NUMBER_OF_CHARS];
+    
+    sprintf(filename,"%s%s", path, EXP_INFO_FILE_NAME);
+    file.open(filename,ios::out);
+             
+    file << m << endl;
+    file << l << endl;
+    file << h << endl;
+    
+    file.close();
+    delete [] filename;
+}
