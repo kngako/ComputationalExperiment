@@ -1,38 +1,40 @@
 #include "module_6.h"
 
-void partition(string pattern, bool tree, const char* fn)
+void Partition(string pattern, bool tree, const char* fn)
 {
-    
     fstream file;
-    vector<Node> partitions;
+    vector<partitionedString> partitions;
     if(tree)
     {
         string filename = fn;
         
         file.open(filename.c_str());
         
-        if (!file.is_open()) 
-        {
+        //if (!file.is_open()) 
+        //{
             file.open(filename.c_str(), ios::out);
         
-            Node part;
-            createNode(pattern, part);
+            partitionedString part;
+            cout << "We are here..." << endl;
+            createPartitionedString(pattern, part);
+            cout << "We are here..." << endl;
             partitions.push_back(part);
-
+            cout << "We are here..." << endl;
             printToFile(part, file);
             //file << part;
-
+            cout << "We are here..." << endl;
             for(int i = 1; i < pattern.length(); i++) // i is number of partitions
             {                                         // per being found.
-                Node newNode;
-                split(i, part, newNode);
-                partitionToFile(newNode, partitions, pattern, file);
+                cout << "We are here...\n";
+                partitionedString newNode;
+                split(i, 0, part, newNode, pattern);
+                partitionToFile(newNode, partitions, pattern, 0, file);
             }
-        }
+        /*}
         else
         {
             cout << pattern << " already computed.";
-        }
+        }*/
     }
     else
     {
@@ -42,15 +44,15 @@ void partition(string pattern, bool tree, const char* fn)
         
         while(tokens)
         {
-            Node part;
+            partitionedString part;
             
             cout << "We got: " << tmp <<endl;
             if(partitions.size() == 0)
             {
-                createNode(tmp, part);
+                createPartitionedString(tmp, part);
                 partitions.push_back(part);
             }
-            else partitions[0] = addToNode(partitions[0], tmp);
+            else partitions[0] = addToPartitionedString(partitions[0], tmp);
             
             tokens >> tmp;
         }
@@ -58,64 +60,77 @@ void partition(string pattern, bool tree, const char* fn)
     print(partitions, pattern);
 }
 
-Node& addToNode(Node& node, string newPart)
+partitionedString& addToPartitionedString(partitionedString& partitionedStr, string partitionToAdd)
 {
-    Bundle tmp;
-    createBundle(tmp, newPart);
-    node.part.push_back(tmp);
-    setupDistinct(node);
-    return node;
+    partition* tmpPartition = new partition;
+    createPartition(partitionToAdd, tmpPartition);
+    partitionedStr.push_back(tmpPartition);
+    setupDistinct(partitionedStr);
+    return partitionedStr;
 }
 
-void partition(Node& part, vector<Node>& partitions, string pattern)
+void Partition(int currentIndex, partitionedString& part, 
+        vector<partitionedString>& partitions, string pattern)
 {        
     partitions.push_back(part);
     cout<<endl;
     print(part);
     
-    for(int i = part.currentIndex + 1; i < pattern.length(); i++)
+    for(int i = currentIndex + 1; i < pattern.length(); i++)
     {
-        Node newNode;
-        split(i, part, newNode);
-        partition(newNode, partitions, pattern);
+        partitionedString newPart;
+        split(i, currentIndex, part, newPart, pattern);
+        Partition(currentIndex, newPart, partitions, pattern);
     }
 }
 
-void partitionToFile(Node& part, vector<Node>& partitions, string pattern, fstream& file)
-{        
-    partitions.push_back(part);
+void partitionToFile(partitionedString& partitioned, vector<partitionedString>& partitions, string pattern, int currentIndex, fstream& file)
+{
+    partitions.push_back(partitioned);
     cout<<endl;
-    printToFile(part, file);
+    printToFile(partitioned, file);
     
-    for(int i = part.currentIndex + 1; i < pattern.length(); i++)
+    for(int i = currentIndex++; i < pattern.length(); i++)
     {
-        Node newNode;
-        split(i, part, newNode);
-        partitionToFile(newNode, partitions, pattern, file);
+        partitionedString newPartitionedString;
+        split(i, currentIndex, partitioned, newPartitionedString, pattern);
+        partitionToFile(newPartitionedString, partitions, pattern, i, file);
     }
 }
 
-
-void createNode(string pattern, Node& newNode)
+void createPartitionedString(string pattern, partitionedString& newPartitionedString)
 {
-    newNode.bun.pattern = pattern;
-    newNode.bun.isReptition = false;
-    newNode.bun.count = 1;
-    newNode.bun.rank = newNode.bun.pattern.length() * newNode.bun.count;
-    newNode.part.push_back(newNode.bun);
-    newNode.distinct.push_back(newNode.bun);
-    newNode.currentIndex = 0;
+    cout << "We are in createPartitionedString..." << endl;
+    partition* initial = new partition;
+    createPartition(pattern, initial);
+    newPartitionedString.push_back(initial);
 }
 
-void createBundle(Bundle& tmpBun, string pattern)
+
+void createPartition(string pattern, partition* newPartition)
 {
-    tmpBun.pattern = pattern;
-    tmpBun.isReptition = false;
-    tmpBun.count = 1;
-    tmpBun.rank = tmpBun.pattern.length() *tmpBun.count;
+    cout << "We are in createPartition..." << endl;
+    copyOverPatritionString(newPartition, pattern);
+    newPartition->huffmanCWIndex; // TODO: Implement weight calculation
+    newPartition->distinicIndex = -1;
 }
 
-void print(vector<Node>& collection, string pattern)
+void copyOverPatritionString(partition* newPartition, string pattern)
+{
+    /*cout << "We are in copyOverPatritionString..." << endl;
+    newPartition->partitionStr = new char[pattern.length() + 1];
+    cout << "Boo...";
+    for(int i = 0; i < pattern.length(); i++)
+    {
+        cout << "*";
+        newPartition->partitionStr[i] = pattern[i];
+    }*/
+    cout << "###  " << pattern.length() <<endl;
+    newPartition->partitionStr = new char[pattern.length() + 1];
+    cout << "***" <<endl;
+    strcpy(newPartition->partitionStr, pattern.c_str());
+}
+void print(vector<partitionedString>& collection, string pattern)
 {
     cout << "\nThe partitions for " << pattern << " are:\n";
     for(int i = 0; i < collection.size(); i++)
@@ -124,136 +139,106 @@ void print(vector<Node>& collection, string pattern)
     }
 }
 
-void print(Node& node)
+void print(partitionedString& partitions)
 {
-    for(int i = 0; i < node.part.size(); i++)
+    for(int i = 0; i < partitions.size(); i++)
     {
-        if(i == 0) cout << node.part[i].pattern;
-        else cout << "-" << node.part[i].pattern;
+        if(i == 0)
+        {
+            cout << partitions[i]->partitionStr;
+        }
+        else 
+        {
+            cout << "-" << partitions[i]->partitionStr;
+        }
     }
     cout << endl;
-    
-    for(int i = 0; i < node.distinct.size(); i++)
-    {
-        cout << "The weight of " << node.distinct[i].pattern << "(" << node.distinct[i].codeWord <<") is "
-                << node.distinct[i].pattern.length() << " x " << node.distinct[i].count
-                << " = " << node.distinct[i].rank << endl;
-    }
 }
 
-void printToFile(Node& node, fstream& file)
+void printToFile(partitionedString& partitions, fstream& file)
 {
-    for(int i = 0; i < node.part.size(); i++)
+    for(int i = 0; i < partitions.size(); i++)
     {
-        if(i == 0) file << node.part[i].pattern;
-        else file << "-" << node.part[i].pattern;
+        if(i == 0)
+        {
+            file << partitions[i]->partitionStr;
+            cout << partitions[i]->partitionStr;
+        }
+        else 
+        {
+            file << "-" << partitions[i]->partitionStr;
+            cout << "-" << partitions[i]->partitionStr;
+        }
     }
+    file << endl;
     cout << endl;
+}
+
+void print(partition* word)
+{
+    cout << word->partitionStr;
+}
+
+partitionedString& split(int index, int currentIndex, partitionedString& partStr, partitionedString& newPartStr, string pattern)
+{
+    copyPartitionedString(partStr, newPartStr);
+    partition* part = newPartStr[newPartStr.size() - 1];
+
+    string tmpStr = part->partitionStr;
     
-    for(int i = 0; i < node.distinct.size(); i++)
+    //newPart[newPart.size() - 1]->partitionStr = tmpStr.substr(0, index - currentIndex).c_str();
+    copyOverPatritionString(newPartStr[newPartStr.size() - 1], tmpStr.substr(0, index - currentIndex));
+    partition* tmpPart;
+    createPartition(pattern.substr(index), tmpPart);
+    newPartStr.push_back(tmpPart);
+    setupDistinct(newPartStr);
+        
+    return newPartStr;
+}
+
+void copyPartitionedString(partitionedString& orig, partitionedString& newPartition)
+{
+    newPartition = orig;
+    for(int i = 0; i < orig.size(); i++)
     {
-        file << "The weight of " << node.distinct[i].pattern << "(" << node.distinct[i].codeWord <<") is "
-                << node.distinct[i].pattern.length() << " x " << node.distinct[i].count
-                << " = " << node.distinct[i].rank << endl;
+        newPartition.push_back(orig.at(i));
     }
 }
 
-void print(Bundle& word)
+void setupDistinct(partitionedString& partitionedStr)
 {
-    cout << word.pattern;
-}
-
-Node& split(int index, Node& node, Node& newPart) 
-{
-    copyNode(node, newPart);
-    Bundle partition = newPart.part[newPart.part.size() - 1];
-    if(!partition.isReptition)
+    for(int i = 0; i < partitionedStr.size(); i++)
     {
-        newPart.part[newPart.part.size() - 1].pattern = partition.pattern.substr(0, index - node.currentIndex);
-        Bundle tmpBun;
-        tmpBun.pattern = node.bun.pattern.substr(index);
-        tmpBun.isReptition = false;
-        tmpBun.count = 1;
-        tmpBun.rank = tmpBun.count * tmpBun.pattern.length();
-
-        newPart.part.push_back(tmpBun);
-        newPart.currentIndex = index;
-        setupDistinct(newPart);
-    }
-    return newPart;
-}
-
-void copyNode(Node& orig, Node& newNode){
-    newNode.distinct = orig.distinct;
-    newNode.part = orig.part;
-    newNode.bun = orig.bun;
-    newNode.currentIndex = orig.currentIndex;
-}
-
-void setupDistinct(Node& node)
-{
-    node.distinct.clear();
-
-    for(int i = 0; i < node.part.size(); i++)
-    {
-        if(!contains(node, node.part[i])) 
+        partitionedStr[i]->distinicIndex = contains(partitionedStr, partitionedStr[i]);
+        if(partitionedStr[i]->distinicIndex == -1)
         {
-            node.part[i].rank = node.part[i].count * node.part[i].pattern.length();
-            node.distinct.push_back(node.part[i]);
+            partitionedStr[i]->distinicIndex = highestDistinct(partitionedStr) + 1;
         }
     }
-    sort(node);
-    allocateSorted(node);
 }
 
-bool contains(Node& node, Bundle& bun)
+int highestDistinct(partitionedString& partitionedStr)
 {
-    for(int i = 0; i < node.distinct.size(); i++)
+    int tmpMax = -1;
+    for(int i = 0; i < partitionedStr.size(); i++)
     {
-        if(node.distinct[i].pattern.compare(bun.pattern) == 0)
+        if(partitionedStr[i]->distinicIndex > tmpMax)
         {
-            node.distinct[i].rank = ++node.distinct[i].count * node.distinct[i].pattern.length();
-            return true;
+            tmpMax = partitionedStr[i]->distinicIndex;
         }
     }
-    return false;
+    
+    return tmpMax;
 }
 
-void sort(Node& node)
+int contains(partitionedString& partionedString, partition* partition)
 {
-    vector<Bundle> sorted;
-    vector<Bundle> tmpSorted;
-
-    sorted.push_back(node.distinct.back()); node.distinct.pop_back();
-    while(!node.distinct.empty())
+    for(int i = 0; i < partionedString.size(); i++)
     {
-        Bundle tmpBun = node.distinct.back(); node.distinct.pop_back();
-
-        while(!sorted.empty())
+        if(partionedString[i]->partitionStr == partition->partitionStr)
         {
-            if(sorted.back().rank < tmpBun.rank)
-            {
-                tmpSorted.push_back(sorted.back()); sorted.pop_back();
-            } else break;
-        }
-
-        sorted.push_back(tmpBun);
-
-        while(!tmpSorted.empty())
-        {
-            sorted.push_back(tmpSorted.back()); tmpSorted.pop_back();
+            return partionedString[i]->distinicIndex;
         }
     }
-
-    node.distinct.clear();
-    node.distinct = sorted;
-}
-
-void allocateSorted(Node& node)
-{
-    codeWords hoff = getHuffmanCodeWords_Memory(node.distinct.size(), 2);
-    for(int i = 0; i < hoff.size(); i++)
-    {
-        node.distinct[i].codeWord = cwToString(hoff[hoff.size() - 1 -i]);
-    }
+    return -1;
 }

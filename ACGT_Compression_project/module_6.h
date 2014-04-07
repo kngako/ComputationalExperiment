@@ -3,7 +3,9 @@
  * Author: K
  *
  * Created on 03 March 2014, 9:41 PM
+ * Last Updated: 03 April 2014, 10:16 PM
  */
+#include "module_0.h"
 
 #ifndef MODULE_6_H
 #define	MODULE_6_H
@@ -13,57 +15,59 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "module_1.h"
+
+
+//#include "module_1.h"
 
 using namespace std;
 
-struct Bundle{
-    string pattern;
-    bool isReptition;
-    int count;
-    int rank;
-    string codeWord;
-};
+void Partition(string pattern, bool tree, const char* fn);
 
+void Partition(partitionedString& partition, 
+        vector<partitionedString>& partitions, string pattern); // TODO: Implement this function
 
-struct Node{
-    vector<Bundle> part;
-    vector<Bundle> distinct;
-    
-    Bundle bun;
-    int currentIndex;
-};
+void partitionToFile(partitionedString& partitioned, 
+        vector<partitionedString>& partitions, string pattern, int currentIndex, 
+        fstream& file); // TODO: Implement this 
 
-void partition(string pattern, bool tree, const char* fn);
+void createPartitionedString(string pattern, partitionedString& newPartitionedString);
 
-void partition(Node& part, vector<Node>& partitions, string pattern);
+/**
+ * Create new partition from pattern
+ * @param pattern
+ * @param newPartition
+ */
+void createPartition(string pattern, partition* newPartition);
 
-void partitionToFile(Node& part, vector<Node>& partitions, string pattern, fstream& file);
+void print(vector<partitionedString>& collection, string pattern);
 
-void createNode(string pattern, Node& newNode);
+void print(partitionedString& partitions);
 
-void createBundle(Bundle& tmpBun, string pattern);
+void printToFile(partitionedString& partitions, fstream& file);
 
-void print(vector<Node>& collection, string pattern);
+void print(partition& word);
 
-void print(Node& node);
+partitionedString& split(int index, int currentIndex, 
+        partitionedString& partitionedStr, partitionedString& newPart, string pattern);
 
-void printToFile(Node& node, fstream& file);
+partitionedString& addToPartitionedString(partitionedString& partitionedStr, string partitionToAdd); 
 
-void print(Bundle& word);
+void copyPartitionedString(partitionedString& orig, partitionedString& newPartition); 
 
-Node& split(int index, Node& node, Node& newPart);
+void setupDistinct(partitionedString& partitionedStr);
 
-Node& addToNode(Node& node, string newPart);
+int highestDistinct(partitionedString& partitionedStr);
 
-void copyNode(Node& orig, Node& newNode);
+void copyOverPatritionString(partition* newPartition, string pattern);
 
-void setupDistinct(Node& node);
+/**
+ * Checks to see if a partioned is contained in a partioned string and returns 
+ * the distinct index it is associated with, else it returns -1.
+ * @param partionedString
+ * @param partition
+ * @return 
+ */
+int contains(partitionedString& partionedString, partition* partition);
 
-bool contains(Node& node, Bundle& bun);
-
-void sort(Node& node);
-
-void allocateSorted(Node& node);
 #endif	/* MODULE_6_H */
 
