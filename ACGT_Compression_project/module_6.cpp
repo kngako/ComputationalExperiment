@@ -15,19 +15,16 @@ void Partition(string pattern, bool tree, const char* fn)
             file.open(filename.c_str(), ios::out);
         
             partitionedString part;
-            cout << "We are here..." << endl;
             createPartitionedString(pattern, part);
-            cout << "We are here..." << endl;
             partitions.push_back(part);
-            cout << "We are here..." << endl;
+            cout << "Initial " ; print(part); cout << endl;
             printToFile(part, file);
             //file << part;
-            cout << "We are here..." << endl;
             for(int i = 1; i < pattern.length(); i++) // i is number of partitions
-            {                                         // per being found.
-                cout << "We are here...\n";
+            {
                 partitionedString newNode;
                 split(i, 0, part, newNode, pattern);
+                cout << "Life" <<endl;
                 partitionToFile(newNode, partitions, pattern, 0, file);
             }
         /*}
@@ -76,7 +73,7 @@ void Partition(int currentIndex, partitionedString& part,
     cout<<endl;
     print(part);
     
-    for(int i = currentIndex + 1; i < pattern.length(); i++)
+    for(int i = currentIndex + 1; i < pattern.length() - 1; i++)
     {
         partitionedString newPart;
         split(i, currentIndex, part, newPart, pattern);
@@ -87,10 +84,9 @@ void Partition(int currentIndex, partitionedString& part,
 void partitionToFile(partitionedString& partitioned, vector<partitionedString>& partitions, string pattern, int currentIndex, fstream& file)
 {
     partitions.push_back(partitioned);
-    cout<<endl;
     printToFile(partitioned, file);
     
-    for(int i = currentIndex++; i < pattern.length(); i++)
+    for(int i = currentIndex + 1; i < pattern.length() - 1; i++)
     {
         partitionedString newPartitionedString;
         split(i, currentIndex, partitioned, newPartitionedString, pattern);
@@ -100,7 +96,6 @@ void partitionToFile(partitionedString& partitioned, vector<partitionedString>& 
 
 void createPartitionedString(string pattern, partitionedString& newPartitionedString)
 {
-    cout << "We are in createPartitionedString..." << endl;
     partition* initial = new partition;
     createPartition(pattern, initial);
     newPartitionedString.push_back(initial);
@@ -109,27 +104,17 @@ void createPartitionedString(string pattern, partitionedString& newPartitionedSt
 
 void createPartition(string pattern, partition* newPartition)
 {
-    cout << "We are in createPartition..." << endl;
     copyOverPatritionString(newPartition, pattern);
-    newPartition->huffmanCWIndex; // TODO: Implement weight calculation
+    newPartition->huffmanCWIndex = -1; // TODO: Implement weight calculation
     newPartition->distinicIndex = -1;
 }
 
 void copyOverPatritionString(partition* newPartition, string pattern)
 {
-    /*cout << "We are in copyOverPatritionString..." << endl;
     newPartition->partitionStr = new char[pattern.length() + 1];
-    cout << "Boo...";
-    for(int i = 0; i < pattern.length(); i++)
-    {
-        cout << "*";
-        newPartition->partitionStr[i] = pattern[i];
-    }*/
-    cout << "###  " << pattern.length() <<endl;
-    newPartition->partitionStr = new char[pattern.length() + 1];
-    cout << "***" <<endl;
     strcpy(newPartition->partitionStr, pattern.c_str());
 }
+
 void print(vector<partitionedString>& collection, string pattern)
 {
     cout << "\nThe partitions for " << pattern << " are:\n";
@@ -181,30 +166,45 @@ void print(partition* word)
 
 partitionedString& split(int index, int currentIndex, partitionedString& partStr, partitionedString& newPartStr, string pattern)
 {
+    cout<<"Splitting..." << endl;
+    print(partStr);
+    
     copyPartitionedString(partStr, newPartStr);
     partition* part = newPartStr[newPartStr.size() - 1];
 
     string tmpStr = part->partitionStr;
     
-    //newPart[newPart.size() - 1]->partitionStr = tmpStr.substr(0, index - currentIndex).c_str();
     copyOverPatritionString(newPartStr[newPartStr.size() - 1], tmpStr.substr(0, index - currentIndex));
-    partition* tmpPart;
+    partition* tmpPart = new partition;
     createPartition(pattern.substr(index), tmpPart);
+    
     newPartStr.push_back(tmpPart);
     setupDistinct(newPartStr);
         
+    cout<<"Now have..." << endl;
+    print(newPartStr);
     return newPartStr;
 }
 
 void copyPartitionedString(partitionedString& orig, partitionedString& newPartition)
 {
-    newPartition = orig;
     for(int i = 0; i < orig.size(); i++)
     {
-        newPartition.push_back(orig.at(i));
+        partition* newPart = new partition;
+        copyPartition(orig.at(i), newPart);
+        newPartition.push_back(newPart);
     }
 }
 
+void copyPartition(partition* orig, partition* newPart)
+{
+    string tmp = orig->partitionStr;
+    copyOverPatritionString(newPart, tmp);
+    newPart->distinicIndex = orig->distinicIndex;
+    newPart->huffmanCWIndex = orig->huffmanCWIndex;
+}
+
+//Will be moved over to a module_8
 void setupDistinct(partitionedString& partitionedStr)
 {
     for(int i = 0; i < partitionedStr.size(); i++)
