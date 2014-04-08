@@ -238,6 +238,7 @@ int main(int argc, char** argv)
                 cout << "Highest: ";
                 cin >> h;
                 createPreCache(m,l,h,experiment.c_str());
+                createPartitionedStrings(experiment.c_str());
                 break;
             default: 
                 active = false;
@@ -260,33 +261,67 @@ void createPreCache(unsigned long long int m, unsigned long int l, unsigned long
 {
     ostringstream strm;
     
-    strm << "mkdir " << name;    
-    system(strm.str().c_str());
-    strm << FILEMANAGER_PATH_DELIMINATOR << PRECACHE_SUFFIX_FOLDER_NAME;
+    cout << "Setting up precache data folder for stage 1..." << endl;
     
-    system(strm.str().c_str());
+    strm << name << FILEMANAGER_PATH_DELIMINATOR;
+    char* experimentPath = new char[strm.str().length() + 1];
+    strcpy(experimentPath,strm.str().c_str());
+    
+    strm << PRECACHE_SUFFIX_FOLDER_NAME;
+    char* precachePath = new char[strm.str().length() + 1];
+    strcpy(precachePath,strm.str().c_str());
+    
     strm << FILEMANAGER_PATH_DELIMINATOR << HUFFMAN_FOLDER_NAME;
-    system(strm.str().c_str());
+    char* humffmanFolderPath = new char[strm.str().length() + 1];
+    strcpy(humffmanFolderPath,strm.str().c_str());
+    
     strm.str("");
-    strm << "mkdir " << name << PRECACHE_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << NONISOMORPHIC_FOLDER_NAME;
+    strm << precachePath << FILEMANAGER_PATH_DELIMINATOR << NONISOMORPHIC_FOLDER_NAME;
+    char* NIstringsFolderPath = new char[strm.str().length() + 1];
+    strcpy(NIstringsFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << "mkdir " << name;
+        cout << strm.str().c_str() << endl;    
+    system(strm.str().c_str());
+    
+    ceateInfoFile(experimentPath,l,h,m);
+    
+    strm.str("");
+    strm << "mkdir " << precachePath;
+    cout << strm.str().c_str() << endl;
+    system(strm.str().c_str());
+    
+    
+    strm.str("");
+    strm << "mkdir " <<  humffmanFolderPath;
+    cout << strm.str().c_str() << endl;
+    system(strm.str().c_str());
+
+    strm.str("");
+    strm << "mkdir " << NIstringsFolderPath;
+    cout << strm.str().c_str() << endl;
     system(strm.str().c_str());
     
     if (m > 0)
     {
+        cout << "Populating " << HUFFMAN_FOLDER_NAME << " folder for stage 1..." << endl;
         for(int i = 1; i <= m; i++)
         {
             strm.str("");
-            strm << name << PRECACHE_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << HUFFMAN_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << i << "." << HUFFMAN_FILE_EXT;     
+            strm << humffmanFolderPath << FILEMANAGER_PATH_DELIMINATOR << i << "." << HUFFMAN_FILE_EXT;     
             
             getHuffmanCodeWords_File(strm.str().c_str(), i, 2);
         }
+        
+        cout << "Populating " << NONISOMORPHIC_FOLDER_NAME << " folder for stage 1..." << endl;
         
         if(l <= h && l > 0 && h > 0)
         {
             for(int i = l; i <= h; i++)
             {
                 strm.str("");
-                strm << name << PRECACHE_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << NONISOMORPHIC_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << i << "." << NONISOMORPHIC_FILE_EXT;
+                strm << NIstringsFolderPath << FILEMANAGER_PATH_DELIMINATOR << i << "." << NONISOMORPHIC_FILE_EXT;
                 
                 cout << "Generating NIF file for strings of length " << i << ":" << endl;                
                 getNonIsomorphicStrings_NLen_File(strm.str().c_str(), i, 0);
@@ -301,23 +336,126 @@ void createPreCache(unsigned long long int m, unsigned long int l, unsigned long
     {
         cout << "m value must be bigger than 0" << endl;        
     }
+    
+    delete [] NIstringsFolderPath;
+    delete [] experimentPath;
+    delete [] humffmanFolderPath;
+    delete [] precachePath;
 }
 
 void createPartitionedStrings(const char* expName)
 {
     ostringstream strm;
     
-    strm << "mkdir " << expName << PARTITIONEDDATA_SUFFIX_FOLDER_NAME;    
-    system(strm.str().c_str());
+    cout << "Setting up partitioned data folder for stage 2..." << endl;
+    
+    strm << expName << FILEMANAGER_PATH_DELIMINATOR;
+    char* experimentPath = new char[strm.str().length() + 1];
+    strcpy(experimentPath,strm.str().c_str());
+    
+    unsigned long long int* infoFiledata = readInfoFile(experimentPath);
+    
+    strm.str("");
+    strm << experimentPath << PARTITIONEDDATA_SUFFIX_FOLDER_NAME;
+    char* partitionedDataPath = new char[strm.str().length() + 1];
+    strcpy(partitionedDataPath,strm.str().c_str());
     
     strm << FILEMANAGER_PATH_DELIMINATOR << REPETITIONS_FOLDER_NAME;
-    system(strm.str().c_str());
+    char* repetitionsFolderPath = new char[strm.str().length() + 1];
+    strcpy(repetitionsFolderPath,strm.str().c_str());
     
     strm.str("");
-    strm << "mkdir " << expName << PARTITIONEDDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << ALLPARTITIONS_FOLDER_NAME;
-    system(strm.str().c_str());
+    strm << partitionedDataPath << FILEMANAGER_PATH_DELIMINATOR << ALLPARTITIONS_FOLDER_NAME;
+    char* allpartitionsFolderPath = new char[strm.str().length() + 1];
+    strcpy(allpartitionsFolderPath,strm.str().c_str());
     
     strm.str("");
-    strm << "mkdir " << expName << PARTITIONEDDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << REPPARTITIONS_FOLDER_NAME;
+    strm << partitionedDataPath << FILEMANAGER_PATH_DELIMINATOR << REPPARTITIONS_FOLDER_NAME;
+    char* reppartitionsFolderPath = new char[strm.str().length() + 1];
+    strcpy(reppartitionsFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << expName << FILEMANAGER_PATH_DELIMINATOR << PRECACHE_SUFFIX_FOLDER_NAME;
+    char* precachePath = new char[strm.str().length() + 1];
+    strcpy(precachePath,strm.str().c_str());
+    
+    strm.str("");
+    strm << precachePath << FILEMANAGER_PATH_DELIMINATOR << HUFFMAN_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR;
+    char* humffmanFolderPath = new char[strm.str().length() + 1];
+    strcpy(humffmanFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << precachePath << FILEMANAGER_PATH_DELIMINATOR << NONISOMORPHIC_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR;
+    char* NIstringsFolderPath = new char[strm.str().length() + 1];
+    strcpy(NIstringsFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << "mkdir " << partitionedDataPath;
     system(strm.str().c_str());
+
+    strm.str("");
+    strm << "mkdir " << repetitionsFolderPath;
+    system(strm.str().c_str());    
+    
+    strm.str("");
+    strm << "mkdir " << allpartitionsFolderPath;
+    system(strm.str().c_str());
+
+    strm.str("");
+    strm << "mkdir " << reppartitionsFolderPath;
+    system(strm.str().c_str());
+    
+    cout << "Populating " << REPETITIONS_FOLDER_NAME << " , " << REPPARTITIONS_FOLDER_NAME << " and " << ALLPARTITIONS_FOLDER_NAME << " folders for stage 2..." << endl;
+
+    for (unsigned long long int i = infoFiledata[1]; i <= infoFiledata[2]; i++)
+    {
+        for(unsigned long long int j = 1; j <= getNumberOfIsomorphicStringFor(i); j++)
+        {
+            
+            mappedString* temp = getNonIsomorphicString_FromFile(NIstringsFolderPath,i,j);
+            char* str = getStringFromMap(temp);
+            
+            delete [] temp->mappedStr;
+            delete temp;
+            
+            strm.str("");
+            strm << repetitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
+            strm << i << "_ " << j << "." << REPETITION_FILE_EXT;
+            
+            char* repfile = new char[strm.str().length() + 1];
+            strcpy(repfile,strm.str().c_str());
+            cout << endl << "============================================" << endl;
+            cout << "Generating repetitions for " << str << "..." << endl;
+            getAllRepetitions_XYX_File(str,repfile);
+            
+            strm.str("");
+            strm << reppartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
+            strm << i << "_ " << j << "." << PARTITION_FILE_EXT;
+            
+            cout << "Generating partitions that contain repetitions for " << str << "..." << endl;
+            partitionRepetitions_FromFile(repfile,strm.str().c_str(),0);
+            
+            strm.str("");
+            strm << allpartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
+            strm << i << "_ " << j << "." << PARTITION_FILE_EXT;
+            
+            cout << "Generating all partitions for " << str << "..." << endl;
+            //(str,strm.str().c_str());
+            
+            delete [] repfile;
+            
+            delete [] str;
+        }
+    }
+    
+    delete [] NIstringsFolderPath;
+    delete [] experimentPath;
+    delete [] humffmanFolderPath;
+    delete [] precachePath;
+    delete [] allpartitionsFolderPath;
+    delete [] repetitionsFolderPath;
+    delete [] reppartitionsFolderPath;
+    delete [] partitionedDataPath;
+    delete [] infoFiledata;
+    
 }

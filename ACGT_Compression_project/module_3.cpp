@@ -10,10 +10,9 @@ bool getAllRepetitions_XYX_Mem (char* str, vector<repetition*>& reps)
 	return true;
 }
 
-bool getAllRepetitions_XYX_File (char* str, char* filename)
+bool getAllRepetitions_XYX_File (char* str, const char* filename)
 {
-	fstream outFile;
-        
+	fstream outFile;        
         
 	outFile.open(filename,ios::out);
         
@@ -42,7 +41,7 @@ void findReps_E_XYX_file (char* str, fstream& outFile)
 	
         scanLPArrForRep_E_XYX_file(str,temp,outFile);
         
-        delete temp;
+        delete [] temp;
 }
 
 int* findMaxLppattern_XYX(char* str)
@@ -254,13 +253,10 @@ void scanLPArrForRep_E_XYX_mem (char* str, int* lpMaxPattern, vector<repetition*
 void scanLPArrForRep_E_XYX_file (char* str, int* lpMaxPattern, fstream& outFile)
 {
 	int lpLen = strlen(str);
-        cout << lpLen << endl;
         
         //scan lpMaxPattern for reps
 	for(int i = 0; i < lpLen; i++)
 	{
-            
-            cout << lpMaxPattern[i];
                 //Check if rep exist
 		if(lpMaxPattern[i] > 0)
 		{

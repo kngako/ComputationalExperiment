@@ -299,7 +299,7 @@ mappedString* getNonIsomorphicString_FromFile(const char* path, unsigned long lo
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
     sprintf(filename,"%s%llu.%s", path, lenIndex, NONISOMORPHIC_FILE_EXT);
-    
+    cout << filename << endl;
     char* data = getLine_FromFile(filename,NIStringIndex);
     
     delete [] filename;

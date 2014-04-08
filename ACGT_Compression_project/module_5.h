@@ -23,7 +23,7 @@ const char EXP_INFO_FILE_NAME[] = "info.DAT";
 
 const char PRECACHE_SUFFIX_FOLDER_NAME[] = "_precache";
 const char HUFFMAN_FOLDER_NAME[] = "HuffmanTable";
-const char NONISOMORPHIC_FOLDER_NAME[] = "NIFStrings";
+const char NONISOMORPHIC_FOLDER_NAME[] = "NIStrings";
 
 const char PARTITIONEDDATA_SUFFIX_FOLDER_NAME[] = "_partitioneddata";
 const char ALLPARTITIONS_FOLDER_NAME[] = "AllPartitions";
@@ -36,6 +36,6 @@ const char FILEMANAGER_PATH_DELIMINATOR = '/';
 char* getLine_FromFile(const char* filename, unsigned long long int lineIndex);
 vector<char*> getAllLines_FromFile (const char* filename);
 
-void ceateInfoFile(const char* path, unsigned long long int h, unsigned long long int l, unsigned long long int m);
-
+void ceateInfoFile(const char* path, unsigned long long int l, unsigned long long int h, unsigned long long int m);
+unsigned long long int* readInfoFile(const char* path);
 #endif
