@@ -12,7 +12,7 @@ char* getLine_FromFile(const char* filename, unsigned long long int line)
   
   if(file)
   {
-      unsigned int count = 0;
+      unsigned long long int count = 0;
       while (!file.eof())
       {
           count++;

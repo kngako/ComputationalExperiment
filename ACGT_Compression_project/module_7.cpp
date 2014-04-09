@@ -301,9 +301,10 @@ void recPartitioner_file(char*& str, int curPos, partitionedString& currentParti
 
 partitionedString getPartition_FromFile(const char* filename, unsigned long long int partIndex)
 {    
+    cout << filename << endl;
     char* data = getLine_FromFile(filename,partIndex);
     
-    partitionedString temp();
+    partitionedString temp;
     
     if(data != NULL)
     { 

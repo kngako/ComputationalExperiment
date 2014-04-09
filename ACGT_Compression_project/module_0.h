@@ -126,6 +126,11 @@ bitstream encodeString_compressed(char * string, int len);
 //Converts a  bit stream to a D:H formated string
 char* decodeString_compressed(bitstream estr);
 
+//converts a compressionInfo in to "<partionStr> <gain>
+char* compressionInfoToString(compressionInfo* info);
+//converts a string to  compressionInfo
+compressionInfo* stringToCompressionInfo(char* str);
+
 
 //Module_7 & Module_6
 //==============================================================================
@@ -134,6 +139,8 @@ char* partitionToString(partition part);
 char* partitionToString(partition* part);
 //converts a partitioned string in to "<partition1>-<partion2>-<partition3>-..."
 char* partitionedStringToString(partitionedString& partStr);
+//converts a partitioned string in to "<partionStr1>-<partionStr2>-<partionStr3>-..."
+char* partitionedStringToStripedString(partitionedString& partStr);
 
 //converts a string in the format "<partionStr> <distincIndex> <weight>" to a partition struct
 partition stringToPartition (char* string);

@@ -449,6 +449,48 @@ char* decodeString_compressed(bitstream bits)
     }
 }
 
+//converts a compressionInfo in to "<partionStr> <gain>
+char* compressionInfoToString(compressionInfo* info)
+{
+    std::ostringstream strm;
+    
+    strm << info->partstr;
+    strm << " ";
+    strm << info->gain;
+    
+    char* outStr = new char [strm.str().length() + 1];
+    strcpy(outStr,strm.str().c_str());
+    
+    return outStr;
+}
+
+//converts a string to  compressionInfo
+compressionInfo* stringToCompressionInfo(char* str)
+{
+    compressionInfo* temp = new compressionInfo;
+
+    char* curTok = strtok(str," ");
+    int count = 0;
+
+    while(curTok != NULL && count <= 1)
+    {
+            switch (count)
+            {
+                    case 0: temp->partstr = new char[strlen(curTok) + 1];
+                            strcpy(temp->partstr,curTok);       
+                            break;
+                    case 1: temp->gain = atof(curTok);
+                            break;                    
+                    default:
+                            break;
+            }
+            curTok = strtok(NULL," ");
+            count++;
+    }
+
+    return temp;
+}
+
 //Module_7 & Module_6
 //==============================================================================
 char* partitionToString(partition part)
@@ -499,6 +541,37 @@ char* partitionedStringToString(partitionedString& partStr)
     if(partStr.size() > 0)
     {
         char * ptr = partitionToString(partStr[partStr.size() - 1]);
+        strm << ptr;
+        delete [] ptr;        
+    }
+    
+    strm << "\0";
+
+    char* outStr = new char[strm.str().length() + 1];
+    
+    strcpy(outStr,strm.str().c_str());
+
+    return outStr;
+}
+
+char* partitionedStringToStripedString(partitionedString& partStr)
+{
+    std::ostringstream strm;
+    
+    for(int i = 0; i < partStr.size() - 1; i++)
+    {        
+        char * ptr = new char[strlen(partStr[i]->partitionStr) + 1];
+        strcpy(ptr,partStr[i]->partitionStr);
+        strm << ptr;
+        delete [] ptr;
+        
+        strm << "-";
+    }
+    
+    if(partStr.size() > 0)
+    {
+        char * ptr = new char[strlen(partStr[partStr.size() - 1]->partitionStr) + 1];
+        strcpy(ptr,partStr[partStr.size() - 1]->partitionStr);
         strm << ptr;
         delete [] ptr;        
     }

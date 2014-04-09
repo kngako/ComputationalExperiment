@@ -30,6 +30,11 @@ const char ALLPARTITIONS_FOLDER_NAME[] = "AllPartitions";
 const char REPPARTITIONS_FOLDER_NAME[] = "RepPartitions";
 const char REPETITIONS_FOLDER_NAME[] = "RepetitionData";
 
+const char CALCULATIONDATA_SUFFIX_FOLDER_NAME[] = "_calculationdata";
+const char ALLRESULTS_FOLDER_NAME[] = "AllResults";
+const char REPRESULTS_FOLDER_NAME[] = "RepResults";
+const char ANALYSIS_FOLDER_NAME[] = "Analysis";
+
 const char COMPUTATION_FOLDER_NAME[] = "ACGT_COMPUTATION";
 const char FILEMANAGER_PATH_DELIMINATOR = '/';
 

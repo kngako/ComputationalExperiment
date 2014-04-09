@@ -2,6 +2,66 @@
 //Created by Mathys Ellis 26/02/2014
 #include "module_4.h"
 
+void calculateCompressionGain_FromPartitionFile(char* str, const char* partitionFilename, const char* outputFilename, const char* huffmanTablesPath)
+{
+    unsigned long long int p = 0;
+    partitionedString tempPartitoned;
+    
+    ostringstream strm;
+    fstream file;
+    
+    file.open(outputFilename,ios::out);
+    
+    do
+    {
+        tempPartitoned = getPartition_FromFile(partitionFilename,p);
+        
+        if(tempPartitoned.size() > 0)
+        {
+            strm.str("");
+            strm << huffmanTablesPath << FILEMANAGER_PATH_DELIMINATOR;
+            strm << tempPartitoned[0]->distinicIndex << "." << HUFFMAN_FILE_EXT; 
+
+            calculateAndStoreCompressionGain(str,tempPartitoned,strm.str().c_str(),file);
+
+            p++;
+        }
+        
+        for(unsigned int i = 0; i < tempPartitoned.size(); i++)
+        {
+            delete [] tempPartitoned[i]->partitionStr;
+            delete tempPartitoned[i];
+        }
+
+    } while(tempPartitoned.size() > 0);
+    
+    file.close();
+}
+
+void calculateAndStoreCompressionGain(char* str, partitionedString& partitionedStr, const char* huffmanTableFilename, fstream& file)
+{
+    compressionInfo* temp = new compressionInfo;
+    
+    char* encodedStr = encodePartitionedStringToEncodedString(partitionedStr,huffmanTableFilename);
+    
+    int len1 = strlen(str);
+    int len2 = strlen(encodedStr);
+    cout << len1 <<" " << len2 << endl;
+    temp->gain = getCompressionGain_2Str(str,len1,encodedStr,len2);
+    
+    temp->partstr = partitionedStringToStripedString(partitionedStr);
+    
+    delete [] encodedStr;
+    cout << temp->gain << " " << temp->partstr << endl;
+    char* out = compressionInfoToString(temp);
+    
+    file << out << endl;
+    
+    delete [] out;
+    delete [] temp->partstr;
+    delete temp;
+}
+
 double getCompressionGain_2Str(char* normal, int len1, char* encoded, int len2)
 {
 	double norm = getBitSizeOfStr(normal, len1);
