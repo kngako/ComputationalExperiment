@@ -31,7 +31,7 @@ void recRepetitionPartitioner_file(char*& str, int curPos, partitionedString& cu
 
 void recPartitioner_file(char*& str, int curPos, partitionedString& currentPartitionedString, fstream& outFile);
 
-
+partitionedString getPartition_FromFile(const char* filename, unsigned long long int partIndex);
 
 
 #endif	/* MODULE_7_H */

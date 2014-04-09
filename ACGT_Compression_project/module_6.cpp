@@ -17,6 +17,7 @@ void Partition(string pattern, const char* fn)
         partitionedString part;
         createPartitionedString(pattern, part);
         setupDistinct(part);
+        setupHuffmanCW(part);
         partitions.push_back(part);
         printToFile(part, file);
         //file << part;
