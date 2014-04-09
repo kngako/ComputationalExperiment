@@ -227,6 +227,12 @@ int main(int argc, char** argv)
                 sprintf(fn2,"%llu_%llu.%s", m, i, PARTITION_FILE_EXT);
                 partitionRepetitions_FromFile(fn, fn2,0); 
                 break;
+            case 51:
+                cout << "A partitoned string: ";
+                cin >> strin;
+                cout << strin;
+                stringToPartitionedString (strin);
+                break;
             case 60:      
                 cout << "Enter precache experiment name[ExpName]: ";
                 cin >> experiment;
@@ -421,7 +427,7 @@ void createPartitionedStrings(const char* expName)
             
             strm.str("");
             strm << repetitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
-            strm << i << "_ " << j << "." << REPETITION_FILE_EXT;
+            strm << i << "_" << j << "." << REPETITION_FILE_EXT;
             
             char* repfile = new char[strm.str().length() + 1];
             strcpy(repfile,strm.str().c_str());
@@ -431,14 +437,14 @@ void createPartitionedStrings(const char* expName)
             
             strm.str("");
             strm << reppartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
-            strm << i << "_ " << j << "." << PARTITION_FILE_EXT;
+            strm << i << "_" << j << "." << PARTITION_FILE_EXT;
             
             cout << "Generating partitions that contain repetitions for " << str << "..." << endl;
             partitionRepetitions_FromFile(repfile,strm.str().c_str(),0);
             
             strm.str("");
             strm << allpartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
-            strm << i << "_ " << j << "." << PARTITION_FILE_EXT;
+            strm << i << "_" << j << "." << PARTITION_FILE_EXT;
             
             cout << "Generating all partitions for " << str << "..." << endl;
             Partition(str,strm.str().c_str());
@@ -561,7 +567,7 @@ void calcualteCompressionGain(const char* expName)
             
             strm.str("");
             strm << represultsPath << FILEMANAGER_PATH_DELIMINATOR;
-            strm << i << "_ " << j << "." << COMPRESSION_GAIN_FILE_EXT; 
+            strm << i << "_" << j << "." << COMPRESSION_GAIN_FILE_EXT; 
             char* resultFile = new char[strm.str().length() + 1];
             strcpy(resultFile,strm.str().c_str());
             
@@ -569,7 +575,7 @@ void calcualteCompressionGain(const char* expName)
             
             strm.str("");
             strm << reppartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
-            strm << i << "_ " << j << "." << PARTITION_FILE_EXT; 
+            strm << i << "_" << j << "." << PARTITION_FILE_EXT; 
             char* partFile = new char[strm.str().length() + 1];
             strcpy(partFile,strm.str().c_str());
             

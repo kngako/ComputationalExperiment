@@ -84,6 +84,7 @@ typedef vector<partition*> partitionedString;
 //Module_0
 //==============================================================================
 void errorMsg(char*);
+char* nextTok(char* str, int& curPos, const char* delim);
 
 //Module_1
 //==============================================================================

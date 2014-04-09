@@ -265,7 +265,7 @@ codeWords getAllCodewords_FromFile(const char* path, unsigned long long int m)
 {
     char* filename = new char[STD_NUMBER_OF_CHARS];
     sprintf(filename,"%s%llu.%s", path,m, HUFFMAN_FILE_EXT);
-    
+
     char* data = getLine_FromFile(filename,1);
     
     delete [] filename;
@@ -275,7 +275,7 @@ codeWords getAllCodewords_FromFile(const char* path, unsigned long long int m)
     if(data != NULL)
     {    
         temp = getAllCodeWordsInString(data);
-
+        
         delete [] data;
     }
     

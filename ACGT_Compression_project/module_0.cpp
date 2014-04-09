@@ -86,8 +86,9 @@ codeWord findCodeWordInString(char* str, int index)
 codeWords getAllCodeWordsInString(char* str)
 {
     codeWords temp; 
-    char* curTok = strtok(str," ");
-    int count = -1;
+    int curPos = 0;
+    char* curTok = nextTok(str,curPos," ");
+    int count = 0;
 
     while(curTok != NULL)
     {
@@ -95,7 +96,7 @@ codeWords getAllCodeWordsInString(char* str)
         {
             temp.push_back(stringToCodeWord(curTok));
         }
-        curTok = strtok(NULL," ");
+        curTok = nextTok(str,curPos," ");
         count++;
     }
 
@@ -616,7 +617,7 @@ partition stringToPartition (char* string)
 partition* stringToPartitionPtr (char* string)
 {
     partition* temp = new partition;
-
+    
     char* curTok = strtok(string," ");
     int count = 0;
 
@@ -644,25 +645,63 @@ partition* stringToPartitionPtr (char* string)
 partitionedString stringToPartitionedString (char* string)
 {
     partitionedString temp;
-
-    char* curTok = strtok(string,"-");
     
+    //cout << string << endl;
+    int curPos = 0;
+    
+    char* curTok = nextTok(string,curPos,"-");
+
+    //cout << curTok << endl;
     while(curTok != NULL)
     {
-        partition curToken = stringToPartition(curTok);
-        partition* tempPart = new partition;
-        
-        //Set up pointer version of current partition token
-        tempPart->partitionStr = new char [strlen(curToken.partitionStr) + 1];
-        strcpy(tempPart->partitionStr,curToken.partitionStr);
-        
-        tempPart->distinicIndex = curToken.distinicIndex;
-        tempPart->huffmanCWIndex = curToken.huffmanCWIndex;
+        //cout << "Loop tok: " << curTok << endl;
+        partition* tempPart = stringToPartitionPtr(curTok);
                 
         //Add to partitionedString vector       
         temp.push_back(tempPart);
-        curTok = strtok(NULL,"-");        
+        
+        delete [] curTok;
+
+        curTok = nextTok(string,curPos,"-");     
     }
 
     return temp;
+}
+
+char* nextTok(char* str, int& curPos, const char* delim)
+{
+    string temp = string(str);
+    
+    char* outstr = NULL;
+    
+    //cout << "temp: " << temp << endl;
+    //cout << "Curpos: " << curPos << endl;
+    
+    if (curPos < temp.length())
+    {
+        
+        int newPos = temp.find(delim, curPos);
+        
+        //cout << "New pos: " << newPos << endl;
+        
+        if(newPos == string::npos)
+        {
+            
+            newPos = temp.length();
+            //cout << "endPos: " << newPos << endl;
+        }
+        
+        string newtemp = temp.substr(curPos, newPos - curPos);
+        
+        //cout << "newtemp: " << newtemp << endl;
+        
+        curPos = newPos + 1;
+        
+        outstr = new char[newtemp.length() + 1];
+        strcpy(outstr,newtemp.c_str());    
+    }
+    
+    return outstr;
+    
+    
 }

@@ -4,7 +4,7 @@
 
 void calculateCompressionGain_FromPartitionFile(char* str, const char* partitionFilename, const char* outputFilename, const char* huffmanTablesPath)
 {
-    unsigned long long int p = 0;
+    unsigned long long int p = 1;
     partitionedString tempPartitoned;
     
     ostringstream strm;
@@ -18,11 +18,7 @@ void calculateCompressionGain_FromPartitionFile(char* str, const char* partition
         
         if(tempPartitoned.size() > 0)
         {
-            strm.str("");
-            strm << huffmanTablesPath << FILEMANAGER_PATH_DELIMINATOR;
-            strm << tempPartitoned[0]->distinicIndex << "." << HUFFMAN_FILE_EXT; 
-
-            calculateAndStoreCompressionGain(str,tempPartitoned,strm.str().c_str(),file);
+            calculateAndStoreCompressionGain(str,tempPartitoned,huffmanTablesPath,file);
 
             p++;
         }
@@ -32,9 +28,9 @@ void calculateCompressionGain_FromPartitionFile(char* str, const char* partition
             delete [] tempPartitoned[i]->partitionStr;
             delete tempPartitoned[i];
         }
-
+        
     } while(tempPartitoned.size() > 0);
-    
+    cout << "Number of partitions found in file: " << p - 1 << endl;
     file.close();
 }
 
@@ -46,13 +42,13 @@ void calculateAndStoreCompressionGain(char* str, partitionedString& partitionedS
     
     int len1 = strlen(str);
     int len2 = strlen(encodedStr);
-    cout << len1 <<" " << len2 << endl;
+    //cout << len1 <<" " << len2 << endl;
     temp->gain = getCompressionGain_2Str(str,len1,encodedStr,len2);
     
     temp->partstr = partitionedStringToStripedString(partitionedStr);
     
     delete [] encodedStr;
-    cout << temp->gain << " " << temp->partstr << endl;
+    //cout << temp->gain << " " << temp->partstr << endl;
     char* out = compressionInfoToString(temp);
     
     file << out << endl;
@@ -128,6 +124,7 @@ char* encodePartitionedStringToEncodedString(partitionedString& input, const cha
             
         }
         
+        
         //construct dictionary string
         while(dictionary.size() > 1)
         {
@@ -148,11 +145,11 @@ char* encodePartitionedStringToEncodedString(partitionedString& input, const cha
         dictionary.pop_back();
         
         //concatenate streams
-        strm << strm2;
+        //strm << strm2.str();
         
         char* out = new char[strm.str().length() + 1];
         strcpy(out,strm.str().c_str());
-        
+
         return out;
         
     }

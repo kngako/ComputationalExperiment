@@ -18,7 +18,7 @@ char* getLine_FromFile(const char* filename, unsigned long long int line)
           count++;
           char* temp = new char[MAX_READ_CHARS];
           file.getline(temp, MAX_READ_CHARS);
-
+          
           if(count == line)
           {
               char* fit = new char[file.gcount() + 1];
