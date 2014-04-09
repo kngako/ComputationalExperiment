@@ -5,19 +5,17 @@
  * Created on 03 March 2014, 9:41 PM
  * Last Updated: 03 April 2014, 10:16 PM
  */
-#include "module_0.h"
-
 #ifndef MODULE_6_H
 #define	MODULE_6_H
+
+#include "module_0.h"
+#include "module_8.h"
 
 #include <string>
 #include <vector>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-
-
-//#include "module_1.h"
 
 using namespace std;
 
@@ -54,22 +52,9 @@ partitionedString& addToPartitionedString(partitionedString& partitionedStr, str
 
 void copyPartitionedString(partitionedString& orig, partitionedString& newPartition); 
 
-void setupDistinct(partitionedString& partitionedStr);
-
-int highestDistinct(partitionedString& partitionedStr);
-
 void copyOverPatritionString(partition* newPartition, string pattern);
 
 void copyPartition(partition* orig, partition* newPart);
-
-/**
- * Checks to see if a partioned is contained in a partioned string and returns 
- * the distinct index it is associated with, else it returns -1.
- * @param partionedString
- * @param partition
- * @return 
- */
-int contains(partitionedString& partionedString, partition* partition);
 
 #endif	/* MODULE_6_H */
 

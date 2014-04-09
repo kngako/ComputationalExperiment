@@ -16,16 +16,15 @@ void Partition(string pattern, bool tree, const char* fn)
         
             partitionedString part;
             createPartitionedString(pattern, part);
+            setupDistinct(part);
             partitions.push_back(part);
-            cout << "Initial " ; print(part); cout << endl;
             printToFile(part, file);
             //file << part;
             for(int i = 1; i < pattern.length(); i++) // i is number of partitions
             {
                 partitionedString newNode;
                 split(i, 0, part, newNode, pattern);
-                cout << "Life" <<endl;
-                partitionToFile(newNode, partitions, pattern, 0, file);
+                partitionToFile(newNode, partitions, pattern, i, file);
             }
         /*}
         else
@@ -77,7 +76,7 @@ void Partition(int currentIndex, partitionedString& part,
     {
         partitionedString newPart;
         split(i, currentIndex, part, newPart, pattern);
-        Partition(currentIndex, newPart, partitions, pattern);
+        Partition(currentIndex + 1, newPart, partitions, pattern);
     }
 }
 
@@ -86,7 +85,7 @@ void partitionToFile(partitionedString& partitioned, vector<partitionedString>& 
     partitions.push_back(partitioned);
     printToFile(partitioned, file);
     
-    for(int i = currentIndex + 1; i < pattern.length() - 1; i++)
+    for(int i = currentIndex + 1; i < pattern.length(); i++)
     {
         partitionedString newPartitionedString;
         split(i, currentIndex, partitioned, newPartitionedString, pattern);
@@ -130,11 +129,12 @@ void print(partitionedString& partitions)
     {
         if(i == 0)
         {
-            cout << partitions[i]->partitionStr;
+            cout << partitions[i]->partitionStr << "(" <<partitions[i]->distinicIndex <<"," <<partitions[i]->huffmanCWIndex  <<")" ;
+            
         }
         else 
         {
-            cout << "-" << partitions[i]->partitionStr;
+            cout << "-" << partitions[i]->partitionStr << "(" <<partitions[i]->distinicIndex <<"," <<partitions[i]->huffmanCWIndex << ")";
         }
     }
     cout << endl;
@@ -147,16 +147,16 @@ void printToFile(partitionedString& partitions, fstream& file)
         if(i == 0)
         {
             file << partitions[i]->partitionStr;
-            cout << partitions[i]->partitionStr;
+            //cout << partitions[i]->partitionStr;
         }
         else 
         {
             file << "-" << partitions[i]->partitionStr;
-            cout << "-" << partitions[i]->partitionStr;
+            //cout << "-" << partitions[i]->partitionStr;
         }
     }
     file << endl;
-    cout << endl;
+    //cout << endl;
 }
 
 void print(partition* word)
@@ -166,9 +166,6 @@ void print(partition* word)
 
 partitionedString& split(int index, int currentIndex, partitionedString& partStr, partitionedString& newPartStr, string pattern)
 {
-    cout<<"Splitting..." << endl;
-    print(partStr);
-    
     copyPartitionedString(partStr, newPartStr);
     partition* part = newPartStr[newPartStr.size() - 1];
 
@@ -180,9 +177,8 @@ partitionedString& split(int index, int currentIndex, partitionedString& partStr
     
     newPartStr.push_back(tmpPart);
     setupDistinct(newPartStr);
+    setupHuffmanCW(newPartStr);
         
-    cout<<"Now have..." << endl;
-    print(newPartStr);
     return newPartStr;
 }
 
@@ -204,41 +200,3 @@ void copyPartition(partition* orig, partition* newPart)
     newPart->huffmanCWIndex = orig->huffmanCWIndex;
 }
 
-//Will be moved over to a module_8
-void setupDistinct(partitionedString& partitionedStr)
-{
-    for(int i = 0; i < partitionedStr.size(); i++)
-    {
-        partitionedStr[i]->distinicIndex = contains(partitionedStr, partitionedStr[i]);
-        if(partitionedStr[i]->distinicIndex == -1)
-        {
-            partitionedStr[i]->distinicIndex = highestDistinct(partitionedStr) + 1;
-        }
-    }
-}
-
-int highestDistinct(partitionedString& partitionedStr)
-{
-    int tmpMax = -1;
-    for(int i = 0; i < partitionedStr.size(); i++)
-    {
-        if(partitionedStr[i]->distinicIndex > tmpMax)
-        {
-            tmpMax = partitionedStr[i]->distinicIndex;
-        }
-    }
-    
-    return tmpMax;
-}
-
-int contains(partitionedString& partionedString, partition* partition)
-{
-    for(int i = 0; i < partionedString.size(); i++)
-    {
-        if(partionedString[i]->partitionStr == partition->partitionStr)
-        {
-            return partionedString[i]->distinicIndex;
-        }
-    }
-    return -1;
-}
