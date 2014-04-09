@@ -19,7 +19,7 @@
 
 using namespace std;
 
-void Partition(string pattern, bool tree, const char* fn);
+void Partition(string pattern, const char* fn);
 
 void Partition(partitionedString& partition, 
         vector<partitionedString>& partitions, string pattern); // TODO: Implement this function

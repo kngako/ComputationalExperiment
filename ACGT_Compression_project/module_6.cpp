@@ -1,58 +1,59 @@
 #include "module_6.h"
 
-void Partition(string pattern, bool tree, const char* fn)
+void Partition(string pattern, const char* fn)
 {
     fstream file;
     vector<partitionedString> partitions;
-    if(tree)
+//    if(tree)
+//    {
+    string filename = fn;
+
+    file.open(filename.c_str());
+
+    if (!file.is_open()) 
     {
-        string filename = fn;
-        
-        file.open(filename.c_str());
-        
-        //if (!file.is_open()) 
-        //{
-            file.open(filename.c_str(), ios::out);
-        
-            partitionedString part;
-            createPartitionedString(pattern, part);
-            setupDistinct(part);
-            partitions.push_back(part);
-            printToFile(part, file);
-            //file << part;
-            for(int i = 1; i < pattern.length(); i++) // i is number of partitions
-            {
-                partitionedString newNode;
-                split(i, 0, part, newNode, pattern);
-                partitionToFile(newNode, partitions, pattern, i, file);
-            }
-        /*}
-        else
+        file.open(filename.c_str(), ios::out);
+
+        partitionedString part;
+        createPartitionedString(pattern, part);
+        setupDistinct(part);
+        partitions.push_back(part);
+        printToFile(part, file);
+        //file << part;
+        for(int i = 1; i < pattern.length(); i++) // i is number of partitions
         {
-            cout << pattern << " already computed.";
-        }*/
+            partitionedString newNode;
+            split(i, 0, part, newNode, pattern);
+            partitionToFile(newNode, partitions, pattern, i, file);
+        }
     }
     else
     {
-        istringstream tokens(pattern);
-        string tmp;
-        tokens >> tmp;
-        
-        while(tokens)
-        {
-            partitionedString part;
-            
-            cout << "We got: " << tmp <<endl;
-            if(partitions.size() == 0)
-            {
-                createPartitionedString(tmp, part);
-                partitions.push_back(part);
-            }
-            else partitions[0] = addToPartitionedString(partitions[0], tmp);
-            
-            tokens >> tmp;
-        }
+        cout << pattern << " already computed.";
     }
+//    }
+//    else
+//    {
+//        // TT-AAA-BCD
+//        istringstream tokens(pattern);
+//        string tmp;
+//        tokens >> tmp;
+//        
+//        while(tokens)
+//        {
+//            partitionedString part;
+//            
+//            cout << "We got: " << tmp <<endl;
+//            if(partitions.size() == 0)
+//            {
+//                createPartitionedString(tmp, part);
+//                partitions.push_back(part);
+//            }
+//            else partitions[0] = addToPartitionedString(partitions[0], tmp);
+//            
+//            tokens >> tmp;
+//        }
+//    }
     print(partitions, pattern);
 }
 
@@ -142,21 +143,11 @@ void print(partitionedString& partitions)
 
 void printToFile(partitionedString& partitions, fstream& file)
 {
-    for(int i = 0; i < partitions.size(); i++)
-    {
-        if(i == 0)
-        {
-            file << partitions[i]->partitionStr;
-            //cout << partitions[i]->partitionStr;
-        }
-        else 
-        {
-            file << "-" << partitions[i]->partitionStr;
-            //cout << "-" << partitions[i]->partitionStr;
-        }
-    }
-    file << endl;
-    //cout << endl;
+    char* temp = partitionedStringToString(partitions);
+    
+    file << temp << endl;
+    
+    delete [] temp;
 }
 
 void print(partition* word)
@@ -178,7 +169,8 @@ partitionedString& split(int index, int currentIndex, partitionedString& partStr
     newPartStr.push_back(tmpPart);
     setupDistinct(newPartStr);
     setupHuffmanCW(newPartStr);
-        
+     
+    // TODO: Output to the file
     return newPartStr;
 }
 
