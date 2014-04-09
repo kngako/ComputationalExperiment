@@ -8,7 +8,7 @@ void partitionRepetitions_FromFile(const char* sourceFilename, const char* destF
     cout << sourceFilename << endl;
     cout << destFilname << endl;
     vector<repetition*> list = generateRepetitionListFromFile(sourceFilename, string);
-    
+    cout << "Number of repetitions found: " << list.size() << endl;
     //If the list is in cluster order
     /*if(mode == 0)
     {
@@ -36,7 +36,10 @@ void partitionRepetitions_FromFile(const char* sourceFilename, const char* destF
     if(mode == 0)
     {
         vector<vector<repetition*>*> sortedList = repetitionListSorterSingleRef(list,string);
-        
+        /*for(unsigned int i = 0; i < sortedList.size(); i++)
+        {
+                cout << sortedList[i]->size() << endl;
+        }*/
         repetitionToPartitions_mem_file(string,sortedList,list,destFilname);
         
         //Free sorted list
@@ -128,11 +131,11 @@ vector<vector<repetition*>*> repetitionListSorterSingleRef(vector<repetition*>& 
         
         if(used == false)
         {
-            //Convert startpos to a Counter
-            repetitionList[i]->startpos = 0;
-            
             out[repetitionList[i]->startpos]->push_back(repetitionList[i]);
             alreadyUsed.push_back(repetitionList[i]);
+            
+            //Convert startpos to a Counter
+            repetitionList[i]->startpos = 0;
         }
         
         repetitionList[i] = NULL;
@@ -218,9 +221,10 @@ void recRepetitionPartitioner_file(char*& str, int curPos, partitionedString& cu
             temp->huffmanCWIndex = -1;
             
             bool doSubtract = false;
-
+            //cout << repetitionList[curPos]->size() << " " << curPos << " " << i << endl;
             if(repetitionList[curPos]->size() >= i && strcmp(temp->partitionStr,(*repetitionList[curPos])[i - 1]->repetitionStr) == 0)
             {
+                //cout << "++" << endl;
                 (*repetitionList[curPos])[i - 1]->startpos++;
                 doSubtract = true;
             }
@@ -231,6 +235,7 @@ void recRepetitionPartitioner_file(char*& str, int curPos, partitionedString& cu
             
             if(doSubtract)
             {
+                //cout << "--" << endl;
                 (*repetitionList[curPos])[i - 1]->startpos--;
             }            
             
@@ -245,9 +250,10 @@ void recRepetitionPartitioner_file(char*& str, int curPos, partitionedString& cu
     }
     else if(curPos == repetitionList.size())
     {
-        
+        //cout << partitionedStringToString(currentPartitionedString) << endl;
         for(unsigned int i = 0; i < list.size(); i++)
         {
+            //cout << list[i]->repetitionStr << " " << list[i]->startpos << endl;
             if(list[i]->startpos > 1)
             {
                 

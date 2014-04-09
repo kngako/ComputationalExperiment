@@ -39,7 +39,8 @@ void calculateAndStoreCompressionGain(char* str, partitionedString& partitionedS
     compressionInfo* temp = new compressionInfo;
     
     char* encodedStr = encodePartitionedStringToEncodedString(partitionedStr,huffmanTableFilename);
-    
+    cout << "String: " << str << endl;
+    cout << "Encoded str: " << encodedStr << endl;
     int len1 = strlen(str);
     int len2 = strlen(encodedStr);
     //cout << len1 <<" " << len2 << endl;
@@ -145,7 +146,7 @@ char* encodePartitionedStringToEncodedString(partitionedString& input, const cha
         dictionary.pop_back();
         
         //concatenate streams
-        //strm << strm2.str();
+        strm << strm2.str();
         
         char* out = new char[strm.str().length() + 1];
         strcpy(out,strm.str().c_str());

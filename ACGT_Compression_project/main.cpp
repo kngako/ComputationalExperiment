@@ -581,16 +581,24 @@ void calcualteCompressionGain(const char* expName)
             
             calculateCompressionGain_FromPartitionFile(str,partFile,resultFile,humffmanFolderPath);
             
+            delete [] resultFile;
             delete [] partFile;
             
             cout << "Generating results for all partitions of " << str << "..." << endl;
             
             strm.str("");
+            strm << allresultsPath << FILEMANAGER_PATH_DELIMINATOR;
+            strm << i << "_" << j << "." << COMPRESSION_GAIN_FILE_EXT; 
+            resultFile = new char[strm.str().length() + 1];
+            strcpy(resultFile,strm.str().c_str());
+            
+            strm.str("");
             strm << allpartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
-            strm << i << "_ " << j << "." << PARTITION_FILE_EXT;            
+            strm << i << "_" << j << "." << PARTITION_FILE_EXT;            
             partFile = new char[strm.str().length() + 1];
             strcpy(partFile,strm.str().c_str()); 
             
+            calculateCompressionGain_FromPartitionFile(str,partFile,resultFile,humffmanFolderPath);
             
             delete [] partFile;
             delete [] resultFile;

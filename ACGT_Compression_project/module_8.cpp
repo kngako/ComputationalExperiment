@@ -89,7 +89,7 @@ void setupHuffmanCW(partitionedString& partitionedStr)
         {
             if(strcmp(partitionedStr.at(k)->partitionStr, sorted.at(i)->partitionStr) == 0)
             {
-                partitionedStr.at(k)->huffmanCWIndex = i;
+                partitionedStr.at(k)->huffmanCWIndex = (sorted.size() - 1) - i;
             }
         }
         //cout << sorted.at(i)->partitionStr << "(" << sorted.at(i)->distinicIndex << "," << sorted.at(i)->huffmanCWIndex << ")" << endl;
