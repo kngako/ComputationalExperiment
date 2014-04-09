@@ -440,7 +440,7 @@ void createPartitionedStrings(const char* expName)
             strm << i << "_ " << j << "." << PARTITION_FILE_EXT;
             
             cout << "Generating all partitions for " << str << "..." << endl;
-            //(str,strm.str().c_str());
+            Partition(str,strm.str().c_str());
             
             delete [] repfile;
             

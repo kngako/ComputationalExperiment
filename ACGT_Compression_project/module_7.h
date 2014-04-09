@@ -17,6 +17,7 @@
 #include "module_0.h"
 #include "module_5.h"
 #include "module_3.h"
+#include "module_8.h"
 
 void partitionRepetitions_FromFile(const char* sourceFilename, const char* destFilname, int mode);
 

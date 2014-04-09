@@ -43,7 +43,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/module_4.o \
 	${OBJECTDIR}/module_5.o \
 	${OBJECTDIR}/module_6.o \
-	${OBJECTDIR}/module_7.o
+	${OBJECTDIR}/module_7.o \
+	${OBJECTDIR}/module_8.o
 
 
 # C Compiler Flags
@@ -72,48 +73,53 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/acgt_compression_project: ${OBJECTFIL
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 ${OBJECTDIR}/module_0.o: module_0.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_0.o module_0.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_0.o module_0.cpp
 
 ${OBJECTDIR}/module_1.o: module_1.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_1.o module_1.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_1.o module_1.cpp
 
 ${OBJECTDIR}/module_2.o: module_2.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_2.o module_2.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_2.o module_2.cpp
 
 ${OBJECTDIR}/module_3.o: module_3.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_3.o module_3.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_3.o module_3.cpp
 
 ${OBJECTDIR}/module_4.o: module_4.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_4.o module_4.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_4.o module_4.cpp
 
 ${OBJECTDIR}/module_5.o: module_5.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_5.o module_5.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_5.o module_5.cpp
 
 ${OBJECTDIR}/module_6.o: module_6.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_6.o module_6.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_6.o module_6.cpp
 
 ${OBJECTDIR}/module_7.o: module_7.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/module_7.o module_7.cpp
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_7.o module_7.cpp
+
+${OBJECTDIR}/module_8.o: module_8.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/module_8.o module_8.cpp
 
 # Subprojects
 .build-subprojects:

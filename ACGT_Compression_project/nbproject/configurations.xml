@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="90">
+<configurationDescriptor version="94">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -12,6 +12,7 @@
       <itemPath>module_5.h</itemPath>
       <itemPath>module_6.h</itemPath>
       <itemPath>module_7.h</itemPath>
+      <itemPath>module_8.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -29,6 +30,7 @@
       <itemPath>module_5.cpp</itemPath>
       <itemPath>module_6.cpp</itemPath>
       <itemPath>module_7.cpp</itemPath>
+      <itemPath>module_8.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -89,6 +91,10 @@
       </item>
       <item path="module_7.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="module_8.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="module_8.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
@@ -143,6 +149,10 @@
       <item path="module_7.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="module_7.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="module_8.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="module_8.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

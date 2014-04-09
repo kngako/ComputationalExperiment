@@ -214,8 +214,8 @@ void recRepetitionPartitioner_file(char*& str, int curPos, partitionedString& cu
         {
             partition* temp = new partition;            
             temp->partitionStr = copyChar(str,curPos,i);
-            temp->distinicIndex = 0;
-            temp->huffmanCWIndex = 0;
+            temp->distinicIndex = -1;
+            temp->huffmanCWIndex = -1;
             
             bool doSubtract = false;
 
@@ -251,6 +251,8 @@ void recRepetitionPartitioner_file(char*& str, int curPos, partitionedString& cu
             if(list[i]->startpos > 1)
             {
                 
+                setupDistinct(currentPartitionedString);
+                setupHuffmanCW(currentPartitionedString);
                 char* ptr = partitionedStringToString(currentPartitionedString);
 
                 outFile << ptr << endl;

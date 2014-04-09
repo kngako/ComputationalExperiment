@@ -2,13 +2,26 @@
 
 void setupDistinct(partitionedString& partitionedStr)
 {
+    for(unsigned int j = 0; j < partitionedStr.size(); j++)
+    {
+        partitionedStr[j]->distinicIndex = -1;
+        partitionedStr[j]->huffmanCWIndex = -1;
+    }
+    
+    int highest = -1;
     for(int i = 0; i < partitionedStr.size(); i++)
     {
         partitionedStr[i]->distinicIndex = contains(partitionedStr, partitionedStr[i]);
         if(partitionedStr[i]->distinicIndex == -1)
         {
             partitionedStr[i]->distinicIndex = highestDistinct(partitionedStr) + 1;
+            highest = partitionedStr[i]->distinicIndex;
         }
+    }
+    highest++;
+    for(int i = 0; i < partitionedStr.size(); i++)
+    {
+        partitionedStr[i]->distinicIndex = highest;
     }
 }
 
