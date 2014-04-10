@@ -27,10 +27,21 @@ void Partition(string pattern, const char* fn)
             split(i, 0, part, newNode, pattern);
             partitionToFile(newNode, partitions, pattern, i, file);
         }
+        
+        for(unsigned int i = 0; i < partitions.size(); i++)
+        {
+            for(unsigned int j = 0; j < partitions[i].size(); j++)
+            {
+                delete [] partitions[i][j]->partitionStr;
+                delete partitions[i][j];
+            }
+        }
+        
+        file.close();
     }
     else
     {
-        cout << pattern << " already computed.";
+        cout << " -NOTE: " << pattern << " already computed.";
     }
 //    }
 //    else
@@ -55,7 +66,7 @@ void Partition(string pattern, const char* fn)
 //            tokens >> tmp;
 //        }
 //    }
-    print(partitions, pattern);
+    //print(partitions, pattern);
 }
 
 partitionedString& addToPartitionedString(partitionedString& partitionedStr, string partitionToAdd)
@@ -98,6 +109,7 @@ void partitionToFile(partitionedString& partitioned, vector<partitionedString>& 
 void createPartitionedString(string pattern, partitionedString& newPartitionedString)
 {
     partition* initial = new partition;
+
     createPartition(pattern, initial);
     newPartitionedString.push_back(initial);
 }
@@ -105,6 +117,7 @@ void createPartitionedString(string pattern, partitionedString& newPartitionedSt
 
 void createPartition(string pattern, partition* newPartition)
 {
+    
     copyOverPatritionString(newPartition, pattern);
     newPartition->huffmanCWIndex = -1; // TODO: Implement weight calculation
     newPartition->distinicIndex = -1;
@@ -163,8 +176,11 @@ partitionedString& split(int index, int currentIndex, partitionedString& partStr
 
     string tmpStr = part->partitionStr;
     
+    delete [] part->partitionStr;
+    
     copyOverPatritionString(newPartStr[newPartStr.size() - 1], tmpStr.substr(0, index - currentIndex));
     partition* tmpPart = new partition;
+
     createPartition(pattern.substr(index), tmpPart);
     
     newPartStr.push_back(tmpPart);
@@ -180,6 +196,7 @@ void copyPartitionedString(partitionedString& orig, partitionedString& newPartit
     for(int i = 0; i < orig.size(); i++)
     {
         partition* newPart = new partition;
+
         copyPartition(orig.at(i), newPart);
         newPartition.push_back(newPart);
     }

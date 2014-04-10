@@ -19,9 +19,9 @@ using namespace std;
 #include <string>
 #include <iostream>
 
-void createPreCache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* expName);
-void createPartitionedStrings(const char* expName);
-void calcualteCompressionGain(const char* expName);
+void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* expName);
+void execStage2_partitiondata(const char* expName);
+void execStage3_calculationdata(const char* expName);
 
 /*
  * 
@@ -243,9 +243,9 @@ int main(int argc, char** argv)
                 cin >> l;
                 cout << "Highest: ";
                 cin >> h;
-                createPreCache(m,l,h,experiment.c_str());
-                createPartitionedStrings(experiment.c_str());
-                calcualteCompressionGain(experiment.c_str());
+                execStage1_precache(m,l,h,experiment.c_str());
+                execStage2_partitiondata(experiment.c_str());
+                execStage3_calculationdata(experiment.c_str());
                 break;
             default: 
                 active = false;
@@ -264,7 +264,7 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void createPreCache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* name)
+void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* name)
 {
     ostringstream strm;
     
@@ -348,9 +348,11 @@ void createPreCache(unsigned long long int m, unsigned long int l, unsigned long
     delete [] experimentPath;
     delete [] humffmanFolderPath;
     delete [] precachePath;
+    
+    cout << "Stage 1 complete..." << endl << "=======================================" << endl;
 }
 
-void createPartitionedStrings(const char* expName)
+void execStage2_partitiondata(const char* expName)
 {
     ostringstream strm;
     
@@ -416,9 +418,11 @@ void createPartitionedStrings(const char* expName)
 
     for (unsigned long long int i = infoFiledata[1]; i <= infoFiledata[2]; i++)
     {
+        cout << "Generating partition files for stings of length: " << i << endl;
+        double count = getNumberOfIsomorphicStringFor(i);
         for(unsigned long long int j = 1; j <= getNumberOfIsomorphicStringFor(i); j++)
         {
-            
+            cout << "\r Processing " << j << " of " << count << " files (" << (100 * (j/count)) << "% complete)";
             mappedString* temp = getNonIsomorphicString_FromFile(NIstringsFolderPath,i,j);
             char* str = getStringFromMap(temp);
             
@@ -431,29 +435,31 @@ void createPartitionedStrings(const char* expName)
             
             char* repfile = new char[strm.str().length() + 1];
             strcpy(repfile,strm.str().c_str());
-            cout << endl << "============================================" << endl;
-            cout << "Generating repetitions for " << str << "..." << endl;
+            //cout << endl << "============================================" << endl;
+            //cout << "Generating repetitions for " << str << "..." << endl;
             getAllRepetitions_XYX_File(str,repfile);
             
             strm.str("");
             strm << reppartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
             strm << i << "_" << j << "." << PARTITION_FILE_EXT;
             
-            cout << "Generating partitions that contain repetitions for " << str << "..." << endl;
+            //cout << "Generating partitions that contain repetitions for " << str << "..." << endl;
             partitionRepetitions_FromFile(repfile,strm.str().c_str(),0);
             
             strm.str("");
             strm << allpartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
             strm << i << "_" << j << "." << PARTITION_FILE_EXT;
             
-            cout << "Generating all partitions for " << str << "..." << endl;
+            //cout << "Generating all partitions for " << str << "..." << endl;
             Partition(str,strm.str().c_str());
             
             delete [] repfile;
             
             delete [] str;
         }
+        cout << endl;
     }
+    
     
     delete [] NIstringsFolderPath;
     delete [] experimentPath;
@@ -465,9 +471,10 @@ void createPartitionedStrings(const char* expName)
     delete [] partitionedDataPath;
     delete [] infoFiledata;
     
+    cout << "Stage 2 complete..." << endl << "=======================================" << endl;
 }
 
-void calcualteCompressionGain(const char* expName)
+void execStage3_calculationdata(const char* expName)
 {
     ostringstream strm;
     
@@ -553,9 +560,11 @@ void calcualteCompressionGain(const char* expName)
 
     for (unsigned long long int i = infoFiledata[1]; i <= infoFiledata[2]; i++)
     {
+        cout << "Generating results files for stings of length: " << i << endl;
+        double count = getNumberOfIsomorphicStringFor(i);
         for(unsigned long long int j = 1; j <= getNumberOfIsomorphicStringFor(i); j++)
         {
-            
+            cout << "\r Processing " << j << " of " << count << " files (" << (100 * (j/count)) << "% complete)";
             mappedString* temp = getNonIsomorphicString_FromFile(NIstringsFolderPath,i,j);
             char* str = getStringFromMap(temp);
             
@@ -563,7 +572,7 @@ void calcualteCompressionGain(const char* expName)
             delete temp;
             
             
-            cout << endl << "============================================" << endl;
+            //cout << endl << "============================================" << endl;
             
             strm.str("");
             strm << represultsPath << FILEMANAGER_PATH_DELIMINATOR;
@@ -571,7 +580,7 @@ void calcualteCompressionGain(const char* expName)
             char* resultFile = new char[strm.str().length() + 1];
             strcpy(resultFile,strm.str().c_str());
             
-            cout << "Generating results for all partitions of " << str << " that contain repetitions..." << endl;
+            //cout << "Generating results for all partitions of " << str << " that contain repetitions..." << endl;
             
             strm.str("");
             strm << reppartitionsFolderPath << FILEMANAGER_PATH_DELIMINATOR;
@@ -584,7 +593,7 @@ void calcualteCompressionGain(const char* expName)
             delete [] resultFile;
             delete [] partFile;
             
-            cout << "Generating results for all partitions of " << str << "..." << endl;
+            //cout << "Generating results for all partitions of " << str << "..." << endl;
             
             strm.str("");
             strm << allresultsPath << FILEMANAGER_PATH_DELIMINATOR;
@@ -605,6 +614,7 @@ void calcualteCompressionGain(const char* expName)
             
             delete [] str;
         }
+        cout << endl;
     }
     
     delete [] NIstringsFolderPath;
@@ -620,4 +630,6 @@ void calcualteCompressionGain(const char* expName)
     delete [] represultsPath;
     delete [] allresultsPath;
     delete [] infoFiledata;
+    
+    cout << "Stage 3 complete..." << endl << "=======================================" << endl;
 }

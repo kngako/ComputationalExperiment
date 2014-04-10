@@ -96,7 +96,11 @@ codeWords getAllCodeWordsInString(char* str)
         {
             temp.push_back(stringToCodeWord(curTok));
         }
+        
+        delete [] curTok;
+        
         curTok = nextTok(str,curPos," ");
+        
         count++;
     }
 

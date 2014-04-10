@@ -5,10 +5,10 @@
 void partitionRepetitions_FromFile(const char* sourceFilename, const char* destFilname, int mode = 0)
 {
     char* string = NULL;
-    cout << sourceFilename << endl;
-    cout << destFilname << endl;
+    //cout << sourceFilename << endl;
+    //cout << destFilname << endl;
     vector<repetition*> list = generateRepetitionListFromFile(sourceFilename, string);
-    cout << "Number of repetitions found: " << list.size() << endl;
+    //cout << "Number of repetitions found: " << list.size() << endl;
     //If the list is in cluster order
     /*if(mode == 0)
     {

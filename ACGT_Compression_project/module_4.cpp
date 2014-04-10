@@ -30,7 +30,7 @@ void calculateCompressionGain_FromPartitionFile(char* str, const char* partition
         }
         
     } while(tempPartitoned.size() > 0);
-    cout << "Number of partitions found in file: " << p - 1 << endl;
+    //cout << "Number of partitions found in file: " << p - 1 << endl;
     file.close();
 }
 
@@ -39,8 +39,8 @@ void calculateAndStoreCompressionGain(char* str, partitionedString& partitionedS
     compressionInfo* temp = new compressionInfo;
     
     char* encodedStr = encodePartitionedStringToEncodedString(partitionedStr,huffmanTableFilename);
-    cout << "String: " << str << endl;
-    cout << "Encoded str: " << encodedStr << endl;
+    //cout << "String: " << str << endl;
+    //cout << "Encoded str: " << encodedStr << endl;
     int len1 = strlen(str);
     int len2 = strlen(encodedStr);
     //cout << len1 <<" " << len2 << endl;
@@ -121,8 +121,11 @@ char* encodePartitionedStringToEncodedString(partitionedString& input, const cha
             }
             
             //construct encoded string
-            strm2 << cwToString(huffmanCWs[ind]);
+            char* ptr = cwToString(huffmanCWs[ind]);
             
+            strm2 << ptr;
+            
+            delete [] ptr;
         }
         
         

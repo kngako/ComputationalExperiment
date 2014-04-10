@@ -307,7 +307,7 @@ bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, in
         
 	for(unsigned long long int j = m; j <= m; j++)
 	{
-                cout << "Huffman codewords for m = " << j << endl;
+                //cout << "Huffman codewords for m = " << j << endl;
                 outputFile << j << " ";
                 //outputFile << "{m:" << j << ",data:[";
 
