@@ -492,8 +492,18 @@ compressionInfo* stringToCompressionInfo(char* str)
             curTok = strtok(NULL," ");
             count++;
     }
-
-    return temp;
+    
+    if(strcmp(str,"") == 0)
+    {
+        //cout << "returning null" << endl;
+        //delete [] temp->partstr;
+        delete temp;
+        return NULL;
+    }
+    else
+    {
+        return temp;
+    }
 }
 
 //Module_7 & Module_6

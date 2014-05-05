@@ -22,6 +22,7 @@ using namespace std;
 void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* expName);
 void execStage2_partitiondata(const char* expName);
 void execStage3_calculationdata(const char* expName);
+void execStage4_analysisdata(const char* expName);
 
 /*
  * 
@@ -246,6 +247,7 @@ int main(int argc, char** argv)
                 execStage1_precache(m,l,h,experiment.c_str());
                 execStage2_partitiondata(experiment.c_str());
                 execStage3_calculationdata(experiment.c_str());
+                execStage4_analysisdata(experiment.c_str());
                 break;
             default: 
                 active = false;
@@ -502,11 +504,6 @@ void execStage3_calculationdata(const char* expName)
     strcpy(represultsPath,strm.str().c_str());
     
     strm.str("");
-    strm << experimentPath << CALCULATIONDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << ANALYSIS_FOLDER_NAME;
-    char* analysisPath = new char[strm.str().length() + 1];
-    strcpy(analysisPath,strm.str().c_str());
-    
-    strm.str("");
     strm << experimentPath << PARTITIONEDDATA_SUFFIX_FOLDER_NAME;
     char* partitionedDataPath = new char[strm.str().length() + 1];
     strcpy(partitionedDataPath,strm.str().c_str());
@@ -552,17 +549,13 @@ void execStage3_calculationdata(const char* expName)
     strm << "mkdir " << represultsPath;
     system(strm.str().c_str());  
     
-    strm.str("");
-    strm << "mkdir " << analysisPath;
-    system(strm.str().c_str());
-    
     cout << "Populating " << ALLRESULTS_FOLDER_NAME << " and " << REPRESULTS_FOLDER_NAME << " folder for stage 3..." << endl;
 
     for (unsigned long long int i = infoFiledata[1]; i <= infoFiledata[2]; i++)
     {
         cout << "Generating results files for stings of length: " << i << endl;
         double count = getNumberOfIsomorphicStringFor(i);
-        for(unsigned long long int j = 1; j <= getNumberOfIsomorphicStringFor(i); j++)
+        for(unsigned long long int j = 1; j <= count; j++)
         {
             cout << "\r Processing " << j << " of " << count << " files (" << (100 * (j/count)) << "% complete)";
             mappedString* temp = getNonIsomorphicString_FromFile(NIstringsFolderPath,i,j);
@@ -625,11 +618,155 @@ void execStage3_calculationdata(const char* expName)
     delete [] repetitionsFolderPath;
     delete [] reppartitionsFolderPath;
     delete [] partitionedDataPath;
-    delete [] analysisPath;
     delete [] calculationDataPath;
     delete [] represultsPath;
     delete [] allresultsPath;
     delete [] infoFiledata;
     
     cout << "Stage 3 complete..." << endl << "=======================================" << endl;
+}
+
+void execStage4_analysisdata(const char* expName)
+{
+    ostringstream strm;
+    
+    cout << "Setting up analysis data folder for stage 4..." << endl;
+    
+    strm << expName << FILEMANAGER_PATH_DELIMINATOR;
+    char* experimentPath = new char[strm.str().length() + 1];
+    strcpy(experimentPath,strm.str().c_str());
+    
+    unsigned long long int* infoFiledata = readInfoFile(experimentPath);
+    
+    strm.str("");
+    strm << experimentPath << CALCULATIONDATA_SUFFIX_FOLDER_NAME;
+    char* calculationDataPath = new char[strm.str().length() + 1];
+    strcpy(calculationDataPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << experimentPath << CALCULATIONDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << ALLRESULTS_FOLDER_NAME;
+    char* allresultsPath = new char[strm.str().length() + 1];
+    strcpy(allresultsPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << experimentPath << CALCULATIONDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << REPRESULTS_FOLDER_NAME;
+    char* represultsPath = new char[strm.str().length() + 1];
+    strcpy(represultsPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << experimentPath << CALCULATIONDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << ALL_ANALYSIS_FOLDER_NAME;
+    char* AllAnalysisPath = new char[strm.str().length() + 1];
+    strcpy(AllAnalysisPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << experimentPath << CALCULATIONDATA_SUFFIX_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR << REP_ANALYSIS_FOLDER_NAME;
+    char* RepAnalysisPath = new char[strm.str().length() + 1];
+    strcpy(RepAnalysisPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << experimentPath << PARTITIONEDDATA_SUFFIX_FOLDER_NAME;
+    char* partitionedDataPath = new char[strm.str().length() + 1];
+    strcpy(partitionedDataPath,strm.str().c_str());
+    
+    strm << FILEMANAGER_PATH_DELIMINATOR << REPETITIONS_FOLDER_NAME;
+    char* repetitionsFolderPath = new char[strm.str().length() + 1];
+    strcpy(repetitionsFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << partitionedDataPath << FILEMANAGER_PATH_DELIMINATOR << ALLPARTITIONS_FOLDER_NAME;
+    char* allpartitionsFolderPath = new char[strm.str().length() + 1];
+    strcpy(allpartitionsFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << partitionedDataPath << FILEMANAGER_PATH_DELIMINATOR << REPPARTITIONS_FOLDER_NAME;
+    char* reppartitionsFolderPath = new char[strm.str().length() + 1];
+    strcpy(reppartitionsFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << expName << FILEMANAGER_PATH_DELIMINATOR << PRECACHE_SUFFIX_FOLDER_NAME;
+    char* precachePath = new char[strm.str().length() + 1];
+    strcpy(precachePath,strm.str().c_str());
+    
+    strm.str("");
+    strm << precachePath << FILEMANAGER_PATH_DELIMINATOR << HUFFMAN_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR;
+    char* humffmanFolderPath = new char[strm.str().length() + 1];
+    strcpy(humffmanFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << precachePath << FILEMANAGER_PATH_DELIMINATOR << NONISOMORPHIC_FOLDER_NAME << FILEMANAGER_PATH_DELIMINATOR;
+    char* NIstringsFolderPath = new char[strm.str().length() + 1];
+    strcpy(NIstringsFolderPath,strm.str().c_str());
+
+    strm.str("");
+    strm << "mkdir " << AllAnalysisPath;
+    system(strm.str().c_str());
+    
+    strm.str("");
+    strm << "mkdir " << RepAnalysisPath;
+    system(strm.str().c_str());
+    
+    cout << "Populating " << ALL_ANALYSIS_FOLDER_NAME << " and " << REP_ANALYSIS_FOLDER_NAME << " folder for stage 4..." << endl;
+
+    for (unsigned long long int i = infoFiledata[1]; i <= infoFiledata[2]; i++)
+    {
+        cout << "Generating analysis files for stings of length: " << i << endl;
+        double count = getNumberOfIsomorphicStringFor(i);                       
+            
+        //cout << endl << "============================================" << endl;
+
+        strm.str("");
+        strm << represultsPath << FILEMANAGER_PATH_DELIMINATOR;
+        char* resultPath = new char[strm.str().length() + 1];
+        strcpy(resultPath,strm.str().c_str());
+
+        //cout << "Generating results for all partitions of " << str << " that contain repetitions..." << endl;
+
+        strm.str("");
+        strm << RepAnalysisPath << FILEMANAGER_PATH_DELIMINATOR; 
+        char* analysisPath = new char[strm.str().length() + 1];
+        strcpy(analysisPath,strm.str().c_str());
+
+        analysisCompressionGainInfo_ForLenN(analysisPath,resultPath,i,count);
+
+        delete [] resultPath;
+        delete [] analysisPath;
+
+        //cout << "Generating results for all partitions of " << str << "..." << endl;
+
+        strm.str("");
+        strm << allresultsPath << FILEMANAGER_PATH_DELIMINATOR;
+        resultPath = new char[strm.str().length() + 1];
+        strcpy(resultPath,strm.str().c_str());
+
+        strm.str("");
+        strm << AllAnalysisPath << FILEMANAGER_PATH_DELIMINATOR;            
+        analysisPath = new char[strm.str().length() + 1];
+        strcpy(analysisPath,strm.str().c_str());
+
+        analysisCompressionGainInfo_ForLenN(analysisPath,resultPath,i,count);
+
+
+        delete [] resultPath;
+        delete [] analysisPath;
+        
+        cout << endl;
+    }
+    
+    delete [] NIstringsFolderPath;
+    delete [] experimentPath;
+    delete [] humffmanFolderPath;
+    delete [] precachePath;
+    delete [] allpartitionsFolderPath;
+    delete [] repetitionsFolderPath;
+    delete [] reppartitionsFolderPath;
+    delete [] partitionedDataPath;
+    delete [] AllAnalysisPath;
+    delete [] RepAnalysisPath;
+    delete [] calculationDataPath;
+    delete [] represultsPath;
+    delete [] allresultsPath;
+    delete [] infoFiledata;
+    
+    cout << "Stage 4 complete..." << endl << "=======================================" << endl;
+
 }

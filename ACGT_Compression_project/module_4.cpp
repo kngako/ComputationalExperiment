@@ -1,4 +1,4 @@
-//COMPRESSION PROJECT: MODULE 4 ENCODING : module4.cpp
+//COMPRESSION PROJECT: MODULE 4 ENCODING & CALCULATIONS : module4.cpp
 //Created by Mathys Ellis 26/02/2014
 #include "module_4.h"
 
@@ -57,6 +57,160 @@ void calculateAndStoreCompressionGain(char* str, partitionedString& partitionedS
     delete [] out;
     delete [] temp->partstr;
     delete temp;
+}
+
+void saveCompressionGainInfoToFile(compressionInfo* info, fstream& file)
+{
+    char* temp = compressionInfoToString(info);    
+    
+    file << temp << endl;
+    
+    delete [] temp;
+}
+
+compressionInfo* getOptimumCompressionGainForString(const char* CGIFilename)
+{
+    double max = 0;
+    
+    compressionInfo* maxInfo = NULL;
+    compressionInfo* cur = NULL;
+    
+    unsigned long long int index = 1;
+    
+    do
+    {
+        
+        if(cur != NULL && cur != maxInfo)
+        {
+            //cout << index << endl;
+            delete [] cur->partstr;
+            delete cur;
+            
+            cur = NULL;
+        }
+        
+        cur = getCompressionGainInfo_FromFile(CGIFilename,index);
+        //cout << index << endl;
+        
+        if(cur != NULL && ( cur->gain > max || index == 1 ) )
+        {
+            //cout << index << endl;
+            
+            if(maxInfo != NULL)
+            {
+                delete [] maxInfo->partstr;
+                delete maxInfo;
+            }
+            
+            max = cur->gain;
+            maxInfo = cur;
+            
+            
+        } 
+        
+        //cout << "Cur" << cur << endl;
+        //cout << "max1 : "<< maxInfo->partstr << endl;
+        
+        index++;
+        
+    } while (cur != NULL);
+    
+    //cout << "het" << endl;
+    //cout << "max : "<< maxInfo->partstr << endl;
+    return maxInfo;
+    
+}
+
+double getOptimumAverageOfCompressionGainFor(vector<compressionInfo*>& list)
+{
+    double sum = 0;
+    
+    for(unsigned int i = 0; i < list.size(); i++)
+    {
+        sum += list[i]->gain;
+    }
+    
+    sum = sum / list.size();
+    
+    return sum;
+}
+
+void analysisCompressionGainInfo_ForLenN(const char* outputPath, const char* CGIpath, unsigned long long int lenIndex, unsigned long long int count)
+{ 
+    char* outFilename = new char[STD_NUMBER_OF_CHARS];
+    sprintf(outFilename,"%s%llu.%s", outputPath, lenIndex, ANALYSIS_FILE_EXT);
+
+    fstream file;
+    
+    file.open(outFilename,ios::out);
+    
+    delete [] outFilename;
+    
+    double sum = 0;
+    
+    for(unsigned long long int i = 1; i <= count; i++)
+    {
+        cout << "\r Processing " << i << " of " << count << " files (" << (100 * (i/count)) << "% complete)"; 
+        
+        char* filename = new char[STD_NUMBER_OF_CHARS];
+        sprintf(filename,"%s%llu_%llu.%s", CGIpath, lenIndex, i,COMPRESSION_GAIN_FILE_EXT);
+        
+        compressionInfo* temp = getOptimumCompressionGainForString(filename);
+        
+        delete [] filename;
+        
+        if(temp != NULL)
+        {        
+            sum += temp->gain;
+
+            saveCompressionGainInfoToFile(temp, file);
+
+            delete [] temp->partstr;
+            delete temp;
+        }
+    }
+    
+    double average = sum / count;
+     
+    compressionInfo* avgInfo = new compressionInfo;
+    avgInfo->gain = average;
+    avgInfo->partstr = new char[STD_NUMBER_OF_CHARS];
+    sprintf(avgInfo->partstr,"AVERAGE");
+
+    
+    saveCompressionGainInfoToFile(avgInfo, file);
+
+    delete [] avgInfo->partstr;
+    delete avgInfo;
+ 
+    file.close();   
+    
+}
+
+compressionInfo* getCompressionGainInfo_FromFile(const char* filename, unsigned long long int index)
+{
+    //cout << filename << endl;
+    char* data = getLine_FromFile(filename,index);    
+    
+    compressionInfo* temp = NULL;
+    
+    if(data != NULL)
+    {
+        //cout << "str:" << data << endl;
+        temp = stringToCompressionInfo(data);        
+        
+        delete [] data;
+        
+        return temp;
+    }
+    else
+    {
+        cout << "NULL" << endl;
+        return NULL;
+    }
+          
+    
+    
 }
 
 double getCompressionGain_2Str(char* normal, int len1, char* encoded, int len2)

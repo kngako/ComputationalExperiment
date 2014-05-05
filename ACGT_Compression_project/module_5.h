@@ -18,6 +18,7 @@ const char NONISOMORPHIC_FILE_EXT[] = "NIF";
 const char REPETITION_FILE_EXT[] = "RFF";
 const char PARTITION_FILE_EXT[] = "PWF";
 const char COMPRESSION_GAIN_FILE_EXT[] = "CGF";
+const char ANALYSIS_FILE_EXT[] = "ASF";
 
 const char EXP_INFO_FILE_NAME[] = "info.DAT";
 
@@ -33,7 +34,8 @@ const char REPETITIONS_FOLDER_NAME[] = "RepetitionData";
 const char CALCULATIONDATA_SUFFIX_FOLDER_NAME[] = "_calculationdata";
 const char ALLRESULTS_FOLDER_NAME[] = "AllResults";
 const char REPRESULTS_FOLDER_NAME[] = "RepResults";
-const char ANALYSIS_FOLDER_NAME[] = "Analysis";
+const char ALL_ANALYSIS_FOLDER_NAME[] = "AllAnalysis";
+const char REP_ANALYSIS_FOLDER_NAME[] = "RepAnalysis";
 
 const char COMPUTATION_FOLDER_NAME[] = "ACGT_COMPUTATION";
 const char FILEMANAGER_PATH_DELIMINATOR = '/';
