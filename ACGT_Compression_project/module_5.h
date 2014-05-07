@@ -43,6 +43,6 @@ const char FILEMANAGER_PATH_DELIMINATOR = '/';
 char* getLine_FromFile(const char* filename, unsigned long long int lineIndex);
 vector<char*> getAllLines_FromFile (const char* filename);
 
-void ceateInfoFile(const char* path, unsigned long long int l, unsigned long long int h, unsigned long long int m);
+void ceateInfoFile(const char* path, unsigned long long int l, unsigned long long int h, unsigned long long int m, unsigned long long int c);
 unsigned long long int* readInfoFile(const char* path);
 #endif

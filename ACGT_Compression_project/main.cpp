@@ -19,7 +19,8 @@ using namespace std;
 #include <string>
 #include <iostream>
 
-void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* expName);
+unsigned long long int execStage0_LoadFile(const char* filename, const char* expName);
+void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned long int h, unsigned long long int c, const char* expName);
 void execStage2_partitiondata(const char* expName);
 void execStage3_calculationdata(const char* expName);
 void execStage4_analysisdata(const char* expName);
@@ -34,9 +35,9 @@ int main(int argc, char** argv)
     while (active)
     {
         
-        cout << endl << "Module testing unit" << endl;
-        cout << "Choose test:" << endl;
-        cout << "1: Module 1 - getHuffmanCodeWords_File " << endl;
+        //cout << endl << "Module testing unit" << endl;
+        //cout << "Choose test:" << endl;
+        /*cout << "1: Module 1 - getHuffmanCodeWords_File " << endl;
         cout << "2: Module 1 - getCodeWord_FromFile " << endl;
         cout << "10: Module 2 - getNonIsomorphicStrings_NLen_File" << endl;
         cout << "12: Module 2 - getNonIsomorphicString_FromFile" << endl;
@@ -46,15 +47,16 @@ int main(int argc, char** argv)
         cout << "30: Module 4 - getCompressionGain_2Str" << endl;
         cout << "40: Module 6 - partition (Partition a string)" << endl;
         cout << "41: Module 6 - partition (Calculate weight of partitioned string)" << endl;
-        cout << "50: Module 7 - Repetition partitioner" << endl;
-        cout << "60: Precache - Precache the experiment" << endl;
+        cout << "50: Module 7 - Repetition partitioner" << endl;*/
+        cout << "60: Create experiment using automated string generation" << endl;
+        cout << "61: Create experiment using custom strings from file" << endl;
         
         int option = 0;
         cin >> option;
         
-        // TODO: Get rid of this hard coding.
         unsigned long long int m;
         unsigned long long int i;
+        unsigned long long int c;
         
         int l;
         int h;
@@ -244,7 +246,20 @@ int main(int argc, char** argv)
                 cin >> l;
                 cout << "Highest: ";
                 cin >> h;
-                execStage1_precache(m,l,h,experiment.c_str());
+                execStage1_precache(m,l,h,0,experiment.c_str());
+                execStage2_partitiondata(experiment.c_str());
+                execStage3_calculationdata(experiment.c_str());
+                execStage4_analysisdata(experiment.c_str());
+                break;
+            case 61:      
+                cout << "Enter precache experiment name[ExpName]: ";
+                cin >> experiment;
+                cout << "Enter file name containing ACGT strings: ";
+                cin >> fn;
+                cout << "Enter the maximum 'm' for the Huffman table:" << endl;
+                cin >> m;
+                c = execStage0_LoadFile(fn,experiment.c_str());
+                execStage1_precache(m,0,0,c,experiment.c_str());
                 execStage2_partitiondata(experiment.c_str());
                 execStage3_calculationdata(experiment.c_str());
                 execStage4_analysisdata(experiment.c_str());
@@ -266,13 +281,86 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned long int h, const char* name)
+unsigned long long int execStage0_LoadFile(const char* filename, const char* expName)
+{
+    ostringstream strm;
+    
+    cout << "Setting up custom string data folder for stage 1..." << endl;
+    
+    strm << expName << FILEMANAGER_PATH_DELIMINATOR;
+    char* experimentPath = new char[strm.str().length() + 1];
+    strcpy(experimentPath,strm.str().c_str());
+    
+    strm << PRECACHE_SUFFIX_FOLDER_NAME;
+    char* precachePath = new char[strm.str().length() + 1];
+    strcpy(precachePath,strm.str().c_str());
+    
+    strm.str("");
+    strm << precachePath << FILEMANAGER_PATH_DELIMINATOR << NONISOMORPHIC_FOLDER_NAME;
+    char* NIstringsFolderPath = new char[strm.str().length() + 1];
+    strcpy(NIstringsFolderPath,strm.str().c_str());
+    
+    strm.str("");
+    strm << "mkdir " << expName;
+        cout << strm.str().c_str() << endl;    
+    system(strm.str().c_str());
+    
+    strm.str("");
+    strm << "mkdir " << precachePath;
+    cout << strm.str().c_str() << endl;
+    system(strm.str().c_str());
+
+    strm.str("");
+    strm << "mkdir " << NIstringsFolderPath;
+    cout << strm.str().c_str() << endl;
+    system(strm.str().c_str());
+    
+    strm.str("");
+    strm << NIstringsFolderPath << FILEMANAGER_PATH_DELIMINATOR << 0 << "." << NONISOMORPHIC_FILE_EXT;
+    
+    unsigned long long int count = 0;
+    
+    fstream inputFile;
+    fstream outputFile;
+    inputFile.open(filename,ios::in);
+    outputFile.open(strm.str().c_str(), ios::out);
+    
+    if (inputFile)
+    {
+        
+        cout << "Populating " << NONISOMORPHIC_FOLDER_NAME << " folder for stage 0..." << endl;
+        
+        cout << "Converting " << filename << " to 0.NIF file:" << endl;
+        
+        count = convertStringFileToNonIsomorphicFile(inputFile,outputFile);
+        
+        cout << endl;
+        
+        inputFile.close();
+        outputFile.close();
+        
+    }
+    else
+    {
+        cout << "File could not be opened / located." << endl;        
+    }
+    
+    delete [] NIstringsFolderPath;
+    delete [] experimentPath;
+    delete [] precachePath;
+    
+    cout << "Stage 0 complete..." << endl << "=======================================" << endl;
+    
+    return count;
+}
+
+void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned long int h, unsigned long long int c, const char* expName)
 {
     ostringstream strm;
     
     cout << "Setting up precache data folder for stage 1..." << endl;
     
-    strm << name << FILEMANAGER_PATH_DELIMINATOR;
+    strm << expName << FILEMANAGER_PATH_DELIMINATOR;
     char* experimentPath = new char[strm.str().length() + 1];
     strcpy(experimentPath,strm.str().c_str());
     
@@ -290,17 +378,16 @@ void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned
     strcpy(NIstringsFolderPath,strm.str().c_str());
     
     strm.str("");
-    strm << "mkdir " << name;
+    strm << "mkdir " << expName;
         cout << strm.str().c_str() << endl;    
     system(strm.str().c_str());
     
-    ceateInfoFile(experimentPath,l,h,m);
+    ceateInfoFile(experimentPath,l,h,m,c);
     
     strm.str("");
     strm << "mkdir " << precachePath;
     cout << strm.str().c_str() << endl;
     system(strm.str().c_str());
-    
     
     strm.str("");
     strm << "mkdir " <<  humffmanFolderPath;
@@ -325,7 +412,7 @@ void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned
         
         cout << "Populating " << NONISOMORPHIC_FOLDER_NAME << " folder for stage 1..." << endl;
         
-        if(l <= h && l > 0 && h > 0)
+        if(l <= h && l > 0 && h > 0 )
         {
             for(int i = l; i <= h; i++)
             {
@@ -335,6 +422,10 @@ void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned
                 cout << "Generating NIF file for strings of length " << i << ":" << endl;                
                 getNonIsomorphicStrings_NLen_File(strm.str().c_str(), i, 0);
             }
+        }
+        else if (h == 0 && l == 0)
+        {
+            cout << "Stage 0 was executed. This is a custom run." << endl;
         }
         else
         {
@@ -421,10 +512,22 @@ void execStage2_partitiondata(const char* expName)
     for (unsigned long long int i = infoFiledata[1]; i <= infoFiledata[2]; i++)
     {
         cout << "Generating partition files for stings of length: " << i << endl;
-        double count = getNumberOfIsomorphicStringFor(i);
-        for(unsigned long long int j = 1; j <= getNumberOfIsomorphicStringFor(i); j++)
+        
+        double count = 0;
+        
+        if(infoFiledata[1] == 0 && infoFiledata[2] == 0)
+        {
+            count = infoFiledata[3];
+        }
+        else
+        {
+            count = getNumberOfIsomorphicStringFor(i);
+        }
+        
+        for(unsigned long long int j = 1; j <= count; j++)
         {
             cout << "\r Processing " << j << " of " << count << " files (" << (100 * (j/count)) << "% complete)";
+            
             mappedString* temp = getNonIsomorphicString_FromFile(NIstringsFolderPath,i,j);
             char* str = getStringFromMap(temp);
             
@@ -554,7 +657,18 @@ void execStage3_calculationdata(const char* expName)
     for (unsigned long long int i = infoFiledata[1]; i <= infoFiledata[2]; i++)
     {
         cout << "Generating results files for stings of length: " << i << endl;
-        double count = getNumberOfIsomorphicStringFor(i);
+        
+        double count = 0;
+        
+        if(infoFiledata[1] == 0 && infoFiledata[2] == 0)
+        {
+            count = infoFiledata[3];
+        }
+        else
+        {
+            count = getNumberOfIsomorphicStringFor(i);
+        }
+        
         for(unsigned long long int j = 1; j <= count; j++)
         {
             cout << "\r Processing " << j << " of " << count << " files (" << (100 * (j/count)) << "% complete)";
@@ -710,7 +824,17 @@ void execStage4_analysisdata(const char* expName)
     for (unsigned long long int i = infoFiledata[1]; i <= infoFiledata[2]; i++)
     {
         cout << "Generating analysis files for stings of length: " << i << endl;
-        double count = getNumberOfIsomorphicStringFor(i);                       
+        
+        double count = 0;
+        
+        if(infoFiledata[1] == 0 && infoFiledata[2] == 0)
+        {
+            count = infoFiledata[3];
+        }
+        else
+        {
+            count = getNumberOfIsomorphicStringFor(i);
+        }                     
             
         //cout << endl << "============================================" << endl;
 

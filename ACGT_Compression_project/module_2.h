@@ -38,4 +38,7 @@ bool getNonIsomorphicStrings_NLen_File(const char* filename, int len, unsigned l
 //Get a mappedString from file at a particular path with a length x
 mappedString* getNonIsomorphicString_FromFile(const char* path, unsigned long long int lenIndex, unsigned long long int NIStringIndex);
 
+//Convert strings file to non isomorphic string file
+unsigned long long int convertStringFileToNonIsomorphicFile(fstream& in, fstream& out);
+
 #endif

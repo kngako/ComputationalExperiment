@@ -316,3 +316,40 @@ mappedString* getNonIsomorphicString_FromFile(const char* path, unsigned long lo
     
     return temp;
 }
+
+unsigned long long int convertStringFileToNonIsomorphicFile(fstream& in, fstream& out)
+{
+    unsigned long long int count = 0;    
+    
+    while(!in.eof())
+    {
+        cout << "Converting string " << count << " to NI string...\r";
+        
+        char* temp = new char[STD_NUMBER_OF_CHARS];   
+        
+        in >> temp;
+        
+        mappedString* tempMap = mapString(temp);
+        
+        if(tempMap == NULL)
+        {
+            cout << "Error occurred during conversion of string!" << endl;
+            exit(-1);
+        }
+        
+        delete [] temp;
+        
+        temp = mappedStringToString(tempMap);
+        
+        out << temp << endl;
+        
+        delete [] temp;
+        delete [] tempMap->mappedStr;
+        delete tempMap;
+        
+        count++;
+    }
+    
+    return count;
+    
+}

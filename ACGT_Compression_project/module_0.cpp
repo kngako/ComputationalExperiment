@@ -123,11 +123,11 @@ mappedString* mapString(char* inputStr)
     result->mapping[G_IDX] = -1;
     result->mapping[T_IDX] = -1;
 
-    result->mappedStr = new char[len];
+    result->mappedStr = new char[len + 1];
 
     for(int i = 0; i < len; i++)
     {
-    int* cur; //Pointer to current INDEX a.k.a IDX *used to simplfiy code*
+            int* cur; //Pointer to current INDEX a.k.a IDX *used to simplfiy code*
 
             //Checks current char of inputStr and sets cur to point to correct mapping index of result
             switch (toupper(inputStr[i]))
@@ -146,7 +146,9 @@ mappedString* mapString(char* inputStr)
                             result->mapping[C_IDX] = -1;
                             result->mapping[G_IDX] = -1;
                             result->mapping[T_IDX] = -1;
-                            return result;//error code
+                            delete result;
+                            
+                            return NULL;//error code
                             break;
             }
 
@@ -159,7 +161,7 @@ mappedString* mapString(char* inputStr)
             result->mappedStr[i] = (char)(*cur + 48); //Adds the current map value to the complete mapped string of result
     }
 
-    result->mappedStr += '\0'; //Null terminate the mappedStr of result
+    result->mappedStr[len] = '\0'; //Null terminate the mappedStr of result
 
     return result;
 }
@@ -193,8 +195,8 @@ char* getStringFromMap(mappedString* inputMap)
             }
             else
             {
-        return NULL; //error code
-    }
+                    return NULL; //error code
+            }
 
     }
 
@@ -205,14 +207,22 @@ char* getStringFromMap(mappedString* inputMap)
 
 char* mappedStringToString(mappedString* map)
 {
-    ostringstream strm;
-    strm << map->mappedStr << " " << map->mapping[A_IDX] << " " << map->mapping[C_IDX] << " " << map->mapping[G_IDX] << " " << map->mapping[T_IDX];
-	
-    char* outStr = new char[strm.str().length() + 1];
+    if(map != NULL)
+    {
+        ostringstream strm;
 
-    strcpy(outStr,strm.str().c_str());
+        strm << map->mappedStr << " " << map->mapping[A_IDX] << " " << map->mapping[C_IDX] << " " << map->mapping[G_IDX] << " " << map->mapping[T_IDX];
 
-    return outStr;
+        char* outStr = new char[strm.str().length() + 1];
+
+        strcpy(outStr,strm.str().c_str());
+
+        return outStr;
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 mappedString* stringToMappedString(char* str)
@@ -244,6 +254,11 @@ mappedString* stringToMappedString(char* str)
 		curTok = strtok(NULL," ");
 	  	count++;
 	}
+        
+        if(strlen(str) == 0)
+        {
+            return NULL;
+        }
 
 	return temp;
 }

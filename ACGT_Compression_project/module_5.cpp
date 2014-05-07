@@ -88,7 +88,7 @@ vector<char*> getAllLines_FromFile (const char* filename)
   return out;
 }
 
-void ceateInfoFile(const char* path, unsigned long long int l, unsigned long long int h, unsigned long long int m)
+void ceateInfoFile(const char* path, unsigned long long int l, unsigned long long int h, unsigned long long int m, unsigned long long int c)
 {
     fstream file;
     char* filename = new char[STD_NUMBER_OF_CHARS];
@@ -99,6 +99,7 @@ void ceateInfoFile(const char* path, unsigned long long int l, unsigned long lon
     file << m << endl;
     file << l << endl;
     file << h << endl;
+    file << c << endl;
     
     file.close();
     delete [] filename;
@@ -106,10 +107,11 @@ void ceateInfoFile(const char* path, unsigned long long int l, unsigned long lon
 
 unsigned long long int* readInfoFile(const char* path)
 {
-    unsigned long long int* tempInt = new unsigned long long int[3];
+    unsigned long long int* tempInt = new unsigned long long int[4];
     tempInt[0] = 0;
     tempInt[1] = 0;
     tempInt[2] = 0;
+    tempInt[3] = 0;
     
     char* filename = new char[STD_NUMBER_OF_CHARS];
     
@@ -122,7 +124,7 @@ unsigned long long int* readInfoFile(const char* path)
     if(file)
     {
         int count = 0;
-        while (!file.eof() && count < 3)
+        while (!file.eof() && count < 4)
         {
 
             char* temp = new char[MAX_READ_CHARS];
