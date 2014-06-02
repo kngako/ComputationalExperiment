@@ -1,0 +1,72 @@
+\documentclass[12pt]{article}
+
+\usepackage[english]{babel}
+\usepackage{longtable}
+\usepackage{pdfpages}
+\usepackage{amsthm}
+
+
+\newtheorem{defn}{Definition}[section]
+\newtheorem{obser}{Observation}[section]
+\begin{document}
+
+\begin{center}
+	\LARGE\textbf{XYX-Repetition finder algorithm}
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction}
+This document purposes a viable algorithm for finding all the X-Y-X repetitions in an arbitrary string. X-Y-X repetitions are defined by this document as follows:\\
+\begin{defn}
+	\begin{enumerate}
+		\item 
+		\item Let A be an arbitrary selected alphabet.
+		\item Let S be an arbitrary selected string that consists of two or more characters that are elements of A. 
+		\item Let X be a non-zero length sub-string of S which occurs N times in S. Where $ N \textgreater 1 $. This is the repeating term of the X-Y-X repetition.		
+		\item  Let Y be any of the N - 1 sub-strings of S, which consists of zero or more characters and which starts directly after the end of some occurrence of $X_{i}$ and ends directly before the occurrence of $X_{j}$. Where $j = i + 1$.
+		\item Hence a X-Y-X repetition is defined as the N identical occurrences of X in S that are each separated by N - 1 varying sub-strings Y.	
+	\end{enumerate}
+\end{defn}
+ 
+
+
+\section{Algorithm} 
+In order to provide a formal description of the algorithm purposed above the X-Y-X repetition definition must be used in conjunction with following observation:
+\begin{obser}
+	\begin{enumerate}
+		\item Let R be a X-Y-X repetition in S.
+		\item Let X be the repeating term of R.
+		\item Let M be the sub-string of S which starts at the first character of the first occurrence, of X in S and extends to the last character in S.
+		\item Therefore M contains the N occurrences of X in S.
+		\item Since X is the start of M, it can be observed that each occurrence of X is the sub-string of the prefix of M, which has a length equal to the length of X.
+	\end{enumerate}
+\end{obser}
+
+The above observation forms the core of the first of the two stages in the algorithm.
+
+\subsection{Stage 1: Finding maximum longest prefixes of each character in S}
+
+The first stage splits the arbitrary string S into a list, K, of J sub-strings where J = Length of S. Where the first sub-string in the list is S.
+Each of the sub strings in the K have the following properties
+\begin{enumerate}
+	\item Has a length $T = L - 1$, where L is the length of the sub-string prior to it in the list.
+	\item Is a sub-string of S which starts at the character $C_{J - T} $ in S and ends at character $C_{J}$ in S.
+\end{enumerate}
+
+The stage then creates a list, U, which consist of J 0s. 
+U has the following properties:
+\begin{enumerate}
+	\item Each element, $E_{i}$ is mapped to the corresponding element $C_{i}$ in S.
+	\item Each element is a number $\ge 0$.
+	\item Each element represents the maximum longest prefix which starts at $C_{i}$ in all of the sub-strings of K which has an element that maps to $C_{i}$.  
+	
+\end{enumerate}
+
+Each sub-string, $K_{i}$, in K is then scanned iteratively for the longest prefix sub-string starting at each character, $K_{ij}$. If the value of the element in U which is mapped to by the character index of the $K_{ij}$ is less than the length of longest prefix at $K_{ij}$ then it is replaced by the newly found value. \\
+  
+In order to find the longest prefixes in the string S using a modified version of the O(n) longest prefix sub-string finder algorithm created by Michael G. Main and Richard J. Lorentz and documented in their research article \textit{An O(n log n) Algorithm for finding all repetitions in a String*} which was published in the Journal of Algorithms in 1984.\\
+
+The pseudo code of the stage 1 algorithm follows:
+\end{document}
