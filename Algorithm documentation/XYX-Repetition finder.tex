@@ -11,34 +11,46 @@
 \begin{document}
 
 \begin{center}
-	\LARGE\textbf{XYX-Repetition finder algorithm}
+	\LARGE\textbf{Repeating sub-string finder algorithm}
 \end{center}
 
 \newpage
 \tableofcontents
 \newpage
 \section{Introduction}
-This document purposes a viable algorithm for finding all the X-Y-X repetitions in an arbitrary string. X-Y-X repetitions are defined by this document as follows:\\
+This document purposes a viable algorithm for finding all the repetitions of all the repeating sub-strings in an arbitrary string. Repeating sub-strings are defined by this document as follows:\\
 \begin{defn}
+    Repeating sub-string    
 	\begin{enumerate}
-		\item 
-		\item Let A be an arbitrary selected alphabet.
-		\item Let S be an arbitrary selected string that consists of two or more characters that are elements of A. 
-		\item Let X be a non-zero length sub-string of S which occurs N times in S. Where $ N \textgreater 1 $. This is the repeating term of the X-Y-X repetition.		
-		\item  Let Y be any of the N - 1 sub-strings of S, which consists of zero or more characters and which starts directly after the end of some occurrence of $X_{i}$ and ends directly before the occurrence of $X_{j}$. Where $j = i + 1$.
-		\item Hence a X-Y-X repetition is defined as the N identical occurrences of X in S that are each separated by N - 1 varying sub-strings Y.	
+		\item Let $A$ be an arbitrary selected alphabet.
+		\item Let $S$ be an arbitrary selected string that consists of two or more characters that are elements of $A$.
+		\item Let  $S^{\prime}$ be a sub-string of $S$.
+		\item If there is another sub-string,  $S^{\prime\prime}$, in S that is identical to  $S^{\prime}$ but does not start at the index of  $S^{\prime}$ in S then the sub-string  $S^{\prime}$ is repeated in S and the repeating content of the sub-strings is then denoted by $Z$. The sub-strings $S^{\prime}$, $S^{\prime\prime}$, etc are donated as $Z_{1}$,$Z_{2}$, etc which is generalised to $Z_{i}$ where i indicates the sequential index of the repeating sub-string in relation to all repeating sub-strings of $Z$.
+		\item $Z_{1}$ indicates the first occurrence of $Z$ in $S$ from left to right and $Z_{N}$ indicates the last occurrence of $Z$ in S. Where $N$ is defined as the number of occurrences of a particular repeating term.  
 	\end{enumerate}
 \end{defn}
- 
+The document will further propose an extension of the algorithm that will enable it to find the all the X-Y-X repetitions that occur in the arbitrary sting S. A X-Y-X repetition is defined by this document as follows:   
+\begin{defn} X-Y-X Repetition
+	\begin{enumerate}
+		\item Let A be an arbitrary selected alphabet.
+		\item Let S be an arbitrary selected string that consists of two or more characters that are elements of A. 
+		\item Let X be a non-zero length sub-string of S which repeats M times in S. Where $ M \textgreater 1 $. This is the repeating term of the X-Y-X repetition.		
+		\item  Let Y be any of the M - 1 sub-strings of S, which consists of zero or more characters and which starts directly after the end of some occurrence of $X_{i}$ and ends directly before the occurrence of $X_{j}$. Where $j = i + 1$.
+		\item Hence a X-Y-X repetition is defined as the M identical occurrences of X in S that are each separated by one of the M - 1 varying sub-strings Y.	
+	\end{enumerate}
+\end{defn}
 
+The above definitions and terms lay the bases of the algorithm and will be used throughout the document.
 
 \section{Algorithm} 
-In order to provide a formal description of the algorithm purposed above the X-Y-X repetition definition must be used in conjunction with following observation:
-\begin{obser}
+In order to provide a formal description of the algorithm purposed above the \textit{Repeating sub-string} definition must be used in conjunction with following observation:
+\begin{obser} Repeating sub-strings are identical to the prefix, of equal length, of the sub-string of S starting at the starting index of $Z_{1}$. 
 	\begin{enumerate}
-		\item Let R be a X-Y-X repetition in S.
-		\item Let X be the repeating term of R.
-		\item Let M be the sub-string of S which starts at the first character of the first occurrence, of X in S and extends to the last character in S.
+		
+		\item Let R be the set of all non-identical repeating sub-string content Z in S.
+		\item Let $R_{i}$ be the set of repeated sub-strings ${Z_{1},...,Z_{N}}$ for a particular sub-string content $Z$.
+		\item Let $S^{\prime}$ be the sub-string of S which starts at the index of $Z_{1}$ in S of some set $R_{i}$ and extends of X in S and extends to the last character in S.
+		\item Let P be the prefix of $S^{\prime}$ with a length of $|Z|$.
 		\item Therefore M contains the N occurrences of X in S.
 		\item Since X is the start of M, it can be observed that each occurrence of X is the sub-string of the prefix of M, which has a length equal to the length of X.
 	\end{enumerate}
