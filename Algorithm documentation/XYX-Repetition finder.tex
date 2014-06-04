@@ -20,7 +20,7 @@
 \section{Introduction}
 This document purposes a viable algorithm for finding all the repetitions of all the repeating sub-strings in an arbitrary string. Repeating sub-strings are defined by this document as follows:\\
 \begin{defn}
-    Repeating sub-string    
+    Repeating sub-string $Z$.   
 	\begin{enumerate}
 		\item Let $A$ be an arbitrary selected alphabet.
 		\item Let $S$ be an arbitrary selected string that consists of two or more characters that are elements of $A$.
@@ -44,41 +44,59 @@ The above definitions and terms lay the bases of the algorithm and will be used 
 
 \section{Algorithm} 
 In order to provide a formal description of the algorithm purposed above the \textit{Repeating sub-string} definition must be used in conjunction with following observation:
-\begin{obser} Repeating sub-strings are identical to the prefix, of equal length, of the sub-string of S starting at the starting index of $Z_{1}$. 
-	\begin{enumerate}
-		
+\begin{obser} 
+Repeating sub-strings are identical to the prefix, of length $|Z|$, of the sub-string of S starting at the starting index of the first occurrence of $Z$, $Z_{1}$, in S. 
+	\begin{enumerate}		
 		\item Let R be the set of all non-identical repeating sub-string content Z in S.
 		\item Let $R_{i}$ be the set of repeated sub-strings ${Z_{1},...,Z_{N}}$ for a particular sub-string content $Z$.
-		\item Let $S^{\prime}$ be the sub-string of S which starts at the index of $Z_{1}$ in S of some set $R_{i}$ and extends of X in S and extends to the last character in S.
-		\item Let P be the prefix of $S^{\prime}$ with a length of $|Z|$.
-		\item Therefore M contains the N occurrences of X in S.
-		\item Since X is the start of M, it can be observed that each occurrence of X is the sub-string of the prefix of M, which has a length equal to the length of X.
+		\item Let $S^{\prime}$ be the sub-string of S which starts at the index of $Z_{1}$ in S of some set $R_{i}$ and extends to last index in S.
+		\item Therefore $S^{\prime}$ contains the N occurrences of $Z$ in S. Since $Z{1}$ to $Z_{N}$ all in S and are sequential.
+		\item Let P be the prefix of $S^{\prime}$ with a length of $|Z|$ of $R_{i}$.		
+		\item Since $Z_{1}$ is the start of $S^{\prime}$. It is also P.
+		\item It can be observed that each occurrence of $Z$, $Z_{i}$, is identical to the P.
 	\end{enumerate}
 \end{obser}
 
-The above observation forms the core of the first of the two stages in the algorithm.
+\begin{obser}
+Each occurrence of $Z$ in the string S forms a cluster of $\frac{|Z|(2 + (|Z|-1))}{2}$ repeating sub-strings of S.
+	\begin{enumerate}
+		\item $Z$ has two or more occurrences in $S$ by definition.
+		\item Each occurrence, $Z_{i}$, contains one or more characters by definition.
+		\item Splitting the occurrence,$Z_{i}$, into J layers denoted by L, where J is $|Z_{i}|$ so that each layer $L_{j}$, where $0 \leq j \textless J $, contains $J - j$ equal length partitions of the sub-string $Z$, where each partition's starting index does not duplicate any other partition's starting index on the same layer.
+		\item Each of the partitions on each layer can be seen as a repeating sub-string in S since there is more than one occurrences of it in S since there is more then one occurrence of $Z$ as shown above. 
+		\item Since each layer adds J - j to the total partitions for a particular value of J. Hence the number of partitions contained by a sub-string $Z$ is the summation of the layers which is $J + J - 1 + J - 2 + ... + 2 + 1$. This is an arithmetic sequence that can be described by the explicit formula $a_{n} = a_{1} + (n - 1)d$. Thus the summation of these partitions can be described by the explicit formula $\frac{J(2 + (J-1))}{2}$. 
+		\item Therefore $Z$ forms $N$ clusters containing $\frac{|Z|(2 + (|Z|-1))}{2}$ repeated sub-strings. Since $J = |Z_{i}| = |Z|$.
+		      
+	\end{enumerate}	
+\end{obser}
+
+The above observations forms the core characteristics of a repeating sub-string and the string that contains it. These characteristics are exploited by the algorithm. The algorithm consists of two stages and a third stage that allows for the extension of the algorithm as stated in the introduction of this document.
 
 \subsection{Stage 1: Finding maximum longest prefixes of each character in S}
-
-The first stage splits the arbitrary string S into a list, K, of J sub-strings where J = Length of S. Where the first sub-string in the list is S.
-Each of the sub strings in the K have the following properties
 \begin{enumerate}
-	\item Has a length $T = L - 1$, where L is the length of the sub-string prior to it in the list.
-	\item Is a sub-string of S which starts at the character $C_{J - T} $ in S and ends at character $C_{J}$ in S.
+
+
+\item The first stage splits the arbitrary string S into a array of strings, $K$, of $|S|$ sub-strings. Where the first sub-string in the array is $S$.
+Each of the sub-strings in $K$ have the following properties:
+\begin{enumerate}
+	\item Is donated by $K_{i}$, where i is its index in the array and $ 0 \le i \textless |S|$.
+	\item Has a length $T = |K_{i-1}| - 1$ or $T = |S| - i$, one less the length of the sub-string prior to it in $K$.
+	\item Is a sub-string of S which starts at the character $C_{|S| - T} $ in S and ends at character $C_{|S|}$ in S.
 \end{enumerate}
 
-The stage then creates a list, U, which consist of J 0s. 
+\item Next the algorithm creates a numeric array, $U$, which has a length of $|S|$ and all of its elements are initialised to zero. 
 U has the following properties:
 \begin{enumerate}
-	\item Each element, $E_{i}$ is mapped to the corresponding element $C_{i}$ in S.
-	\item Each element is a number $\ge 0$.
-	\item Each element represents the maximum longest prefix which starts at $C_{i}$ in all of the sub-strings of K which has an element that maps to $C_{i}$.  
+	\item Each element, $E_{i}$ is mapped to the corresponding character $C_{i}$ in S, where $ 0 \le i \textless |S|$.
+	\item Each element has numeric value $\ge 0$.
+	\item Each element represents the maximum longest prefix of all the longest prefixes found in each of the sub-strings in $K$ which have a character index $y$ which can be mapped to the character index $C_{i}$ in S. Where the character index $y$ donates the starting index of the prefix of particular sub-string in $K$. The mapping is defined as $i = y + (|S| - z)$, where $z$ is the index of sub-string in $K$ and $y$ is the character index in $K_{z}$.   
 	
 \end{enumerate}
 
-Each sub-string, $K_{i}$, in K is then scanned iteratively for the longest prefix sub-string starting at each character, $K_{ij}$. If the value of the element in U which is mapped to by the character index of the $K_{ij}$ is less than the length of longest prefix at $K_{ij}$ then it is replaced by the newly found value. \\
+\item Next each sub-string, $K_{z}$, in K is then scanned iteratively for the longest prefix sub-string starting at each character, $K_{zy}$. If the value of the element in U which is mapped to by the character index $y$ of the sub-string $K_{z}$, is less than the length of longest prefix starting at $K_{zy}$ then it is replaced by the length of the longest prefix starting at $K_{zy}$. \\
+\end{enumerate}
   
-In order to find the longest prefixes in the string S using a modified version of the O(n) longest prefix sub-string finder algorithm created by Michael G. Main and Richard J. Lorentz and documented in their research article \textit{An O(n log n) Algorithm for finding all repetitions in a String*} which was published in the Journal of Algorithms in 1984.\\
+In order to find the longest prefixes a modified version of the O(n) longest prefix sub-string finder algorithm created by Michael G. Main and Richard J. Lorentz and documented in their research article \textit{An O(n log n) Algorithm for finding all repetitions in a String*} which was published in the Journal of Algorithms in 1984.\\
 
 The pseudo code of the stage 1 algorithm follows:
 \end{document}
