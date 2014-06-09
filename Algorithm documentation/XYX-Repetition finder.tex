@@ -4,6 +4,19 @@
 \usepackage{longtable}
 \usepackage{pdfpages}
 \usepackage{amsthm}
+\usepackage{listings}
+
+\lstset{
+  columns=flexible,
+  basicstyle=\ttfamily,
+  breaklines=true,
+  keepspaces=true,
+  tabsize=2,
+  mathescape,         
+  literate={->}{$\rightarrow$}{2}
+           {ε}{$\varepsilon$}{1}
+           {<-}{$\leftarrow$}{3}
+}
 
 
 \newtheorem{defn}{Definition}[section]
@@ -43,6 +56,7 @@
 	
 	The above definitions and terms lay the bases of the algorithm and will be used throughout the document.
 \end{flushleft}
+\newpage
 \section{Algorithm}
 \begin{flushleft} 
 	In order to provide a formal description of the algorithm purposed above the \textit{Repeating sub-string} definition must be used in conjunction with following observations:
@@ -85,10 +99,14 @@
 		\end{enumerate}
 	\end{obser}
 	
+	\begin{obser}
+	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, of any of the repeated sub-strings in S overlap in such a way that one of them completely overlaps all the characters of the other then the longer of the two contains all the repeating sub-strings in the cluster of the smaller as well as it owns. Thus the longer absorbs the smaller. 
+	\end{obser}
+	
 	The above observations forms the core characteristics of a repeating sub-string and the string that contains it which will be exploited by the algorithm. The algorithm primarily consists of two stages. A third stage can be added that allows for the extension of the algorithm as stated in the introduction of this document.
 	
 	\subsection{Stage 1: Finding maximum longest prefixes starting at each character index in S}
-		The stage 1 algorithm analyses the string S in such away that a numeric array U, which has the same length as S, is produced. Each element of U indicates the length of the longest repeating sub-string at the particular character index the element corresponds to. 
+		The stage 1 algorithm analyses the string S in such away that a numeric array U, which has the same length as S, is produced. Each element of U indicates the length of the longest repeating sub-string starting at the particular character index the element corresponds to. 
 	
 		\begin{enumerate}	
 		\item The first stage splits the arbitrary string S into a array of strings, $K$, of $|S|$ sub-strings. Where the first sub-string in the array is $S$.
@@ -108,13 +126,58 @@
 				
 			\end{enumerate}
 		
-		\item Next each sub-string, $K_{z}$, in K is then scanned iteratively for the longest prefix sub-string starting at each character, $K_{zy}$. If the value of the element in U which is mapped to by the character index $y$ of the sub-string $K_{z}$, is less than the length of longest prefix starting at $K_{zy}$ then it is replaced by the length of the longest prefix starting at $K_{zy}$. \\
-		\end{enumerate}
+		\item Next each sub-string, $K_{z}$, in K is then scanned iteratively for the longest prefix sub-string* starting at each character, $K_{zy}$. If the value of the element in U which is mapped to by the character index $y$ of the sub-string $K_{z}$, is less than the length of longest prefix starting at $K_{zy}$ then it is replaced by the length of the longest prefix starting at $K_{zy}$. \\
 		
-		  
-		In order to find the longest prefixes a modified version of the O(n) longest prefix sub-string finder algorithm was used. The algorithm was created by Michael G. Main and Richard J. Lorentz and documented in their research article \textit{An O(n log n) Algorithm for finding all repetitions in a String*} which was published in the Journal of Algorithms in 1984.\\
+		\item Since the array elements captures the maximum length of longest prefixes starting at each character index this implies that the elements following the particular starting element will contain a value one less than the previous. This due to the fact that a prefix string covers $|prefix-string|$ elements in $U$ and the cluster repeating sub-strings in the prefix. Thus next the array $U$ is scanned iteratively from left to right in order to remove this unnecessary information. If one of the elements is not zero and does not follow the linearly decreasing sequence above then the element indicates the starting point of a repeating sub-string that is not completely overlapped by the other. In order to remove the unnecessary information, elements containing implied values can be changed to zero. The sub-routine proposed to do so can be found in the pseudo code below.   
+		
+		\end{enumerate}
+				  
+		*In order to find the longest prefixes a modified version of the O(n) longest prefix sub-string finder algorithm was used. The algorithm was created by Michael G. Main and Richard J. Lorentz and documented in their research article \textit{An O(n log n) Algorithm for finding all repetitions in a String*} which was published in the Journal of Algorithms in 1984.\\
 		
 		The pseudo code of the stage 1 algorithm follows:
-	
+		
+	\subsection{Stage 2: Extracting all repeating sub-strings from U}
+		
+	In order to find all the repeating sub-strings in S the algorithm needs to extract them from the array $U$. Since each non-zero element in $U$ indicates a the starting position of the longest repeating sub-string with a length equal to the value of the element, $l$. It also indicates the starting position of a cluster of $\frac{(l)(2 + (l-1))}{2}$ repeating sub-strings. Thus in order to extract the repeating sub-strings this stage needs to scan the the array $U$ from left to right and at every element that is not zero extract the sub-string in $S$ starting at the corresponding character index. This string needs to be partitioned into the $\frac{(l)(2 + (l-1))}{2}$ partitions and recorded. In order to avoid duplicate repeating sub-strings from being created by non-fully overlapped repeating sub-strings a special case must be considered. To cater for both cases the partitioning should occur from left to right in terms of starting position and bottom to top in terms of layers.
+	\newpage
+	\textbf{The pseudo code for the stage 2 algorithm follows:}
+
+\begin{lstlisting}
+S <- String beginning scanned
+U <- Array of longest repeating sub-string starting positions
+L1 <- Empty string array
+L2 <- Empty numeric array
+
+//Scan U for repeating sub-strings starting positions 
+FOR i = 0 to ($|U| - 1$)  
+BEGIN			                
+	//Check if element of U is non-zero
+	IF $U_{i}$ > 0 
+	BEGIN			             
+		
+		//Extract repeating sub-strings
+		FOR j = 0 to $(U_{i} - 1)$ 
+		BEGIN
+		                       
+			//Check for second case repeating sub-strings
+			IF ($U_{i + j} > 0$) AND (j NOT 0) 
+			BEGIN
+				Stop extracting partitions for current sub-string
+			END
+			
+			FOR k = 0 to ($U_{i} - j$)
+			BEGIN                               
+				Grow L1 and L2 by one element so their new size is n
+				$L1_{n}$ <- Sub-string in S which starts at (i + j) and end at (k + 1)
+				$L2_{n}$ <- Starting position of the repeating sub-string (i + j)
+			END
+		
+		END
+		
+	END	
+END		
+\end{lstlisting}
+		
+		
 \end{flushleft}
 \end{document}
