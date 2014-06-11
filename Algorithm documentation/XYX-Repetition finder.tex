@@ -28,6 +28,12 @@
 
 \begin{center}
 	\LARGE\textbf{An algorithm for finding all the repeating sub-strings and X-Y-X repetitions in a string}
+	\\
+	\vspace{0.5in}
+	\large \textbf{By Mathys Ellis}
+	\\
+	\vspace{0.5in}
+	\large \textbf{Version: \today}
 \end{center}
 
 \newpage
@@ -109,16 +115,22 @@
 	\end{thm}
 	
 	\begin{thm}
-	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, of any of the repeated sub-strings in S overlap in such a way that one of them completely overlaps all the characters of the other then the longer of the two contains all the repeating sub-strings in the cluster of the smaller as well as its own. Thus the longer absorbs the smaller.
+	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, in S overlap in such a way that $R^{\prime}$ completely overlaps all the characters of $R^{\prime\prime}$ then $R^{\prime}$ contains all the repeating sub-strings in the cluster of $R^{\prime\prime}$ as well as its own. Thus $R^{\prime}$ absorbs $R^{\prime\prime}$.
 		\begin{prf} Proof for theorem 2.4
 			\begin{enumerate}
-			
+			\item Let $R^{\prime}$ be the leftmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.  
+			\item Let $R^{\prime\prime}$ be the rightmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.
+			\item Therefore by Theorem 2.3 it can be seen that $q - p$ characters overlap forming an overlapped sub-string $S^{\prime}$ in S.
+			\item Assume that $R^{\prime\prime}$ is a sub-string of $R^{\prime}$. Therefore  $R^{\prime}$ overlaps all the characters of $R^{\prime\prime}$.
+			\item Thus $p$ is the index of the starting character of $R^{\prime\prime}$ and $q$ is the index of the ending character of $R^{\prime\prime}$.
+			\item Therefore $S^{\prime}$ is $R^{\prime\prime}$.
+			\item Therefore by theorem 2.3 it can be seen that $R^{\prime}$ contains all the repeating sub-strings of $R^{\prime\prime}$. 
 			\end{enumerate}
 		\end{prf} 
 	\end{thm}
 	
-	The above observations form the core characteristics, of a repeating sub-string and the string that contains it, which will be exploited by the algorithm. The algorithm primarily consists of two stages. A third stage can be added that allows for the extension of the algorithm as stated in the introduction of this document.
-	
+	The above theorems form the core characteristics, of a repeating sub-string and the string that contains it, which will be exploited by the algorithm. The algorithm primarily consists of two stages. A third stage can be added that allows for the extension of the algorithm as stated in the introduction of this document.
+	\newpage
 	\subsection{Stage 1: Finding maximum longest prefixes starting at each character index in S}
 		The stage 1 algorithm analyses the string S in such away that a numeric array representing the maximum longest prefix/repeating sub-string pattern, which has the same length as S, is produced. 
 	
