@@ -4,8 +4,7 @@ void Partition(string pattern, const char* fn)
 {
     fstream file;
     vector<partitionedString> partitions;
-//    if(tree)
-//    {
+
     string filename = fn;
 
     file.open(filename.c_str());
@@ -43,30 +42,34 @@ void Partition(string pattern, const char* fn)
     {
         cout << " -NOTE: " << pattern << " already computed.";
     }
-//    }
-//    else
-//    {
-//        // TT-AAA-BCD
-//        istringstream tokens(pattern);
-//        string tmp;
-//        tokens >> tmp;
-//        
-//        while(tokens)
-//        {
-//            partitionedString part;
-//            
-//            cout << "We got: " << tmp <<endl;
-//            if(partitions.size() == 0)
-//            {
-//                createPartitionedString(tmp, part);
-//                partitions.push_back(part);
-//            }
-//            else partitions[0] = addToPartitionedString(partitions[0], tmp);
-//            
-//            tokens >> tmp;
-//        }
-//    }
     //print(partitions, pattern);
+}
+
+partitionedString PartitionString(string pattern, const char* fn)
+{
+    vector<partitionedString> partitions;
+    // TT-AAA-BCD
+    istringstream tokens(pattern);
+    string tmp;
+    tokens >> tmp;
+
+    while(tokens)
+    {
+        partitionedString part;
+
+        if(partitions.size() == 0)
+        {
+            createPartitionedString(tmp, part);
+            partitions.push_back(part);
+        }
+        else 
+        {
+            partitions[0] = addToPartitionedString(partitions[0], tmp);
+        }
+        
+        tokens >> tmp;
+    }
+    return partitions[0];
 }
 
 partitionedString& addToPartitionedString(partitionedString& partitionedStr, string partitionToAdd)
@@ -75,6 +78,7 @@ partitionedString& addToPartitionedString(partitionedString& partitionedStr, str
     createPartition(partitionToAdd, tmpPartition);
     partitionedStr.push_back(tmpPartition);
     setupDistinct(partitionedStr);
+    setupHuffmanCW(partitionedStr);
     return partitionedStr;
 }
 

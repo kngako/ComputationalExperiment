@@ -50,6 +50,8 @@ int main(int argc, char** argv)
         cout << "50: Module 7 - Repetition partitioner" << endl;*/
         cout << "60: Create experiment using automated string generation" << endl;
         cout << "61: Create experiment using custom strings from file" << endl;
+        cout << "70: Generate all possible huffman trees" <<endl;
+        cout << "71: Generate optimal huffman tree for a partitioned string" <<endl;
         
         int option = 0;
         cin >> option;
@@ -263,6 +265,33 @@ int main(int argc, char** argv)
                 execStage2_partitiondata(experiment.c_str());
                 execStage3_calculationdata(experiment.c_str());
                 execStage4_analysisdata(experiment.c_str());
+                break;
+            case 70:
+                int size;
+                cout << "Enter size of the trees to generate (enter 0 to terminate): ";
+                cin >> size;
+                while(size > 1)
+                {   
+                    generateAllHuffmanCodeWordsI_CW(size, false);
+
+                    cout << "Enter size of the trees to generate (enter 0 to terminate): ";
+                    cin >> size;
+
+                }
+            case 71:
+                cout << "Please enter a string to be partitioned: ";
+                cin.getline(strin,STD_NUMBER_OF_CHARS);
+                cin.getline(strin,STD_NUMBER_OF_CHARS);
+                //getline(cin, inStr, '\n');
+                
+                sprintf(fn,"%s.%s", inStr.c_str(), PARTITION_FILE_EXT);
+                
+                //partition("TT B DAC ABBA ABBA C DAC B DAC TT",false,fn);
+                
+                sprintf(fn,"%s.%s", strin, PARTITION_FILE_EXT);
+                
+                generateOptimalHuffmanCodeWords(PartitionString(strin,fn), true);
+                
                 break;
             default: 
                 active = false;

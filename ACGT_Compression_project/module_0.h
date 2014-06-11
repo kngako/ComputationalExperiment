@@ -36,6 +36,21 @@ typedef std::vector<codeWord> codeWords;
 //bitstream is based on a pointer of boolean type to allow for a dynamic length of bits in the stream
 typedef std::vector<bool> bitstream;
 
+typedef struct node_struct
+{
+    int item;
+    struct node_struct* left;
+    struct node_struct* right;
+} Node;
+
+typedef struct huffman_node_struct
+{
+    double percentage;
+    char* partitionStr;
+    struct huffman_node_struct* left;
+    struct huffman_node_struct* right;
+} HuffmanNode;
+
 //Module_2
 //==============================================================================
 //Special structure used to store data that has been mapped from a genetic string.
@@ -75,6 +90,7 @@ struct partition
     char* partitionStr;
     int huffmanCWIndex;
     int distinicIndex;
+    int frequency;
 };
 
 typedef vector<partition*> partitionedString;

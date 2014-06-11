@@ -34,4 +34,77 @@ codeWords getAllCodewords_FromFile(const char* path, unsigned long long int m);
 codeWords getHuffmanCodeWords_Memory(int m, int series);
 bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, int series);
 
+// Function to generate all possible huffman trees.
+vector<codeWords> generateAllHuffmanCodeWordsI_CW(int noOfCodeWords, bool firstCode);
+
+void show(codeWords temp);
+
+// Construct a BST with the specified items and return the root to it.
+Node* constructTree(int size);
+
+//Create a new node with the specified item
+Node* createNode(int item);
+
+// Insert element into the tree
+Node* insert(int item, Node* node);
+
+// Make the rightmost node at the specified depth the root of the tree
+Node* splay(Node* root);
+
+Node* rotate(Node* gr, Node* par, Node* ch);
+
+Node* rotateLeft(Node* gr, Node* par, Node* ch);
+
+Node* rotateRight(Node* gr, Node* par, Node* ch);
+
+Node* parent(Node* node, Node* subTreeRoot);
+
+void finishRotation(Node* gr, Node* par, Node* ch, Node* chDesc, Node* oldPar);
+
+void displayTree(Node* root, int depth);
+
+void padding(char ch, int n);
+
+codeWords codeWordsFromTree(Node* root, int noOfCodeWords, bool firstCode);
+
+codeWords cwFromTree(Node* node, codeWord& cW, codeWords& cWs, bool firstCode);
+
+Node* copy(Node* root);
+
+Node* copyOver(Node* newSubTree, Node* oldSubtree);
+
+void processTree(Node* root, int noOfCodeWords, bool firstCode, vector<codeWords>& store);
+
+int rightmostDepth(Node* root);
+
+int rightmostDepth(Node* node, int depth);
+
+Node* rightmostAtDepth(Node* root, int depth);
+
+Node* rightmostAtDepth(Node* node, int depthRequired, int depth);
+
+void destoryTree(Node* node);
+
+/******************************************************************************
+**********************    HuffmanOptimally      *******************************
+*******************************************************************************/
+
+codeWords generateOptimalHuffmanCodeWords(partitionedString ptr, bool firstCode);
+
+partitionedString distinction(partitionedString& pString);
+
+void add(partition* part, partitionedString& pString);
+
+void merge(int* smallest, vector<HuffmanNode*>& set);
+
+void removeHuffmanNodes(HuffmanNode* hNode1, HuffmanNode* hNode2, vector<HuffmanNode*>& set);
+
+int* getTwoSmallestPercentageNodeIndexes(vector<HuffmanNode*>& set);
+
+HuffmanNode* createHuffmanNode(double percentage, char* pString, HuffmanNode* left, HuffmanNode* right);
+
+codeWords codeWordsFromTree(HuffmanNode* root, int noOfCodeWords, bool firstCode);
+
+codeWords cwFromTree(HuffmanNode* node, codeWord& cW, codeWords& cWs, bool firstCode);
+
 #endif
