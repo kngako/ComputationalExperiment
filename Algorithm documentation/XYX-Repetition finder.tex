@@ -4,6 +4,20 @@
 \usepackage{longtable}
 \usepackage{pdfpages}
 \usepackage{amsthm}
+\usepackage{listings}
+\newcommand\Small{\fontsize{10}{9.2}\selectfont}
+
+\lstset{
+  columns=flexible,
+  basicstyle=\ttfamily\Small,
+  breaklines=true,
+  keepspaces=true,
+  tabsize=2,
+  mathescape,         
+  literate={->}{$\rightarrow$}{2}
+           {ε}{$\varepsilon$}{1}
+           {<-}{$\leftarrow$}{3}
+}
 
 
 \newtheorem{defn}{Definition}[section]
@@ -43,6 +57,7 @@
 	
 	The above definitions and terms lay the bases of the algorithm and will be used throughout the document.
 \end{flushleft}
+\newpage
 \section{Algorithm}
 \begin{flushleft} 
 	In order to provide a formal description of the algorithm purposed above the \textit{Repeating sub-string} definition must be used in conjunction with following observations:
@@ -85,36 +100,215 @@
 		\end{enumerate}
 	\end{obser}
 	
+	\begin{obser}
+	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, of any of the repeated sub-strings in S overlap in such a way that one of them completely overlaps all the characters of the other then the longer of the two contains all the repeating sub-strings in the cluster of the smaller as well as it owns. Thus the longer absorbs the smaller. 
+	\end{obser}
+	
 	The above observations forms the core characteristics of a repeating sub-string and the string that contains it which will be exploited by the algorithm. The algorithm primarily consists of two stages. A third stage can be added that allows for the extension of the algorithm as stated in the introduction of this document.
 	
 	\subsection{Stage 1: Finding maximum longest prefixes starting at each character index in S}
-		The stage 1 algorithm analyses the string S in such away that a numeric array U, which has the same length as S, is produced. Each element of U indicates the length of the longest repeating sub-string at the particular character index the element corresponds to. 
+		The stage 1 algorithm analyses the string S in such away that a numeric array representing the maximum longest prefix/repeating sub-string pattern, which has the same length as S, is produced. 
 	
 		\begin{enumerate}	
-		\item The first stage splits the arbitrary string S into a array of strings, $K$, of $|S|$ sub-strings. Where the first sub-string in the array is $S$.
+		\item The first phase splits the arbitrary string S into an implicit array of strings, $K$, of $|S|$ sub-strings. Where the first sub-string in the array is $S$. This implicit creation is done by sequentially scanning the string S from left to right and using the current character index as a starting position.    
 		Each of the sub-strings in $K$ have the following properties:
 			\begin{enumerate}
 				\item Is donated by $K_{i}$, where i is its index in the array and $ 0 \le i < |S|$.
 				\item Has a length $T = |K_{i-1}| - 1$ or $T = |S| - i$, one less the length of the sub-string prior to it in $K$.
 				\item Is a sub-string of S which starts at the character $C_{|S| - T} $ in S and ends at character $C_{|S|}$ in S.
-			\end{enumerate}
+			\end{enumerate}		
 		
-		\item Next the algorithm creates a numeric array, $U$, which has a length of $|S|$ and all of its elements are initialised to zero. 
+		\item Next the algorithm creates a numeric array, $U$, which has a length of $|S|$ and all of its elements are initialised to zero. This captures the final results.  
 		U has the following properties:
 			\begin{enumerate}
 				\item Each element, $E_{i}$ is mapped to the corresponding character $C_{i}$ in S, where $ 0 \le i < |S|$.
 				\item Each element has numeric value $\ge 0$.
-				\item Each element represents the maximum longest prefix of all the longest prefixes found in each of the sub-strings in $K$ which have a character index $y$ which can be mapped to the character index $C_{i}$ in S. Where the character index $y$ donates the starting index of the prefix of particular sub-string in $K$. The mapping is defined as $i = y + (|S| - z)$, where $z$ is the index of sub-string in $K$ and $y$ is the character index in $K_{z}$.  
-				
+				\item Each element represents the maximum longest prefix of all the longest prefixes found in each of the sub-strings in $K$ which have a character index $y$ which can be mapped to the character index $C_{i}$ in S. Where the character index $y$ donates the starting index of the prefix of particular sub-string in $K$. The mapping is defined as $i = y + (|S| - z)$, where $z$ is the index of sub-string in $K$ and $y$ is the character index in $K_{z}$. 
 			\end{enumerate}
 		
-		\item Next each sub-string, $K_{z}$, in K is then scanned iteratively for the longest prefix sub-string starting at each character, $K_{zy}$. If the value of the element in U which is mapped to by the character index $y$ of the sub-string $K_{z}$, is less than the length of longest prefix starting at $K_{zy}$ then it is replaced by the length of the longest prefix starting at $K_{zy}$. \\
+		\item Next in order to store the data and support the implicit creation of $K$ the algorithm creates an array of three numeric arrays, $LPPatterns$. Where the first array is $U$. The second represents the current $K_{i}$ sub-string longest prefix pattern and the third represents $K_{i + 1}$ sub-string longest prefix pattern. In order to increase the performance of the longest prefix sub-string finder algorithm $LPPatterns_{2}$ is used to capture the expected longest prefixes for the $K_{i + 1}$. Due to the fact that any prefix found in $K_{i}$ that is longer then one character will be partially present in $K_{i + 1}$.
+		
+		\item Next each sub-string, $K_{z}$, in K is then scanned iteratively for the longest prefix sub-string* starting at each character, $K_{zy}$. If the value of the element in $LPPattern_{0}$ which is mapped to by the character index $y$ of the sub-string $K_{z}$, is less than the length of longest prefix starting at $K_{zy}$ then it is replaced by the length of the longest prefix starting at $K_{zy}$, which is stored in $LPPattern_{1z}$. \\
+						
+		\item Since the array elements of $U$ captures the maximum length of longest prefixes starting at each character index it implies that the elements following the particular starting element will contain a value one less than the previous. This due to the fact that a prefix string covers $|prefix-string|$ elements in $U$ and the cluster repeating sub-strings in the prefix. Thus next the array $U$ is scanned iteratively from left to right in order to remove this unnecessary information. If one of the elements is not zero and does not follow the linearly decreasing sequence above then the element indicates the starting point of a repeating sub-string that is not completely overlapped by the other. In order to remove the unnecessary information, elements containing implied values can be changed to zero.
+		
 		\end{enumerate}
-		
-		  
-		In order to find the longest prefixes a modified version of the O(n) longest prefix sub-string finder algorithm was used. The algorithm was created by Michael G. Main and Richard J. Lorentz and documented in their research article \textit{An O(n log n) Algorithm for finding all repetitions in a String*} which was published in the Journal of Algorithms in 1984.\\
-		
-		The pseudo code of the stage 1 algorithm follows:
+				  
+		*In order to find the longest prefixes a modified version of the O(n) longest prefix sub-string finder algorithm was used. The algorithm was created by Michael G. Main and Richard J. Lorentz and documented in their research article \textit{An O(n log n) Algorithm for finding all repetitions in a String*} which was published in the Journal of Algorithms in 1984. The pseudo code of this can be found below.\\
+		\newpage
+		\subsubsection{Stage 1 algorithm pseudo code}
+\begin{lstlisting}
+S <- String to be scanned for repeating sub-strings
+U <- Empty numeric array of length $|U|$
+LPPatterns <- Empty two dimensional numeric
+
+//Used for zeroing all covered zones in U
+zeroCounter <- 0 
+ 
+
+//Initialise the LPPatterns array with 3 zeroed numeric arrays
+Append U to LPPatterns 
+Append two zeroed numeric array of length 1 to LPPatterns
+
+//Process S and find maximum longest prefixes, LP, at each starting position
+FOR i = 0 to $|S| - 1$
+BEGIN
+	Swap $LPPattern_{1}$ array with $LPPattern_{2}$
+	Remove the last array from LPPatterns    
+	Append a zeroed Numeric array of length $|S| - (i + 1)$ to LPPatterns
 	
+	Find the longest prefix pattern for the next sub-string in K using S, LPPatterns and i as input to algorithm
+	
+	//Handle zeroing of elements that contain unnecessary data
+	IF $LPPatterns_{[0][i]}$ > zeroCounter 
+	THEN
+		zeroCounter = $LPPatterns_{[0][i]}$ - 1;
+	ELSE 
+		IF(zeroCounter > 0) //If zones are covered
+		THEN
+			$LPPatterns_{[0][i]}$ = 0
+			zeroCounter <- zeroCounter - 1
+		END-IF                   
+	END-IF
+END-FOR
+
+//Handle the zeroing of the last element if it contains any unnecessary data
+IF zeroCounter > 0
+THEN
+	p <- |S| - 1
+	$LPPatterns_{[0][p]}$ = 0;
+END-IF
+
+U <- $LPPatterns_{0}$
+
+
+\end{lstlisting}
+
+\newpage
+\subsubsection{Modified longest prefix finder algorithm pseudo code}
+
+\begin{lstlisting}
+S <- String to be scanned for repeating sub-strings
+LPPatterns <- A two dimenstional numeric array which contains the overall, current and next LPPatterns 
+Offset <- Starting position of pattern in the string S
+LPPIndex <- 1 
+currentMatchLength <- 0
+
+patternLength <- $|S|$ - Offset
+
+//Find the longest prefix of S starting at Offset in S
+IF patternLength > 1 
+THEN
+	currentMatchLength = $LPPatterns_{[LPPIndex][1]}$
+END-IF
+
+WHILE (currentMatchLength < patternLength) AND ($S_{currentMatchLength + Offset}$ equals $S_{currentMatchLength + offset + 1}$)
+BEGIN
+	currentMatchLength <- currentMatchLength + 1
+END-WHILE
+
+$LPPatterns_{[LPPIndex][1]}$ <- currentMatchLength
+
+$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][1]}$ and $LPPatterns_{[LPPIndex][0]}$
+$LPPatterns_{[0][Offset + 1]}$ <- maximum between $LPPatterns_{[0][offset + 1]}$ and $LPPatterns_{[LPPIndex][1]}$
+
+//Special index value that maxs: k + lppattern[k] (1 <= k < i)
+k <- 1;
+
+//Find the rest of longest prefixes in S
+FOR i = 2 to patternLength
+BEGIN
+	//lengthOfX = length of substring X: pattern[i]...pattern[k + lppattern[k] - 1]
+	lengthOfX <- length of sub-string X in S: $S_{i}$...$S_{k + LPPatterns_{[LPPIndex][k]} - 1}$
+	
+	IF $LPPatterns_{[LPPIndex][i - k]}$ < lengthOfX
+	THEN
+		//Gives the length of the prefix directly
+		$LPPatterns_{[LPPIndex][i]}$] <- $LPPatterns_{[LPPIndex][i - k]}$
+	ELSE	
+		IF i $\geq$ k + $LPPatterns_{[LPPIndex][k]}$
+		THEN
+			//Cannot give any hint
+			currentMatchLength <- $LPPatterns_{[LPPIndex][i]}$
+		ELSE
+			//Gives a hint that the longest prefix has a length greater or equal to the below
+			currentMatchLength <- maximum between lengthOfX and $lppatterns_{[lppIndex][i]}$
+		END-IF
+		
+		//Find longest prefix using hint or no hint
+		WHILE (currentMatchLength < patternLength) AND $S_{currentMatchLength + offset}$ equals $S_{currentMatchLength + Offset + i}$)
+		BEGIN
+			currentMatchLength <- currentMatchLength + 1
+		END-WHILE
+		
+		$LPPatterns_{[LPPIndex][i]}$ = currentMatchLength;
+		
+		//since last update should max k + lppattern[k]
+		k <- i;
+	END-IF
+	
+
+	$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][0]}$ and $LPPatterns_{[LPPIndex] [i]}$
+	$LPPatterns_{[0][offset + i]}$ <- maximum between $LPPatterns_{[0][offset + i]}$ and $LPPatterns_{[LPPIndex] [i]}$
+	
+	//Add length hints for next sub-string in K
+	IF ($LPPatterns_{[LPPIndex][i]}$ > 1) AND (i + $LPPatterns_{[1][i]}$ < patternLength - 1)
+	THEN
+		$LPPatterns_{[2][i]}$ <- $LPPatterns_{[LPPIndex][i]}$ - 1
+	END-IF
+END-FOR
+
+$LPPatterns_{[0][Offset]}$ <- maximum between $LPPatterns_{[0][offset]}$ and $LPPatterns_{[LPPIndex][0]}$
+
+
+\end{lstlisting}
+	\newpage	
+	\subsection{Stage 2: Extracting all repeating sub-strings from U}
+		
+	In order to find all the repeating sub-strings in S the algorithm needs to extract them from the array $U$. Since each non-zero element in $U$ indicates a the starting position of the longest repeating sub-string with a length, $l$, equal to the value of the element. It also indicates the starting position of a cluster of $\frac{(l)(2 + (l-1))}{2}$ repeating sub-strings. Thus in order to extract the repeating sub-strings this stage needs to scan the the array $U$ from left to right and at every element that is not zero extract the sub-string in $S$ starting at the corresponding character index. This string needs to be partitioned into the $\frac{(l)(2 + (l-1))}{2}$ partitions and recorded. In order to avoid duplicate repeating sub-strings from being created by non-fully overlapped repeating sub-strings a special case must be considered. To cater for both cases the partitioning should occur from left to right in terms of starting position and bottom to top in terms of layers. Thus when a special case is encountered the algorithm can stop scanning the current sub-string and start with the next.
+	\newpage
+	\subsubsection{Stage 2 algorithm pseudo code}
+
+\begin{lstlisting}
+S <- String beginning scanned
+U <- Array of longest repeating sub-string starting positions
+L1 <- Empty string array
+L2 <- Empty numeric array
+
+//Scan U for repeating sub-strings starting positions 
+FOR i = 0 to ($|U| - 1$)  
+BEGIN			                
+	//Check if element of U is non-zero
+	IF $U_{i}$ > 0 
+	THEN
+		//Extract repeating sub-strings
+		FOR j = 0 to $(U_{i} - 1)$ 
+		BEGIN                  
+			//Check for second case repeating sub-strings
+			IF ($U_{i + j} > 0$) AND (j NOT 0) 
+			THEN
+				Stop extracting partitions for current sub-string
+			END-IF
+			
+			FOR k = 0 to ($U_{i} - j$)
+			BEGIN                               
+				Grow L1 and L2 by one element so their new size is n
+				$L1_{n}$ <- Sub-string in S which starts at (i + j) and end at (k + 1)
+				$L2_{n}$ <- Starting position of the repeating sub-string (i + j)
+			END-FOR
+		END-FOR
+	END-IF	
+END-FOR		
+\end{lstlisting}
+	\newpage	
+	\subsection{Stage 3: Extracting all X-Y-X repetitions from all the repeating sub-strings}
+	This stage serves as an extension to the algorithm. It allows the algorithm to find all the X-Y-X repetitions from the list of repeating sub-strings produced by stage 2. This extension hinges on the fact that any X-Y-X repetition of S is a sub-set of all the repeating sub-strings. This can be deduced from the observation that X-Y-X repetitions by definition do not contain overlapping repeating sub-strings. Whereas the set of all repeating sub-strings of S by definition contain both the overlapping and non overlapping sub-strings in S.\\
+	The algorithm firstly sorts the list of all the repeating sub-string in alphabetical order and then by the ascending order of their starting position. Though the latter should be implied as the list produced by stage 2 is already in order of occurrence. Thus any rudimentary sorting algorithm should be able to preserve the starting position order.\\
+	The algorithm should then iteratively scan the list from left to right and produce the X-Y-X repetitions by grouping each set of all the non-overlapping elements that a group of repeating sub-strings may have. The pseudo code for the algorithm follows:
+	\newpage
+	\subsubsection{Stage 3 algorithm pseudo code}
+\begin{lstlisting}
+
+\end{lstlisting} 
 \end{flushleft}
 \end{document}
