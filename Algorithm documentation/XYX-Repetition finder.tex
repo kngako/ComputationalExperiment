@@ -4,8 +4,12 @@
 \usepackage{longtable}
 \usepackage{pdfpages}
 \usepackage{amsthm}
+\usepackage{xcolor}
 \usepackage{listings}
 \newcommand\Small{\fontsize{10}{9.2}\selectfont}
+\usepackage{lmodern}
+\usepackage[a4paper]{geometry}
+
 
 \lstset{
   columns=flexible,
@@ -13,20 +17,30 @@
   breaklines=true,
   keepspaces=true,
   tabsize=2,
-  mathescape,         
+  mathescape,
+  escapeinside={<@}{@>},           
   literate={->}{$\rightarrow$}{2}
            {ε}{$\varepsilon$}{1}
            {<-}{$\leftarrow$}{3}
 }
+\addtolength{\topmargin}{-30pt}
+\addtolength{\textheight}{40pt}
+\addtolength{\textwidth}{40pt}
+\setlength{\oddsidemargin}{-5pt}
+\setlength{\evensidemargin}{-5pt}
 
 
 \newtheorem{defn}{Definition}[section]
 \newtheorem{obser}{Observation}[section]
-\newtheorem{thm}{Theorem}[section]
+\newtheorem{thm}{Proposition}[section]
 \newtheorem{prf}{Proof}[section]
 \begin{document}
 
 \begin{center}
+
+	
+	\null
+	\vspace{2in}
 	\LARGE\textbf{An algorithm for finding all the repeating sub-strings and X-Y-X repetitions in a string}
 	\\
 	\vspace{0.5in}
@@ -71,7 +85,7 @@
 	In order to provide a formal description of the algorithm purposed above the \textit{Repeating sub-string} definition must be used in conjunction with following observations:
 	\begin{thm} 
 	Repeating sub-strings are identical to the prefix, with length $|Z|$, of the sub-string of S starting at the starting index of the first occurrence of $Z$, $Z_{1}$, in S and ending at the last character in S. 
-		\begin{prf} Proof for theorem 2.1\\		
+		\begin{prf} Proof for proposition 2.1\\		
 			\begin{enumerate}		
 				\item Let $R$ be the set of all non-identical repeating sub-string content $Z$ in $S$.
 				\item Let $R_{i}$ be the set of repeated sub-strings ${Z_{1},...,Z_{N}}$ for a particular sub-string content $Z$.
@@ -83,10 +97,10 @@
 			\end{enumerate}
 		\end{prf}
 	\end{thm}
-	
+	\newpage
 	\begin{thm}
 	Each repeating sub-string of some repeating sub-string content,$Z$, in the string S forms a cluster of $\frac{|Z|(2 + (|Z|-1))}{2}$ repeating sub-strings of S.
-		\begin{prf} Proof for theorem 2.2		
+		\begin{prf} Proof for proposition 2.2		
 			\begin{enumerate}
 				\item $Z$ has two or more occurrences in $S$ by definition.
 				\item Each occurrence, $Z_{i}$, contains one or more characters by definition.
@@ -97,10 +111,10 @@
 			\end{enumerate}
 		\end{prf}	
 	\end{thm}
-	
+	\newpage
 	\begin{thm}
 	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, in S overlap between some leftmost position, $p$, and rightmost position ,$q$, in S, then $\frac{(q - p)(2 + ((q - p)-1))}{2}$ repeating sub-strings are in the set of $R^{\prime}_{\textit{repeating sub-strings}} \cup R^{\prime\prime}_{\textit{repeating sub-strings}}$.
-		\begin{prf} Proof for Theorem 2.3
+		\begin{prf} Proof for proposition 2.3
 			\begin{enumerate}
 				\item Let $R^{\prime}$ be the leftmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.  
 				\item Let $R^{\prime\prime}$ be the rightmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.
@@ -113,10 +127,10 @@
 			\end{enumerate}
 		\end{prf}
 	\end{thm}
-	
+	\newpage
 	\begin{thm}
 	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, in S overlap in such a way that $R^{\prime}$ completely overlaps all the characters of $R^{\prime\prime}$ then $R^{\prime}$ contains all the repeating sub-strings in the cluster of $R^{\prime\prime}$ as well as its own. Thus $R^{\prime}$ absorbs $R^{\prime\prime}$.
-		\begin{prf} Proof for theorem 2.4
+		\begin{prf} Proof for proposition 2.4
 			\begin{enumerate}
 			\item Let $R^{\prime}$ be the leftmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.  
 			\item Let $R^{\prime\prime}$ be the rightmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.
@@ -215,27 +229,27 @@ U <- $LPPatterns_{0}$
 \begin{lstlisting}
 S <- String to be scanned for repeating sub-strings
 LPPatterns <- A two dimenstional numeric array which contains the overall, current and next LPPatterns 
-Offset <- Starting position of pattern in the string S
-LPPIndex <- 1 
+<@\textcolor{red}{Offset <- Starting position of pattern in the string S}@>
+<@\textcolor{red}{LPPIndex <- 1}@> 
 currentMatchLength <- 0
 
-patternLength <- $|S|$ - Offset
+<@\textcolor{red}{patternLength <- $|S|$ - Offset}@>
 
 //Find the longest prefix of S starting at Offset in S
-IF patternLength > 1 
-THEN
-	currentMatchLength = $LPPatterns_{[LPPIndex][1]}$
-END-IF
+<@\textcolor{red}{IF patternLength > 1}@> 
+<@\textcolor{red}{THEN}@>
+	<@\textcolor{red}{currentMatchLength = $LPPatterns_{[LPPIndex][1]}$}@>
+<@\textcolor{red}{END-IF}@>
 
-WHILE (currentMatchLength < patternLength) AND ($S_{currentMatchLength + Offset}$ equals $S_{currentMatchLength + offset + 1}$)
+<@\textcolor{red}{WHILE (currentMatchLength < patternLength) AND ($S_{currentMatchLength + Offset}$ equals $S_{currentMatchLength + offset + 1}$)}@>
 BEGIN
 	currentMatchLength <- currentMatchLength + 1
 END-WHILE
 
 $LPPatterns_{[LPPIndex][1]}$ <- currentMatchLength
 
-$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][1]}$ and $LPPatterns_{[LPPIndex][0]}$
-$LPPatterns_{[0][Offset + 1]}$ <- maximum between $LPPatterns_{[0][offset + 1]}$ and $LPPatterns_{[LPPIndex][1]}$
+<@\textcolor{red}{$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][1]}$ and $LPPatterns_{[LPPIndex][0]}$}@>
+<@\textcolor{red}{$LPPatterns_{[0][Offset + 1]}$ <- maximum between $LPPatterns_{[0][offset + 1]}$ and $LPPatterns_{[LPPIndex][1]}$}@>
 
 //Special index value that maxs: k + lppattern[k] (1 <= k < i)
 k <- 1;
@@ -244,7 +258,7 @@ k <- 1;
 FOR i = 2 to patternLength
 BEGIN
 	//lengthOfX = length of substring X: pattern[i]...pattern[k + lppattern[k] - 1]
-	lengthOfX <- length of sub-string X in S: $S_{i}$...$S_{k + LPPatterns_{[LPPIndex][k]} - 1}$
+	lengthOfX <- $k + LPPatterns_{[LPPIndex][k]} - (i + 1)$
 	
 	IF $LPPatterns_{[LPPIndex][i - k]}$ < lengthOfX
 	THEN
@@ -254,14 +268,14 @@ BEGIN
 		IF i $\geq$ k + $LPPatterns_{[LPPIndex][k]}$
 		THEN
 			//Cannot give any hint
-			currentMatchLength <- $LPPatterns_{[LPPIndex][i]}$
-		ELSE
+			<@\textcolor{red}{currentMatchLength <- $LPPatterns_{[LPPIndex][i]}$}@>
+		<@\textcolor{red}{ELSE}@>
 			//Gives a hint that the longest prefix has a length greater or equal to the below
-			currentMatchLength <- maximum between lengthOfX and $lppatterns_{[lppIndex][i]}$
-		END-IF
+			<@\textcolor{red}{currentMatchLength <- maximum between lengthOfX and $lppatterns_{[lppIndex][i]}$}@>
+		<@\textcolor{red}{END-IF}@>
 		
 		//Find longest prefix using hint or no hint
-		WHILE (currentMatchLength < patternLength) AND $S_{currentMatchLength + offset}$ equals $S_{currentMatchLength + Offset + i}$)
+		<@\textcolor{red}{WHILE (currentMatchLength < patternLength) AND $S_{currentMatchLength + offset}$ equals $S_{currentMatchLength + Offset + i}$)}@>
 		BEGIN
 			currentMatchLength <- currentMatchLength + 1
 		END-WHILE
@@ -273,17 +287,17 @@ BEGIN
 	END-IF
 	
 
-	$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][0]}$ and $LPPatterns_{[LPPIndex] [i]}$
-	$LPPatterns_{[0][offset + i]}$ <- maximum between $LPPatterns_{[0][offset + i]}$ and $LPPatterns_{[LPPIndex] [i]}$
+	<@\textcolor{red}{$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][0]}$ and $LPPatterns_{[LPPIndex] [i]}$}@>
+	<@\textcolor{red}{$LPPatterns_{[0][offset + i]}$ <- maximum between $LPPatterns_{[0][offset + i]}$ and $LPPatterns_{[LPPIndex] [i]}$}@>
 	
 	//Add length hints for next sub-string in K
-	IF ($LPPatterns_{[LPPIndex][i]}$ > 1) AND (i + $LPPatterns_{[1][i]}$ < patternLength - 1)
-	THEN
-		$LPPatterns_{[2][i]}$ <- $LPPatterns_{[LPPIndex][i]}$ - 1
-	END-IF
+	<@\textcolor{red}{IF ($LPPatterns_{[LPPIndex][i]}$ > 1) AND (i + $LPPatterns_{[1][i]}$ < patternLength - 1)}@>
+	<@\textcolor{red}{THEN}@>
+		<@\textcolor{red}{$LPPatterns_{[2][i]}$ <- $LPPatterns_{[LPPIndex][i]}$ - 1}@>
+	<@\textcolor{red}{END-IF}@>
 END-FOR
 
-$LPPatterns_{[0][Offset]}$ <- maximum between $LPPatterns_{[0][offset]}$ and $LPPatterns_{[LPPIndex][0]}$
+<@\textcolor{red}{$LPPatterns_{[0][Offset]}$ <- maximum between $LPPatterns_{[0][offset]}$ and $LPPatterns_{[LPPIndex][0]}$}@>
 
 
 \end{lstlisting}
@@ -312,6 +326,7 @@ BEGIN
 			//Check for second case repeating sub-strings
 			IF ($U_{i + j} > 0$) AND (j NOT 0) 
 			THEN
+				i <- i + j
 				Stop extracting partitions for current sub-string
 			END-IF
 			
@@ -322,7 +337,9 @@ BEGIN
 				$L2_{n}$ <- Starting position of the repeating sub-string (i + j)
 			END-FOR
 		END-FOR
-	END-IF	
+		i <- i + $U_{i}$
+	END-IF
+		
 END-FOR		
 \end{lstlisting}
 	\newpage	
