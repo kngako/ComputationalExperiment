@@ -37,7 +37,26 @@ bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, in
 // Function to generate all possible huffman trees.
 vector<codeWords> generateAllHuffmanCodeWordsI_CW(int noOfCodeWords, bool firstCode);
 
+Node* rebuild_tree(int s[], int n);
+
+/**
+ * Function by Tristan... >> http://tristan-interview.blogspot.com/2012/02/enumerate-all-possible-binary-trees.html << 
+ * @param seq
+ * @param n
+ * @param num1
+ * @param num0
+ */
+void output_all_possible_trees(int* seq, int n, int num1, int num0, vector<codeWords>& store);
+
+bool contains(vector<codeWords>& store, codeWords cW);
+
+bool equalLength(codeWords a, codeWords b);
+
+void addCodeWords(vector<codeWords>& store, codeWords& cW);
+
 void show(codeWords temp);
+
+void show(int* seq, int n);
 
 // Construct a BST with the specified items and return the root to it.
 Node* constructTree(int size);
@@ -67,6 +86,8 @@ void padding(char ch, int n);
 
 codeWords codeWordsFromTree(Node* root, int noOfCodeWords, bool firstCode);
 
+codeWords sort(codeWords cW);
+
 codeWords cwFromTree(Node* node, codeWord& cW, codeWords& cWs, bool firstCode);
 
 Node* copy(Node* root);
@@ -92,6 +113,8 @@ void destoryTree(Node* node);
 codeWords generateOptimalHuffmanCodeWords(partitionedString ptr, bool firstCode);
 
 partitionedString distinction(partitionedString& pString);
+
+int calculateBits(partitionedString& pStrings, partitionedString& distinct, codeWords codeWords);
 
 void add(partition* part, partitionedString& pString);
 

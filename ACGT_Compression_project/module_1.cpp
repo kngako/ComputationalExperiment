@@ -2,6 +2,7 @@
 //Created by Mathys Ellis 31/01/2013
 
 #include "module_1.h"
+#include "module_6.h"
 
 codeWords generateHuffmanCodeWordsI_CW(int noOfCodeWords, bool firstCode)
 {
@@ -380,21 +381,129 @@ bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, in
 	return true;
 }
 
+/******************************************************************************
+ **************************** Huffman generation ******************************
+ ******************************************************************************/
+
 vector<codeWords> generateAllHuffmanCodeWordsI_CW(int noOfCodeWords, bool firstCode)
 {
     vector<codeWords> store;
-    int unique = noOfCodeWords/2;
     
-    Node* root = constructTree(noOfCodeWords - 1);
-    //displayTree(root, 0);
-
-    codeWords temp = codeWordsFromTree(root, noOfCodeWords, firstCode);
-    show(temp);
-    store.push_back(temp);
-    processTree(root, noOfCodeWords, firstCode, store);
+    noOfCodeWords--; // Turn it into the number of internal nodes
+    int* treeArray = new int[(2 * noOfCodeWords) + 1];
+    int i = 0;
+    
+    for(; i < noOfCodeWords; i++)
+    {
+        treeArray[i] = 1;
+    }
+    
+    for(int j = 0; j < (noOfCodeWords+1); j++)
+    {
+        treeArray[i++] = 0;
+    }
+    
+    output_all_possible_trees(treeArray, noOfCodeWords, 0, 0, store);
+                
+    delete [] treeArray;
     return store;
 }
 
+void addCodeWords(vector<codeWords>& store, codeWords& cW)
+{
+    if(!contains(store, cW))
+        store.push_back(cW);
+}
+
+bool contains(vector<codeWords>& store, codeWords cW)
+{
+    for(int i = 0; i < store.size(); i++)
+    {
+        if(equalLength(store[i], cW))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool equalLength(codeWords a, codeWords b)
+{
+    for(int i = 0; i < a.size() && i < b.size(); i++)
+    {
+        if(a[i].size() != b[i].size())
+            return false;
+    }
+    return a.size() == b.size() ? true : false;
+}
+
+// rebuild the tree from a sequence such as "11000"
+Node* rebuild_tree(int* s, int n)
+{
+    Node* root = createNode(0);
+    stack<Node*> stk;
+    stk.push(root);
+    for(int i=1; i < n; i++)
+    {
+        if(s[i])
+        {
+            Node* node = createNode(0);
+            if(s[i-1]) 
+            {
+                stk.top()->left = node;           
+            }
+            else
+            {
+                stk.top()->right = node;
+                stk.pop();          
+            }
+            stk.push(node);
+        }
+        else 
+        {
+            if(!s[i-1]) stk.pop();
+        }
+    }
+
+    return root;
+}
+
+//print all possible trees
+void output_all_possible_trees(int* seq, int n, int num1, int num0, vector<codeWords>& store)
+{
+    if((num1 + num0) == 2*n)
+    {
+        seq[2*n] = 0;
+        Node *root = rebuild_tree(seq, 2*n+1);
+        //displayTree(root, 0);
+        //show(seq, n);
+        codeWords temp = codeWordsFromTree(root, n, true);
+        //store.push_back(temp);
+        addCodeWords(store, temp);
+        return;
+    }
+        
+    if(num1 >= num0 && num1 < n)
+    {
+        seq[num1+num0] = 1;
+        output_all_possible_trees(seq, n, num1+1, num0, store); 
+    }       
+    
+    if(num0 < num1 && num1 <=n)
+    {
+        seq[num1+num0] = 0;
+        output_all_possible_trees(seq, n, num1, num0+1, store);
+    }
+}
+
+void show(int* seq, int n)
+{
+    for(int i = 0; i < 2*n+1; i++)
+    {
+        cout << seq[i] << ", " ;
+    }
+    cout << endl;
+}
 void show(codeWords temp)
 {
     for(int k = 0; k < temp.size(); k++)
@@ -517,6 +626,31 @@ codeWords codeWordsFromTree(Node* root, int noOfCodeWords, bool firstCode)
     return cwFromTree(root, codeWord, temp, firstCode);
 }
 
+codeWords sort(codeWords cW)
+{
+    codeWords sorted;
+    if(cW.size() == 0) return sorted;
+
+    sorted.push_back(cW.back()); cW.pop_back();
+    while(!cW.empty())
+    {
+        codeWords tmp;
+        while(!sorted.empty() && sorted.back().size() > cW.back().size())
+        {
+            tmp.push_back(sorted.back()); sorted.pop_back();
+        }
+
+        sorted.push_back(cW.back()); cW.pop_back();
+
+        while(!tmp.empty())
+        {
+            sorted.push_back(tmp.back()); tmp.pop_back();
+        }
+    }
+    
+    return sorted;
+}
+
 codeWords cwFromTree(Node* node, codeWord& cW, codeWords& cWs, bool firstCode)
 {
     if(node == NULL)
@@ -537,7 +671,7 @@ codeWords cwFromTree(Node* node, codeWord& cW, codeWords& cWs, bool firstCode)
        cW2.push_back(!firstCode);
        cwFromTree(node->right, cW2, cWs, firstCode);
     }
-    return cWs;
+    return sort(cWs);
 }
 
 Node* copy(Node* oldRoot)
@@ -572,9 +706,10 @@ Node* copyOver(Node* newSubTree, Node* oldSubTree)
 
 void processTree(Node* root, int noOfCodeWords, bool firstCode, vector<codeWords>& store)
 {
+    int unique = noOfCodeWords/2;
     int rDepth = rightmostDepth(root);
 
-    for(int i = 1; i < rDepth; i++)
+    for(int i = 1;i < rDepth; i++)
     { 
         Node* rootCopy = copy(root);
 
@@ -627,7 +762,37 @@ void destoryTree(Node* node)
 
 codeWords generateOptimalHuffmanCodeWords(partitionedString pStrings, bool firstCode)
 {
-    partitionedString pS = distinction(pStrings);
+    partitionedString distinct = distinction(pStrings);
+    
+    vector<codeWords> store = generateAllHuffmanCodeWordsI_CW(distinct.size(), firstCode);
+    codeWords minCW = store[0];
+    int bestBits = calculateBits(pStrings, distinct, minCW);
+    
+    for(int i = 1; i < store.size(); i++)
+    {
+        int bits = calculateBits(pStrings, distinct, store[i]);
+        if(bits < bestBits)
+        {
+            bestBits = bits;
+            minCW = store[i];
+        }
+    }
+    
+    cout << "For " ;
+    print(pStrings);
+    cout << "We get these Huffman trees...\n";
+    for(int i = 0; i < store.size(); i++)
+    {
+        cout << i + 1 << ": " ;
+        show(store[i]);
+    }
+    
+    cout << "The best: ";
+    show(minCW);
+    
+    cout << "With a size of: " << bestBits << endl;
+    return minCW;
+    /*partitionedString pS = distinction(pStrings);
 
     int total = pStrings.size();
     
@@ -643,7 +808,27 @@ codeWords generateOptimalHuffmanCodeWords(partitionedString pStrings, bool first
         merge(getTwoSmallestPercentageNodeIndexes(set), set);
     }
 
-    return codeWordsFromTree(set[0], pS.size(), firstCode);
+    return codeWordsFromTree(set[0], pS.size(), firstCode);*/
+}
+
+int calculateBits(partitionedString& pStrings, partitionedString& distinct, codeWords cW)
+{
+    // (: + comma) + (encoded string size)
+    int count = (distinct.size() * 3); 
+    //cout << "*" << count << " via: (" << distinct.size() << "* 3) + (" << pStrings.size() << " * " << distinct.size() << ")" << endl;
+    // Calculate how much each distinct string cost...
+    for(int i = 0; i < distinct.size(); i++)
+    {
+        count += strlen(distinct[i]->partitionStr) * 3;
+    }
+    
+    // Calculate the bits for the encoded string...
+    for(int i = 0; i < pStrings.size(); i++)
+    {
+        count += cW[pStrings[i]->huffmanCWIndex].size();
+    }
+    
+    return count;
 }
 
 partitionedString distinction(partitionedString& pString)
@@ -654,6 +839,7 @@ partitionedString distinction(partitionedString& pString)
     {
         add(pString[i], nPS);
     }
+    
     return nPS;
 }
 
@@ -661,7 +847,7 @@ void add(partition* part, partitionedString& pString)
 {
     for(int i = 0; i < pString.size(); i++)
     {
-        if(strcmp(pString[i]->partitionStr, part->partitionStr))
+        if(strcmp(pString[i]->partitionStr, part->partitionStr) == 0)
         {
             pString[i]->frequency++;
             return;
