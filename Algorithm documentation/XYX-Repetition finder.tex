@@ -4,8 +4,12 @@
 \usepackage{longtable}
 \usepackage{pdfpages}
 \usepackage{amsthm}
+\usepackage{xcolor}
 \usepackage{listings}
 \newcommand\Small{\fontsize{10}{9.2}\selectfont}
+\usepackage{lmodern}
+\usepackage[a4paper]{geometry}
+
 
 \lstset{
   columns=flexible,
@@ -13,19 +17,37 @@
   breaklines=true,
   keepspaces=true,
   tabsize=2,
-  mathescape,         
+  mathescape,
+  escapeinside={<@}{@>},           
   literate={->}{$\rightarrow$}{2}
            {ε}{$\varepsilon$}{1}
            {<-}{$\leftarrow$}{3}
 }
+\addtolength{\topmargin}{-30pt}
+\addtolength{\textheight}{40pt}
+\addtolength{\textwidth}{40pt}
+\setlength{\oddsidemargin}{-5pt}
+\setlength{\evensidemargin}{-5pt}
 
 
 \newtheorem{defn}{Definition}[section]
 \newtheorem{obser}{Observation}[section]
+\newtheorem{thm}{Proposition}[section]
+\newtheorem{prf}{Proof}[section]
 \begin{document}
 
 \begin{center}
-	\LARGE\textbf{Repeating sub-string finder algorithm}
+
+	
+	\null
+	\vspace{2in}
+	\LARGE\textbf{An algorithm for finding all the repeating sub-strings and X-Y-X repetitions in a string}
+	\\
+	\vspace{0.5in}
+	\large \textbf{By Mathys Ellis}
+	\\
+	\vspace{0.5in}
+	\large \textbf{Version: \today}
 \end{center}
 
 \newpage
@@ -33,18 +55,18 @@
 \newpage
 \section{Introduction}
 \begin{flushleft}
-	This document purposes a viable algorithm for finding all the repetitions of all the repeating sub-strings in an arbitrary string. Repeating sub-strings are defined by this document as follows:\\
+	This document purposes a viable algorithm for finding all the repeating sub-strings in an arbitrary string. Repeating sub-strings are defined by this document as follows:\\
 	\begin{defn}
-	    Repeating sub-string $Z$.   
+	    Repeating sub-string   
 		\begin{enumerate}
 			\item Let $A$ be an arbitrary selected alphabet.
 			\item Let $S$ be an arbitrary selected string that consists of two or more characters that are elements of $A$.
 			\item Let  $S^{\prime}$ be a sub-string of $S$.
-			\item If there is another sub-string,  $S^{\prime\prime}$, in S that is identical to  $S^{\prime}$ but does not start at the index of  $S^{\prime}$ in S then the sub-string  $S^{\prime}$ is repeated in S and the repeating content of the sub-strings is then denoted by $Z$. The sub-strings $S^{\prime}$, $S^{\prime\prime}$, etc are donated as $Z_{1}$,$Z_{2}$, etc which is generalised to $Z_{i}$ where i indicates the sequential index of the repeating sub-string in relation to all repeating sub-strings of $Z$.
-			\item $Z_{1}$ indicates the first occurrence of $Z$ in $S$ from left to right and $Z_{N}$ indicates the last occurrence of $Z$ in S. Where $N$ is defined as the number of occurrences of a particular repeating term.  
+			\item If there is another sub-string,  $S^{\prime\prime}$, in S that is identical to  $S^{\prime}$ but does not start at the index of  $S^{\prime}$ in S then the sub-string  $S^{\prime}$ is repeated in S and the repeating content of the sub-strings is then denoted by $Z$. The sub-strings $S^{\prime}$, $S^{\prime\prime}$, etc are donated as $Z_{1}$,$Z_{2}$, etc which is generalised to $Z_{i}$ where i indicates the sequential index of the repeating sub-string in relation to all repeating sub-strings of $Z$ in $S$.
+			\item $Z_{1}$ indicates the first occurrence of $Z$ in $S$ from left to right and $Z_{N}$ indicates the last occurrence of $Z$ in S. Where $N$ is defined as the number of occurrences of a particular repeating sub-string content.  
 		\end{enumerate}
 	\end{defn}
-	The document will further propose an extension of the algorithm that will enable it to find the all the X-Y-X repetitions that occur in the arbitrary sting S. A X-Y-X repetition is defined by this document as follows:   
+	The document will further propose an extension of the algorithm that will enable it to find all the X-Y-X repetitions that occur in an arbitrary sting S. A X-Y-X repetition is defined by this document as follows:   
 	\begin{defn} X-Y-X Repetition
 		\begin{enumerate}
 			\item Let A be an arbitrary selected alphabet.
@@ -55,57 +77,74 @@
 		\end{enumerate}
 	\end{defn}
 	
-	The above definitions and terms lay the bases of the algorithm and will be used throughout the document.
+	The above definitions and terms lay the bases of the algorithms described in this document and will be used throughout the document.
 \end{flushleft}
 \newpage
 \section{Algorithm}
 \begin{flushleft} 
 	In order to provide a formal description of the algorithm purposed above the \textit{Repeating sub-string} definition must be used in conjunction with following observations:
-	\begin{obser} 
-	Repeating sub-strings are identical to the prefix, of length $|Z|$, of the sub-string of S starting at the starting index of the first occurrence of $Z$, $Z_{1}$, in S and ending at the last character in S. 
-		\begin{enumerate}		
-			\item Let $R$ be the set of all non-identical repeating sub-string content $Z$ in $S$.
-			\item Let $R_{i}$ be the set of repeated sub-strings ${Z_{1},...,Z_{N}}$ for a particular sub-string content $Z$.
-			\item Let $S^{\prime}$ be the sub-string of S which starts at the index of $Z_{1}$ in S of some set $R_{i}$ and extends to last index in S.
-			\item Therefore $S^{\prime}$ contains the N occurrences of $Z$ in S. Since $Z{1}$ to $Z_{N}$ all in S and are sequential.
-			\item Let P be the prefix of $S^{\prime}$ with a length of $|Z|$ of $R_{i}$.		
-			\item Since $Z_{1}$ is the start of $S^{\prime}$. It is also P.
-			\item It can be observed that each occurrence of $Z$, $Z_{i}$, is identical to the P.
-		\end{enumerate}
-	\end{obser}
+	\begin{thm} 
+	Repeating sub-strings are identical to the prefix, with length $|Z|$, of the sub-string of S starting at the starting index of the first occurrence of $Z$, $Z_{1}$, in S and ending at the last character in S. 
+		\begin{prf} Proof for proposition 2.1\\		
+			\begin{enumerate}		
+				\item Let $R$ be the set of all non-identical repeating sub-string content $Z$ in $S$.
+				\item Let $R_{i}$ be the set of repeated sub-strings ${Z_{1},...,Z_{N}}$ for a particular sub-string content $Z$.
+				\item Let $S^{\prime}$ be the sub-string of S which starts at the index of $Z_{1}$ in S of some set $R_{i}$ and extends to last index in S.
+				\item Therefore $S^{\prime}$ contains the N occurrences of $Z$ in S. Since $Z_{1}$ to $Z_{N}$ all in S and are sequential.
+				\item Let P be the prefix of $S^{\prime}$ with a length of $|Z|$ of $R_{i}$.		
+				\item Since $Z_{1}$ is the start of $S^{\prime}$. It is also P.
+				\item It can be observed that each occurrence of $Z$, $Z_{i}$, is identical to the P.
+			\end{enumerate}
+		\end{prf}
+	\end{thm}
+	\newpage
+	\begin{thm}
+	Each repeating sub-string of some repeating sub-string content,$Z$, in the string S forms a cluster of $\frac{|Z|(2 + (|Z|-1))}{2}$ repeating sub-strings of S.
+		\begin{prf} Proof for proposition 2.2		
+			\begin{enumerate}
+				\item $Z$ has two or more occurrences in $S$ by definition.
+				\item Each occurrence, $Z_{i}$, contains one or more characters by definition.
+				\item Splitting the occurrence,$Z_{i}$, into J layers denoted by L, where J is $|Z_{i}|$ so that each layer $L_{j}$, where $0 \leq j < J $, contains $J - j$ partitions of the sub-string $Z$. Each partition has a length of $j + 1$ each, where each partition's starting index is pairwise disjoint with any other partition's starting index on the same layer.
+				\item Each of the partitions on a layer can be seen as a repeating sub-string in S since there is more than one occurrences of it in S since there is more then one occurrence of $Z$ as shown above. 
+				\item Each layer adds $J - j$ to the total partitions for a particular value of J. Hence the number of partitions contained by a sub-string $Z$ is the summation of the number of partitions on each of the layers. Therefore $1 + 2 + ... + (J - 2) + (J - 1) + J$. This is an arithmetic sequence that can be described by the explicit formula $a_{n} = 1 + (n - 1)$. Thus the summation of these partitions can be described by the explicit formula $\frac{J(2 + (J-1))}{2}$. 
+				\item Therefore $Z$ forms $N$ clusters containing $\frac{|Z|(2 + (|Z|-1))}{2}$ repeated sub-strings. Since $J = |Z_{i}| = |Z|$.		      
+			\end{enumerate}
+		\end{prf}	
+	\end{thm}
+	\newpage
+	\begin{thm}
+	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, in S overlap between some leftmost position, $p$, and rightmost position ,$q$, in S, then $\frac{(q - p)(2 + ((q - p)-1))}{2}$ repeating sub-strings are in the set of $R^{\prime}_{\textit{repeating sub-strings}} \cup R^{\prime\prime}_{\textit{repeating sub-strings}}$.
+		\begin{prf} Proof for proposition 2.3
+			\begin{enumerate}
+				\item Let $R^{\prime}$ be the leftmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.  
+				\item Let $R^{\prime\prime}$ be the rightmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.
+				\item Let $p$ be the character index in $S$ which indicates the leftmost overlapping character.
+				\item Let $q$ be the character index in $S$ which indicates the rightmost overlapping character.
+				\item Therefore it can be seen that $q - p$ characters overlap forming an overlapped sub-string $S^{\prime}$ in S.
+				\item Since both $R^{\prime}$ and $R^{\prime\prime}$ form repeating sub-string clusters it can be observed that $S^{\prime}$ forms a repeating sub-string cluster since it consists of only characters that are repeated in both $R^{\prime}$ and $R^{\prime\prime}$.
+				\item Therefore by definition and observation 2.2, $S^{\prime}$ creates a new repeating sub-string cluster contains which contains $\frac{(q - p)(2 + ((q - p)-1))}{2}$ repeating sub-strings.
+				\item Therefore both $R^{\prime}$ and $R^{\prime\prime}$ contain $\frac{(q - p)(2 + ((q - p)-1))}{2}$ identical repeating sub-strings.
+			\end{enumerate}
+		\end{prf}
+	\end{thm}
+	\newpage
+	\begin{thm}
+	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, in S overlap in such a way that $R^{\prime}$ completely overlaps all the characters of $R^{\prime\prime}$ then $R^{\prime}$ contains all the repeating sub-strings in the cluster of $R^{\prime\prime}$ as well as its own. Thus $R^{\prime}$ absorbs $R^{\prime\prime}$.
+		\begin{prf} Proof for proposition 2.4
+			\begin{enumerate}
+			\item Let $R^{\prime}$ be the leftmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.  
+			\item Let $R^{\prime\prime}$ be the rightmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-string content in S.
+			\item Therefore by Theorem 2.3 it can be seen that $q - p$ characters overlap forming an overlapped sub-string $S^{\prime}$ in S.
+			\item Assume that $R^{\prime\prime}$ is a sub-string of $R^{\prime}$. Therefore  $R^{\prime}$ overlaps all the characters of $R^{\prime\prime}$.
+			\item Thus $p$ is the index of the starting character of $R^{\prime\prime}$ and $q$ is the index of the ending character of $R^{\prime\prime}$.
+			\item Therefore $S^{\prime}$ is $R^{\prime\prime}$.
+			\item Therefore by theorem 2.3 it can be seen that $R^{\prime}$ contains all the repeating sub-strings of $R^{\prime\prime}$. 
+			\end{enumerate}
+		\end{prf} 
+	\end{thm}
 	
-	\begin{obser}
-	Each occurrence of $Z$ in the string S forms a cluster of $\frac{|Z|(2 + (|Z|-1))}{2}$ repeating sub-strings of S.
-		\begin{enumerate}
-			\item $Z$ has two or more occurrences in $S$ by definition.
-			\item Each occurrence, $Z_{i}$, contains one or more characters by definition.
-			\item Splitting the occurrence,$Z_{i}$, into J layers denoted by L, where J is $|Z_{i}|$ so that each layer $L_{j}$, where $0 \leq j < J $, contains $J - j$ partitions of the sub-string $Z$. Each partition has a length of $j + 1$ each, where each partition's starting index is pairwise disjoint with any other partition's starting index on the same layer.
-			\item Each of the partitions on each layer can be seen as a repeating sub-string in S since there is more than one occurrences of it in S since there is more then one occurrence of $Z$ as shown above. 
-			\item Since each layer adds $J - j$ to the total partitions for a particular value of J. Hence the number of partitions contained by a sub-string $Z$ is the summation of the layers which is $J + J - 1 + J - 2 + ... + 2 + 1$. This is an arithmetic sequence that can be described by the explicit formula $a_{n} = a_{1} + (n - 1)d$. Thus the summation of these partitions can be described by the explicit formula $\frac{J(2 + (J-1))}{2}$. 
-			\item Therefore $Z$ forms $N$ clusters containing $\frac{|Z|(2 + (|Z|-1))}{2}$ repeated sub-strings. Since $J = |Z_{i}| = |Z|$.		      
-		\end{enumerate}	
-	\end{obser}
-	
-	\begin{obser}
-	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, of any of the repeated sub-strings in S overlap at some leftmost position, $p$, and rightmost position ,$q$, in S, then $\frac{(q - p)(2 + ((q - p)-1))}{2}$ repeating sub-strings are in the set of $R^{\prime}_{\textit{repeating sub-strings}} \cup R^{\prime\prime}_{\textit{repeating sub-strings}}$.
-		\begin{enumerate}
-			\item Let $R^{\prime}$ be the leftmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-strings in S.  
-			\item Let $R^{\prime\prime}$ be the rightmost repeating sub-string in $S$ of any two overlapping arbitrary selected repeating sub-strings of any of the repeating sub-strings in S.
-			\item Let $p$ be the character index in $S$ which indicates the leftmost overlapping character.
-			\item Let $q$ be the character index in $S$ which indicates the rightmost overlapping character.
-			\item Therefore it can be seen that $R^{\prime} - p$ characters overlap, form an overlapped sub-string $S^{\prime}$ in S.
-			\item Since both $R^{\prime}$ and $R^{\prime\prime}$ form repeating sub-string clusters it can be that $S^{\prime}$ forms a repeating sub-string cluster since it consists of only characters that are repeated.
-			\item Therefore by definition and observation 2.2 the new repeating sub-string cluster contains $\frac{(q - p)(2 + ((q - p)-1))}{2}$ repeating sub-strings.
-			\item Therefore both $R^{\prime}$ and $R^{\prime\prime}$ contain $\frac{(q - p)(2 + ((q - p)-1))}{2}$ identical repeating sub-strings.
-		\end{enumerate}
-	\end{obser}
-	
-	\begin{obser}
-	If any two repeating sub-strings, $R^{\prime}$ and $R^{\prime\prime}$, of any of the repeated sub-strings in S overlap in such a way that one of them completely overlaps all the characters of the other then the longer of the two contains all the repeating sub-strings in the cluster of the smaller as well as it owns. Thus the longer absorbs the smaller. 
-	\end{obser}
-	
-	The above observations forms the core characteristics of a repeating sub-string and the string that contains it which will be exploited by the algorithm. The algorithm primarily consists of two stages. A third stage can be added that allows for the extension of the algorithm as stated in the introduction of this document.
-	
+	The above theorems form the core characteristics, of a repeating sub-string and the string that contains it, which will be exploited by the algorithm. The algorithm primarily consists of two stages. A third stage can be added that allows for the extension of the algorithm as stated in the introduction of this document.
+	\newpage
 	\subsection{Stage 1: Finding maximum longest prefixes starting at each character index in S}
 		The stage 1 algorithm analyses the string S in such away that a numeric array representing the maximum longest prefix/repeating sub-string pattern, which has the same length as S, is produced. 
 	
@@ -118,19 +157,19 @@
 				\item Is a sub-string of S which starts at the character $C_{|S| - T} $ in S and ends at character $C_{|S|}$ in S.
 			\end{enumerate}		
 		
-		\item Next the algorithm creates a numeric array, $U$, which has a length of $|S|$ and all of its elements are initialised to zero. This captures the final results.  
+		\item Next the algorithm creates a numeric array, $U$, which has a length of $|S|$ and all of its elements are initialised to zero. This captures the final longest prefix pattern of S.  
 		U has the following properties:
 			\begin{enumerate}
-				\item Each element, $E_{i}$ is mapped to the corresponding character $C_{i}$ in S, where $ 0 \le i < |S|$.
+				\item Each element, $U_{i}$ is mapped to the corresponding character $C_{i}$ in S, where $ 0 \le i < |S|$.
 				\item Each element has numeric value $\ge 0$.
 				\item Each element represents the maximum longest prefix of all the longest prefixes found in each of the sub-strings in $K$ which have a character index $y$ which can be mapped to the character index $C_{i}$ in S. Where the character index $y$ donates the starting index of the prefix of particular sub-string in $K$. The mapping is defined as $i = y + (|S| - z)$, where $z$ is the index of sub-string in $K$ and $y$ is the character index in $K_{z}$. 
 			\end{enumerate}
 		
-		\item Next in order to store the data and support the implicit creation of $K$ the algorithm creates an array of three numeric arrays, $LPPatterns$. Where the first array is $U$. The second represents the current $K_{i}$ sub-string longest prefix pattern and the third represents $K_{i + 1}$ sub-string longest prefix pattern. In order to increase the performance of the longest prefix sub-string finder algorithm $LPPatterns_{2}$ is used to capture the expected longest prefixes for the $K_{i + 1}$. Due to the fact that any prefix found in $K_{i}$ that is longer then one character will be partially present in $K_{i + 1}$.
+		\item Next in order to store the data and support the implicit creation of $K$ the algorithm creates an array of three numeric arrays, $LPPatterns$. Where the first array is $U$. The second represents the current $K_{i}$ sub-string's longest prefix pattern and the third represents $K_{i + 1}$ sub-string's longest prefix pattern. In order to increase the performance of the longest prefix sub-string finder algorithm $LPPatterns_{2}$ is used to capture the expected longest prefixes for the $K_{i + 1}$. Due to the fact that any prefix found in $K_{i}$ that is longer then one character will be partially present in $K_{i + 1}$.
 		
 		\item Next each sub-string, $K_{z}$, in K is then scanned iteratively for the longest prefix sub-string* starting at each character, $K_{zy}$. If the value of the element in $LPPattern_{0}$ which is mapped to by the character index $y$ of the sub-string $K_{z}$, is less than the length of longest prefix starting at $K_{zy}$ then it is replaced by the length of the longest prefix starting at $K_{zy}$, which is stored in $LPPattern_{1z}$. \\
 						
-		\item Since the array elements of $U$ captures the maximum length of longest prefixes starting at each character index it implies that the elements following the particular starting element will contain a value one less than the previous. This due to the fact that a prefix string covers $|prefix-string|$ elements in $U$ and the cluster repeating sub-strings in the prefix. Thus next the array $U$ is scanned iteratively from left to right in order to remove this unnecessary information. If one of the elements is not zero and does not follow the linearly decreasing sequence above then the element indicates the starting point of a repeating sub-string that is not completely overlapped by the other. In order to remove the unnecessary information, elements containing implied values can be changed to zero.
+		\item Since the array elements of $U$ captures the maximum length of longest prefixes starting at each character index it implies that the elements following the particular starting element will contain a value one less than the previous. This due to the fact that a prefix string covers $|\textit{prefix string}|$ elements in $U$ and that it contains a cluster of repeating sub-strings. Thus next the array $U$ is scanned iteratively from left to right in order to remove this unnecessary information. If one of the elements is not zero and does not follow the linearly decreasing sequence above then the element indicates the starting point of a repeating sub-string that is not completely overlapped by the other which is important for the next stage. Thus in order to remove the unnecessary information, elements containing expected values can be changed to zero.
 		
 		\end{enumerate}
 				  
@@ -190,27 +229,27 @@ U <- $LPPatterns_{0}$
 \begin{lstlisting}
 S <- String to be scanned for repeating sub-strings
 LPPatterns <- A two dimenstional numeric array which contains the overall, current and next LPPatterns 
-Offset <- Starting position of pattern in the string S
-LPPIndex <- 1 
+<@\textcolor{red}{Offset <- Starting position of pattern in the string S}@>
+<@\textcolor{red}{LPPIndex <- 1}@> 
 currentMatchLength <- 0
 
-patternLength <- $|S|$ - Offset
+<@\textcolor{red}{patternLength <- $|S|$ - Offset}@>
 
 //Find the longest prefix of S starting at Offset in S
-IF patternLength > 1 
-THEN
-	currentMatchLength = $LPPatterns_{[LPPIndex][1]}$
-END-IF
+<@\textcolor{red}{IF patternLength > 1}@> 
+<@\textcolor{red}{THEN}@>
+	<@\textcolor{red}{currentMatchLength = $LPPatterns_{[LPPIndex][1]}$}@>
+<@\textcolor{red}{END-IF}@>
 
-WHILE (currentMatchLength < patternLength) AND ($S_{currentMatchLength + Offset}$ equals $S_{currentMatchLength + offset + 1}$)
+<@\textcolor{red}{WHILE (currentMatchLength < patternLength) AND ($S_{currentMatchLength + Offset}$ equals $S_{currentMatchLength + offset + 1}$)}@>
 BEGIN
 	currentMatchLength <- currentMatchLength + 1
 END-WHILE
 
 $LPPatterns_{[LPPIndex][1]}$ <- currentMatchLength
 
-$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][1]}$ and $LPPatterns_{[LPPIndex][0]}$
-$LPPatterns_{[0][Offset + 1]}$ <- maximum between $LPPatterns_{[0][offset + 1]}$ and $LPPatterns_{[LPPIndex][1]}$
+<@\textcolor{red}{$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][1]}$ and $LPPatterns_{[LPPIndex][0]}$}@>
+<@\textcolor{red}{$LPPatterns_{[0][Offset + 1]}$ <- maximum between $LPPatterns_{[0][offset + 1]}$ and $LPPatterns_{[LPPIndex][1]}$}@>
 
 //Special index value that maxs: k + lppattern[k] (1 <= k < i)
 k <- 1;
@@ -219,7 +258,7 @@ k <- 1;
 FOR i = 2 to patternLength
 BEGIN
 	//lengthOfX = length of substring X: pattern[i]...pattern[k + lppattern[k] - 1]
-	lengthOfX <- length of sub-string X in S: $S_{i}$...$S_{k + LPPatterns_{[LPPIndex][k]} - 1}$
+	lengthOfX <- $k + LPPatterns_{[LPPIndex][k]} - (i + 1)$
 	
 	IF $LPPatterns_{[LPPIndex][i - k]}$ < lengthOfX
 	THEN
@@ -229,14 +268,14 @@ BEGIN
 		IF i $\geq$ k + $LPPatterns_{[LPPIndex][k]}$
 		THEN
 			//Cannot give any hint
-			currentMatchLength <- $LPPatterns_{[LPPIndex][i]}$
-		ELSE
+			<@\textcolor{red}{currentMatchLength <- $LPPatterns_{[LPPIndex][i]}$}@>
+		<@\textcolor{red}{ELSE}@>
 			//Gives a hint that the longest prefix has a length greater or equal to the below
-			currentMatchLength <- maximum between lengthOfX and $lppatterns_{[lppIndex][i]}$
-		END-IF
+			<@\textcolor{red}{currentMatchLength <- maximum between lengthOfX and $lppatterns_{[lppIndex][i]}$}@>
+		<@\textcolor{red}{END-IF}@>
 		
 		//Find longest prefix using hint or no hint
-		WHILE (currentMatchLength < patternLength) AND $S_{currentMatchLength + offset}$ equals $S_{currentMatchLength + Offset + i}$)
+		<@\textcolor{red}{WHILE (currentMatchLength < patternLength) AND $S_{currentMatchLength + offset}$ equals $S_{currentMatchLength + Offset + i}$)}@>
 		BEGIN
 			currentMatchLength <- currentMatchLength + 1
 		END-WHILE
@@ -248,17 +287,17 @@ BEGIN
 	END-IF
 	
 
-	$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][0]}$ and $LPPatterns_{[LPPIndex] [i]}$
-	$LPPatterns_{[0][offset + i]}$ <- maximum between $LPPatterns_{[0][offset + i]}$ and $LPPatterns_{[LPPIndex] [i]}$
+	<@\textcolor{red}{$LPPatterns_{[LPPIndex][0]}$ <- maximum between $LPPatterns_{[LPPIndex][0]}$ and $LPPatterns_{[LPPIndex] [i]}$}@>
+	<@\textcolor{red}{$LPPatterns_{[0][offset + i]}$ <- maximum between $LPPatterns_{[0][offset + i]}$ and $LPPatterns_{[LPPIndex] [i]}$}@>
 	
 	//Add length hints for next sub-string in K
-	IF ($LPPatterns_{[LPPIndex][i]}$ > 1) AND (i + $LPPatterns_{[1][i]}$ < patternLength - 1)
-	THEN
-		$LPPatterns_{[2][i]}$ <- $LPPatterns_{[LPPIndex][i]}$ - 1
-	END-IF
+	<@\textcolor{red}{IF ($LPPatterns_{[LPPIndex][i]}$ > 1) AND (i + $LPPatterns_{[1][i]}$ < patternLength - 1)}@>
+	<@\textcolor{red}{THEN}@>
+		<@\textcolor{red}{$LPPatterns_{[2][i]}$ <- $LPPatterns_{[LPPIndex][i]}$ - 1}@>
+	<@\textcolor{red}{END-IF}@>
 END-FOR
 
-$LPPatterns_{[0][Offset]}$ <- maximum between $LPPatterns_{[0][offset]}$ and $LPPatterns_{[LPPIndex][0]}$
+<@\textcolor{red}{$LPPatterns_{[0][Offset]}$ <- maximum between $LPPatterns_{[0][offset]}$ and $LPPatterns_{[LPPIndex][0]}$}@>
 
 
 \end{lstlisting}
@@ -287,6 +326,7 @@ BEGIN
 			//Check for second case repeating sub-strings
 			IF ($U_{i + j} > 0$) AND (j NOT 0) 
 			THEN
+				i <- i + j
 				Stop extracting partitions for current sub-string
 			END-IF
 			
@@ -297,18 +337,53 @@ BEGIN
 				$L2_{n}$ <- Starting position of the repeating sub-string (i + j)
 			END-FOR
 		END-FOR
-	END-IF	
+		i <- i + $U_{i}$
+	END-IF
+		
 END-FOR		
 \end{lstlisting}
 	\newpage	
 	\subsection{Stage 3: Extracting all X-Y-X repetitions from all the repeating sub-strings}
 	This stage serves as an extension to the algorithm. It allows the algorithm to find all the X-Y-X repetitions from the list of repeating sub-strings produced by stage 2. This extension hinges on the fact that any X-Y-X repetition of S is a sub-set of all the repeating sub-strings. This can be deduced from the observation that X-Y-X repetitions by definition do not contain overlapping repeating sub-strings. Whereas the set of all repeating sub-strings of S by definition contain both the overlapping and non overlapping sub-strings in S.\\
-	The algorithm firstly sorts the list of all the repeating sub-string in alphabetical order and then by the ascending order of their starting position. Though the latter should be implied as the list produced by stage 2 is already in order of occurrence. Thus any rudimentary sorting algorithm should be able to preserve the starting position order.\\
+	The algorithm firstly sorts the list of all the repeating sub-string in alphabetical order and then by the ascending order of their starting position. Though the latter should be implied as the list produced by stage 2 is already in order of occurrence. Thus any rudimentary sorting algorithm should be able to preserve the starting position order. This ordering implicitly groups the various repeating sub-stings by their sub-string content and the left to right order they occur in the string S.\\
 	The algorithm should then iteratively scan the list from left to right and produce the X-Y-X repetitions by grouping each set of all the non-overlapping elements that a group of repeating sub-strings may have. The pseudo code for the algorithm follows:
 	\newpage
 	\subsubsection{Stage 3 algorithm pseudo code}
+	
 \begin{lstlisting}
+//Parallel arrays that hold repeating string information
+L1 <- Alphabetically ordered array of all repeating sub-strings 
+L2 <- Array of starting positions for all L1 elements
+O <- Empty two dimensional numeric array
+N <- Empty string array
 
+FOR i = 0 to (|L1| - 1)
+BEGIN
+	P <- Empty numeric array
+	R <- $L1_{i}$
+	currentPosition <- $L2_{i}$ + |R|
+	
+	Append $L2_{i}$ to P	
+	Remove $L1_{i} and $L2_{i}	
+	
+	j <- 0		
+	WHILE $L1_{i + j}$ equals R
+	BEGIN
+		IF $L2_{i + j}$ $\geq$ currentPosition
+		THEN 
+			currentPosition <- $L2_{i}$ + |R|
+			Append $L2_{i + j}$ to P
+			Remove $L1_{i + j}$ and $L2_{i + j}$			
+		ELSE
+			j <- j + 1
+		END-IF		
+	END-WHILE
+	Append P to O
+	Append R to N  
+END-FOR
+
+N contains an array of the various repeating sub-string content of each of the X-Y-X repetitions
+O contains the starting positions of each repeating sub-string in each group of X-Y-X repetitions 
 \end{lstlisting} 
 \end{flushleft}
 \end{document}
