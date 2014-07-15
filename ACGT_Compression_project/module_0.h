@@ -12,6 +12,7 @@
 #define	MODULE_0_H
 
 #include <vector>
+#include <stack>
 #include <string>
 #include <cctype>
 #include <cstring>
