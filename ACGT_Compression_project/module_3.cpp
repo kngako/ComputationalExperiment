@@ -1160,3 +1160,288 @@ repetition* getRepetionOfNIStringI_FromFile(const char* path, unsigned long long
     
     return temp;
 }
+
+//Complexity analysis
+bool getAllRepetitions_XYX_File_ECA (char* str, const char* filename, long &count)
+{
+	fstream outFile;        
+        cout << "Writing repetitions to file: " << filename << endl;
+	outFile.open(filename,ios::out);
+        
+	outFile << str << endl;
+
+	findReps_E_XYX_file_ECA(str, outFile, count);
+        
+        outFile.close();
+        
+	return true;
+}
+
+void findReps_E_XYX_file_ECA (char* str, fstream& outFile, long &count)
+{
+	
+        
+        int* temp = findMaxLppattern_XYX_ECA(str, count);
+        
+        scanLPArrForRep_E_XYX_file_ECA(str,temp,outFile, count);
+        
+        delete [] temp;
+}
+
+int* findMaxLppattern_XYX_ECA(char* str, long &count)
+{
+	int strLen = strlen(str);
+        count++;
+        //Used for zeroing all covered zones in LPpattern Overall
+	int zeroCounter = 0;
+        count++;
+	
+        vector<int*> lppatterns;
+
+	//Intialise 3 arrays
+        //MOVE FROM ALL TO 1 string levels (no of chars from orignal string)
+        //[0] Overall LPpattern
+        //[1] current level LPpattern in string
+        //[2] next level LPpattern in string
+	lppatterns.push_back(new int[strLen]);
+	lppatterns.push_back(new int[1]);
+	lppatterns.push_back(new int[strLen]);        
+
+	for (int i = 0; i < strLen; i++)
+	{
+                lppatterns[0][i] = 0;
+		lppatterns[2][i] = 0;   
+                //count++;
+                //count++;
+	}
+
+	//Process str and find longest prefixs
+	for (int i = 0; i < strLen - 1; i++)
+	{
+                //Replace Cur array lppatterns[1] with Temp array lppatterns[2]
+		int* temp = lppatterns[2];
+                count++;
+		lppatterns.pop_back();
+
+		delete [] lppatterns[1];
+		lppatterns.pop_back();
+
+		lppatterns.push_back(temp);
+                
+                
+                //Insert new array in lppatterns[2] and initialise
+		temp = 0;
+                count++;
+		temp = new int[strLen - i - 1];
+                count++;
+		for (int j = 0; j < strLen - i - 1; j++)
+		{
+			temp[j] = 0;
+                        //count++;
+		}
+
+		lppatterns.push_back(temp);
+                //count++;
+
+		//Claculate the next level of lppattern
+		calcLppattern_E_XYX_ECA(str, lppatterns, i, count);
+                /*
+                cout << "level " << i << ": " << endl;
+                for(int m = 0; m < strLen - i; m++)
+                {
+                    cout << lppatterns[1][m];
+                }
+                cout << endl;
+		*/
+                //Zero already covered zones
+		if(lppatterns[0][i] > zeroCounter) //If the current LP is bigger then the current number of elements to zero then needs to change zero counter that
+		{
+			zeroCounter = lppatterns[0][i] - 1;
+                        count++;
+		}
+		else if(zeroCounter > 0) //If zones are covered
+		{
+		   lppatterns[0][i] = 0;
+		   zeroCounter--;
+                   count++;                   
+		}
+                
+
+	}
+
+	//Zero last if not covered yet
+	if(zeroCounter > 0)
+	{
+                lppatterns[0][strLen - 1] = 0;
+                count++;
+        }
+
+	//Free memory
+        delete [] lppatterns[1];
+	delete [] lppatterns[2];
+
+	lppatterns.pop_back();
+	lppatterns.pop_back();
+
+	return lppatterns[0];
+}
+
+void calcLppattern_E_XYX_ECA (char* pattern, vector<int*>& lppatterns, int offset, long &count)
+{
+	//cout << "======offset: " << offset << endl;
+	//find pattern length
+
+	int patternLen = strlen(pattern) - offset;
+        count++;
+
+	int lppIndex = 1;//lppatterns.size() - patternLen;
+        count++;
+
+	int curMatchLen = 0; //j
+        count++;
+
+	//Find lppattern[1]
+	if (patternLen > 1)     //modified
+	{
+		curMatchLen = lppatterns[lppIndex][1]; //j  //modified
+                count++;
+	}
+
+	while (curMatchLen < patternLen && pattern[curMatchLen + offset] == pattern[curMatchLen + offset + 1])
+	{
+		curMatchLen++;
+                count++;
+	}
+
+	lppatterns[lppIndex][1] = curMatchLen;
+        count++;
+
+	//Adjust cur start max
+	lppatterns[lppIndex][0] = max(lppatterns[lppIndex][1],lppatterns[lppIndex][0]);
+        count++;
+   	//adjust max array
+	lppatterns[0][offset + 1] = max(lppatterns[0][offset + 1],lppatterns[lppIndex][1]);
+        count++;
+
+	//Special index value that maxs: k + lppattern[k] (1 <= k < i)
+	int k = 1;
+        count++;
+
+	//Find rest of lppattern
+	for(int i = 2; i < patternLen; i++)
+	{
+		//lenX = length of substring X: pattern[i]...pattern[k + lppattern[k] - 1]
+		int lenX = k + lppatterns[lppIndex][k] - (1 + i); //?
+                count++;
+
+		if(lppatterns[lppIndex][(i - k)] < lenX)  //changed lppattern[i - k + 1]  to lppattern[i - k]
+		{
+			//gives length directly
+			lppatterns[lppIndex][i] = lppatterns[lppIndex][(i - k)];  //changed lppattern[i - k + 1]  to lppattern[i - k]
+                        count++;
+		}
+		else
+		{
+			if(i >= k + lppatterns[lppIndex][k])
+			{
+				//No hint is possiable
+				curMatchLen = lppatterns[lppIndex][i];  //modified
+                                count++;
+			}
+			else
+			{
+				//gives hint to length
+				curMatchLen = max(lenX,lppatterns[lppIndex][i]); //modified
+                                count++;
+			}
+
+			//Used to find substring length if no predetemined or aid given
+			while(curMatchLen < patternLen && pattern[curMatchLen + offset] == pattern[curMatchLen + offset + i] )
+			{
+				curMatchLen++;
+                                count++;
+			}
+
+			lppatterns[lppIndex][i] = curMatchLen;
+                        count++;
+
+			//since last update should max k + lppattern[k]
+			k = i;
+                        count++;
+		}
+
+		//Adjust max
+		lppatterns[0][i + offset] = max(lppatterns[0][i + offset],lppatterns[lppIndex][i]);
+                count++;
+
+		//Adjust cur start max
+		lppatterns[lppIndex][0] = max(lppatterns[lppIndex][0],lppatterns[lppIndex][i]);
+                count++;
+
+		//Write prepocessed data (speed up processing via hints)
+		//****050000
+		//*****04000
+		if (lppatterns[lppIndex][i] > 1 && i + lppatterns[1][i] < patternLen - 1)
+		{
+			lppatterns[2][i] = lppatterns[lppIndex][i] - 1;
+                        count++;
+		}
+
+
+	}
+    //Adjust max
+	lppatterns[0][offset] = max(lppatterns[0][offset],lppatterns[lppIndex][0]);
+        count++;
+}
+
+void scanLPArrForRep_E_XYX_file_ECA (char* str, int* lpMaxPattern, fstream& outFile, long &count)
+{
+	int lpLen = strlen(str);
+        count++;
+        
+        //scan lpMaxPattern for reps
+	for(int i = 0; i < lpLen; i++)
+	{
+                //Check if rep exist
+		if(lpMaxPattern[i] > 0)
+		{
+                        //Extract repetitions
+			for(int j = 0; j < lpMaxPattern[i]; j++)
+			{
+                            //Compensate for overlapping LPMaxs
+                            if (lpMaxPattern[i + j] > 0 && j != 0)
+                            {
+                                break;
+                            }
+                            
+                            //cout << "J: " << j << endl;
+                            for(int k = 0; k < lpMaxPattern[i] - j; k++)
+                            {
+                                    repetition* temp = new repetition;
+                                    
+                                    temp->repetitionStr = copyChar(str,i + j, k + 1);
+                                    
+                                    temp->startpos = i + j;
+                                    
+
+                                    char* strOut = repetitionToString(temp);
+                                    count++;
+
+                                    outFile << strOut << endl;
+
+                                    delete [] strOut;                                        
+                                    delete [] temp->repetitionStr;
+                                    delete temp;
+                            }
+                            
+                            
+			}
+		}
+
+		//skip if possible
+		//if(lpMaxPattern[i] > 1 && lpMaxPattern[lpMaxPattern[i] + i - 1] == 0)
+		//{
+		   	//i = i + lpMaxPattern[i] - 1;
+                //}
+	}
+}

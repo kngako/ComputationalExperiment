@@ -96,6 +96,10 @@ bool getAllRepetitions_XX (char* filename, char* str);
 //Not used
 int* calcLstextLR_XX (char*, char*);
 
-
+bool getAllRepetitions_XYX_File_ECA (char* str, const char* filename, long &count);
+void findReps_E_XYX_file_ECA (char* str, fstream& outFile, long &count);
+int* findMaxLppattern_XYX_ECA(char* str, long &count);
+void calcLppattern_E_XYX_ECA (char* pattern, vector<int*>& lppatterns, int offset, long &count);
+void scanLPArrForRep_E_XYX_file_ECA (char* str, int* lpMaxPattern, fstream& outFile, long &count);
 
 #endif

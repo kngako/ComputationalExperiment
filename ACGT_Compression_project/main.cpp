@@ -20,6 +20,9 @@ using namespace std;
 #include <iostream>
 
 unsigned long long int execStage0_LoadFile(const char* filename, const char* expName);
+string generateRandomString(int length);
+void ECA_run(const char* path, int N, int numberOfRuns);
+
 void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned long int h, unsigned long long int c, const char* expName);
 void execStage2_partitiondata(const char* expName);
 void execStage3_calculationdata(const char* expName);
@@ -48,10 +51,12 @@ int main(int argc, char** argv)
         cout << "40: Module 6 - partition (Partition a string)" << endl;
         cout << "41: Module 6 - partition (Calculate weight of partitioned string)" << endl;
         cout << "50: Module 7 - Repetition partitioner" << endl;*/
+        
         cout << "60: Create experiment using automated string generation" << endl;
         cout << "61: Create experiment using custom strings from file" << endl;
         cout << "70: Generate all possible huffman trees" <<endl;
         cout << "71: Generate optimal huffman tree for a partitioned string" <<endl;
+        cout << "80: Run experimental complexity analysis" << endl;
         
         int option = 0;
         cin >> option;
@@ -293,6 +298,15 @@ int main(int argc, char** argv)
                 generateOptimalHuffmanCodeWords(PartitionString(strin,fn), true);
                 
                 break;
+            case 80:      
+                cout << "Enter path for results: ";
+                cin >> directory;
+                cout << "N: " << endl;
+                cin >> m;
+                cout << "Number of runs: " << endl;
+                cin >> j;
+                ECA_run(directory.c_str(),m,j);
+                break;
             default: 
                 active = false;
                 break;                
@@ -472,6 +486,98 @@ void execStage1_precache(unsigned long long int m, unsigned long int l, unsigned
     delete [] precachePath;
     
     cout << "Stage 1 complete..." << endl << "=======================================" << endl;
+}
+
+string generateRandomString(int length)
+{
+    string out = "";
+    
+    for(int i = 0; i < length; i++ )
+    {
+        if(rand() % 2 == 0 || i == 0)
+        {
+            out.append(1,(char)((rand() % 25) + 65));
+        }
+        else
+        {
+            out.append(1,out.at(rand() % i));
+        }
+    }
+    
+    return out;
+}
+
+void ECA_run(const char* path, int N, int numberOfRuns)
+{
+    ostringstream strm;
+    
+    strm << path << FILEMANAGER_PATH_DELIMINATOR;
+    char* PATH = new char[strm.str().length() + 1];
+    strcpy(PATH,strm.str().c_str());
+    
+    strm.str("");
+    strm << PATH << "ECA_N_" << N << "_R_" << numberOfRuns << ".csv";
+    char* ECA = new char[strm.str().length() + 1];
+    strcpy(ECA,strm.str().c_str());
+    
+    strm.str("");
+    strm << PATH << "dump.txt";
+    char* ECA_DUMP = new char[strm.str().length() + 1];
+    strcpy(ECA_DUMP,strm.str().c_str());
+    
+    fstream outFile;        
+        
+    outFile.open(ECA,ios::out);
+    
+    long max = 0;
+    long min = 0;
+    double avg = 0;    
+    
+    for(int i = 0; i < numberOfRuns; i++)
+    {
+        long counter = 0;
+        string randString = generateRandomString(N);
+        
+        getAllRepetitions_XYX_File_ECA((char*) randString.c_str(),ECA_DUMP,counter);
+        cout << "Random string " << "i :" << randString << endl;
+        cout << "Count: " << counter << endl;
+        //counts.push_back(counter);
+        //strings.push_back(randString);
+        outFile << i << "," << randString << "," << counter << endl;
+        if(i == 0)
+        {
+            max = counter;
+            min = counter;
+        }
+        else
+        {        
+            if(max < counter)
+            {
+                max = counter;
+            }
+
+            if(min > counter)
+            {
+                min = counter;
+            }
+        }
+        
+        avg += counter;
+    }
+    
+    //Agreggation functions MIN MAX AVG
+    
+    avg /= numberOfRuns; 
+    outFile << "" << endl;
+    outFile << "N" << "," << "Number of runs" << "," << "Min" << "," << "Max" << "," << "Average" << endl;
+    outFile << N << "," << numberOfRuns << "," << min << "," << max << "," << avg << endl;
+    outFile.close();
+    
+    cout << "Results written to file: " << ECA << endl; 
+    
+    delete [] PATH;
+    delete [] ECA;
+    delete [] ECA_DUMP;
 }
 
 void execStage2_partitiondata(const char* expName)
