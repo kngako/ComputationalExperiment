@@ -56,6 +56,7 @@ int main(int argc, char** argv)
         cout << "61: Create experiment using custom strings from file" << endl;
         cout << "70: Generate all possible huffman trees" <<endl;
         cout << "71: Generate optimal huffman tree for a partitioned string" <<endl;
+        cout << "72: Generate optimal huffman tree for a partitioned string using the weights" <<endl;
         cout << "80: Run experimental complexity analysis" << endl;
         
         int option = 0;
@@ -277,12 +278,19 @@ int main(int argc, char** argv)
                 cin >> size;
                 while(size > 1)
                 {   
-                    generateAllHuffmanCodeWordsI_CW(size, false);
+                    vector<codeWords> store = generateAllHuffmanCodeWords(size, false);
 
+                    for(int i = 0; i < store.size(); i++)
+                    {
+                        cout << i + 1 << ": " ;
+                        show(store[i]);
+                    }
+                    
                     cout << "Enter size of the trees to generate (enter 0 to terminate): ";
                     cin >> size;
 
                 }
+                break;
             case 71:
                 cout << "Please enter a string to be partitioned: ";
                 cin.getline(strin,STD_NUMBER_OF_CHARS);
@@ -296,6 +304,21 @@ int main(int argc, char** argv)
                 sprintf(fn,"%s.%s", strin, PARTITION_FILE_EXT);
                 
                 generateOptimalHuffmanCodeWords(PartitionString(strin,fn), true);
+                
+                break;
+            case 72:
+                cout << "Please enter a string to be partitioned: ";
+                cin.getline(strin,STD_NUMBER_OF_CHARS);
+                cin.getline(strin,STD_NUMBER_OF_CHARS);
+                //getline(cin, inStr, '\n');
+                
+                sprintf(fn,"%s.%s", inStr.c_str(), PARTITION_FILE_EXT);
+                
+                //partition("TT B DAC ABBA ABBA C DAC B DAC TT",false,fn);
+                
+                sprintf(fn,"%s.%s", strin, PARTITION_FILE_EXT);
+                
+                show(generateOptimalHuffmanCodeWordsWithWieghts(PartitionString(strin,fn), true));
                 
                 break;
             case 80:      
