@@ -385,7 +385,7 @@ bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, in
  **************************** Huffman generation ******************************
  ******************************************************************************/
 
-vector<codeWords> generateAllHuffmanCodeWordsI_CW(int noOfCodeWords, bool firstCode)
+vector<codeWords> generateAllHuffmanCodeWords(int noOfCodeWords, bool firstCode)
 {
     vector<codeWords> store;
     
@@ -403,7 +403,7 @@ vector<codeWords> generateAllHuffmanCodeWordsI_CW(int noOfCodeWords, bool firstC
         treeArray[i++] = 0;
     }
     
-    output_all_possible_trees(treeArray, noOfCodeWords, 0, 0, store);
+    output_all_possible_trees(treeArray, noOfCodeWords, 0, 0, store, firstCode);
                 
     delete [] treeArray;
     return store;
@@ -469,7 +469,7 @@ Node* rebuild_tree(int* s, int n)
 }
 
 //print all possible trees
-void output_all_possible_trees(int* seq, int n, int num1, int num0, vector<codeWords>& store)
+void output_all_possible_trees(int* seq, int n, int num1, int num0, vector<codeWords>& store, bool firstCode)
 {
     if((num1 + num0) == 2*n)
     {
@@ -477,7 +477,7 @@ void output_all_possible_trees(int* seq, int n, int num1, int num0, vector<codeW
         Node *root = rebuild_tree(seq, 2*n+1);
         //displayTree(root, 0);
         //show(seq, n);
-        codeWords temp = codeWordsFromTree(root, n, true);
+        codeWords temp = codeWordsFromTree(root, n, firstCode);
         //store.push_back(temp);
         addCodeWords(store, temp);
         return;
@@ -486,13 +486,13 @@ void output_all_possible_trees(int* seq, int n, int num1, int num0, vector<codeW
     if(num1 >= num0 && num1 < n)
     {
         seq[num1+num0] = 1;
-        output_all_possible_trees(seq, n, num1+1, num0, store); 
+        output_all_possible_trees(seq, n, num1+1, num0, store, firstCode); 
     }       
     
     if(num0 < num1 && num1 <=n)
     {
         seq[num1+num0] = 0;
-        output_all_possible_trees(seq, n, num1, num0+1, store);
+        output_all_possible_trees(seq, n, num1, num0+1, store, firstCode);
     }
 }
 
@@ -764,7 +764,7 @@ codeWords generateOptimalHuffmanCodeWords(partitionedString pStrings, bool first
 {
     partitionedString distinct = distinction(pStrings);
     
-    vector<codeWords> store = generateAllHuffmanCodeWordsI_CW(distinct.size(), firstCode);
+    vector<codeWords> store = generateAllHuffmanCodeWords(distinct.size(), firstCode);
     codeWords minCW = store[0];
     int bestBits = calculateBits(pStrings, distinct, minCW);
     
@@ -792,23 +792,24 @@ codeWords generateOptimalHuffmanCodeWords(partitionedString pStrings, bool first
     
     cout << "With a size of: " << bestBits << endl;
     return minCW;
-    /*partitionedString pS = distinction(pStrings);
+}
+
+codeWords generateOptimalHuffmanCodeWordsWithWieghts(partitionedString pStrings, bool firstCode)
+{
+    partitionedString pS = distinction(pStrings);
 
     int total = pStrings.size();
     
     vector<HuffmanNode*> set;
-    
     for(int i = 0; i < pS.size(); i++)
     {
         set.push_back(createHuffmanNode(pS[i]->frequency/(total*1.0), pS[i]->partitionStr, NULL, NULL));
     }
-
     while(set.size() > 1)
     {
         merge(getTwoSmallestPercentageNodeIndexes(set), set);
     }
-
-    return codeWordsFromTree(set[0], pS.size(), firstCode);*/
+    return codeWordsFromTree(set[0], pS.size(), firstCode);
 }
 
 int calculateBits(partitionedString& pStrings, partitionedString& distinct, codeWords cW)
@@ -859,10 +860,11 @@ void add(partition* part, partitionedString& pString)
 
 void merge(int* smallest, vector<HuffmanNode*>& set)
 {
+    if(set.size() > 50) exit(1);
     HuffmanNode* hNode = createHuffmanNode(
         set[smallest[0]]->percentage + set[smallest[1]]->percentage, 
         "***", set[smallest[0]], set[smallest[1]]);
-        
+
     removeHuffmanNodes(set[smallest[0]], set[smallest[1]], set);
     set.push_back(hNode);
 }
@@ -872,13 +874,16 @@ void removeHuffmanNodes(HuffmanNode* hNode1, HuffmanNode* hNode2, vector<Huffman
     int count = 0;
     vector<HuffmanNode*> tmp;
     HuffmanNode* tNode;// = set.pop_back();
-
+    
     while(!set.empty())
     {
         tNode = set.back(); set.pop_back();
         if(tNode != hNode1 && tNode != hNode2) 
         {
             tmp.push_back(tNode);
+        }
+        else
+        {
             count++;
             if(count == 2) break;
         }
@@ -895,6 +900,8 @@ int* getTwoSmallestPercentageNodeIndexes(vector<HuffmanNode*>& set)
     int* smallest = new int[2];
 
     smallest[0] = 0;
+    smallest[1] = 1;
+    
     for(int i = 1; i < set.size(); i++)
     {
         if(set[i]->percentage <= set[smallest[0]]->percentage)
@@ -932,11 +939,6 @@ codeWords cwFromTree(HuffmanNode* node, codeWord& cW, codeWords& cWs, bool first
     if(node->left == NULL && node->right == NULL)
     {
         cWs.push_back(cW);
-        for(int i = 0; i < cW.size(); i++)
-        {
-            cout << cW[i];
-        }
-        cout << endl;
     }
     else
     {
@@ -951,6 +953,7 @@ codeWords cwFromTree(HuffmanNode* node, codeWord& cW, codeWords& cWs, bool first
 
        cW2.push_back(!firstCode);
        cwFromTree(node->right, cW2, cWs, firstCode);
+       delete node;
     }
     return cWs;
 }

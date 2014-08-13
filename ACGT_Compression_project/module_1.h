@@ -35,7 +35,7 @@ codeWords getHuffmanCodeWords_Memory(int m, int series);
 bool getHuffmanCodeWords_File(const char* filename, unsigned long long int m, int series);
 
 // Function to generate all possible huffman trees.
-vector<codeWords> generateAllHuffmanCodeWordsI_CW(int noOfCodeWords, bool firstCode);
+vector<codeWords> generateAllHuffmanCodeWords(int noOfCodeWords, bool firstCode);
 
 Node* rebuild_tree(int s[], int n);
 
@@ -46,7 +46,7 @@ Node* rebuild_tree(int s[], int n);
  * @param num1
  * @param num0
  */
-void output_all_possible_trees(int* seq, int n, int num1, int num0, vector<codeWords>& store);
+void output_all_possible_trees(int* seq, int n, int num1, int num0, vector<codeWords>& store, bool firstCode);
 
 bool contains(vector<codeWords>& store, codeWords cW);
 
@@ -109,8 +109,21 @@ void destoryTree(Node* node);
 /******************************************************************************
 **********************    HuffmanOptimally      *******************************
 *******************************************************************************/
-
+/**
+ * Generates all possible Huffman trees and then returns the optimal one.
+ * @param ptr
+ * @param firstCode
+ * @return 
+ */
 codeWords generateOptimalHuffmanCodeWords(partitionedString ptr, bool firstCode);
+
+/**
+ * Generates huffman encoding optimised for the node weights.
+ * @param pStrings
+ * @param firstCode
+ * @return 
+ */
+codeWords generateOptimalHuffmanCodeWordsWithWieghts(partitionedString pStrings, bool firstCode);
 
 partitionedString distinction(partitionedString& pString);
 
@@ -120,6 +133,12 @@ void add(partition* part, partitionedString& pString);
 
 void merge(int* smallest, vector<HuffmanNode*>& set);
 
+/**
+ * Remove these two huffman nodes from set
+ * @param hNode1
+ * @param hNode2
+ * @param set
+ */
 void removeHuffmanNodes(HuffmanNode* hNode1, HuffmanNode* hNode2, vector<HuffmanNode*>& set);
 
 int* getTwoSmallestPercentageNodeIndexes(vector<HuffmanNode*>& set);
