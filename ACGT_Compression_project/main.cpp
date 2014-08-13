@@ -525,52 +525,56 @@ void ECA_run(const char* path, int N, int numberOfRuns)
     char* ECA_DUMP = new char[strm.str().length() + 1];
     strcpy(ECA_DUMP,strm.str().c_str());
     
-    fstream outFile;        
-        
+    fstream outFile; 
     outFile.open(ECA,ios::out);
-    
-    long max = 0;
-    long min = 0;
-    double avg = 0;    
-    
-    for(int i = 0; i < numberOfRuns; i++)
-    {
-        long counter = 0;
-        string randString = generateRandomString(N);
+    outFile << "N" << "," << "Number of runs" << "," << "Min" << "," << "Max" << "," << "Average" << endl;
         
-        getAllRepetitions_XYX_File_ECA((char*) randString.c_str(),ECA_DUMP,counter);
-        cout << "Random string " << "i :" << randString << endl;
-        cout << "Count: " << counter << endl;
-        //counts.push_back(counter);
-        //strings.push_back(randString);
-        outFile << i << "," << randString << "," << counter << endl;
-        if(i == 0)
+    
+    for(int n = 300; n < 500; n++)
+    {
+        long max = 0;
+        long min = 0;
+        double avg = 0;    
+
+        for(int i = 0; i < numberOfRuns; i++)
         {
-            max = counter;
-            min = counter;
-        }
-        else
-        {        
-            if(max < counter)
+            long counter = 0;
+            string randString = generateRandomString(n);
+
+            getAllRepetitions_XYX_File_ECA((char*) randString.c_str(),ECA_DUMP,counter);
+            cout << "Random string " << i << " : N " << n << endl;
+            cout << "Count: " << counter << endl;
+            //counts.push_back(counter);
+            //strings.push_back(randString);
+            //outFile << i << "," << randString << "," << counter << endl;
+            if(i == 0)
             {
                 max = counter;
-            }
-
-            if(min > counter)
-            {
                 min = counter;
             }
+            else
+            {        
+                if(max < counter)
+                {
+                    max = counter;
+                }
+
+                if(min > counter)
+                {
+                    min = counter;
+                }
+            }
+
+            avg += counter;
         }
-        
-        avg += counter;
+
+        //Agreggation functions MIN MAX AVG
+
+        avg /= numberOfRuns; 
+        //outFile << "" << endl;
+        //outFile << "N" << "," << "Number of runs" << "," << "Min" << "," << "Max" << "," << "Average" << endl;
+        outFile << n << "," << numberOfRuns << "," << min << "," << max << "," << avg << endl;
     }
-    
-    //Agreggation functions MIN MAX AVG
-    
-    avg /= numberOfRuns; 
-    outFile << "" << endl;
-    outFile << "N" << "," << "Number of runs" << "," << "Min" << "," << "Max" << "," << "Average" << endl;
-    outFile << N << "," << numberOfRuns << "," << min << "," << max << "," << avg << endl;
     outFile.close();
     
     cout << "Results written to file: " << ECA << endl; 
